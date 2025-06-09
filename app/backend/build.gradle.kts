@@ -11,8 +11,17 @@ repositories {
 }
 
 dependencies {
-    val servletApiVersion = "6.1.0"
-    providedCompile("jakarta.servlet:jakarta.servlet-api:$servletApiVersion")
+    implementation("io.github.cdimascio:dotenv-java:3.2.0")
+    implementation("org.postgresql:postgresql:42.7.6")
+    val ebeanVersion = "15.11.0"
+    implementation("io.ebean:ebean:$ebeanVersion")
+    runtimeOnly("io.ebean:ebean-agent:$ebeanVersion")
+    implementation("io.ebean:ebean-api:$ebeanVersion")
+    implementation("io.ebean:ebean-core:$ebeanVersion")
+    implementation("io.ebean:ebean-querybean:$ebeanVersion")
+    implementation("io.ebean:ebean-ddl-generator:$ebeanVersion")
+    val jakartaVersion = "6.1.0"
+    providedCompile("jakarta.servlet:jakarta.servlet-api:$jakartaVersion")
     val lombokVersion = "1.18.38"
     compileOnly("org.projectlombok:lombok:$lombokVersion")
     annotationProcessor("org.projectlombok:lombok:$lombokVersion")

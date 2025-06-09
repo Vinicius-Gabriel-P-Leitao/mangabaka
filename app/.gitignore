@@ -1,6 +1,6 @@
 # Gradle build outputs
 .gradle/
-build/
+*build/
 !gradle/wrapper/gradle-wrapper.jar
 # Keep build folders inside source sets to allow IDE to recognize compiled outputs
 !**/src/main/**/build/
@@ -63,7 +63,7 @@ out/
 *.local
 
 # Vite
-*deps*/
+*.vite/
 
 # Editor temporary and project files
 *.suo
@@ -82,3 +82,6 @@ coverage/
 *.tmp
 *.temp
 
+# Application enviroments
+*local.properties
+*.env
