@@ -11,11 +11,8 @@ repositories {
 }
 
 dependencies {
-    val servletApiVersion = "6.0.0"
+    val servletApiVersion = "6.1.0"
     providedCompile("jakarta.servlet:jakarta.servlet-api:$servletApiVersion")
-    val jettyVersion = "12.0.13"
-    implementation("org.eclipse.jetty:jetty-server:$jettyVersion")
-    implementation("org.eclipse.jetty.ee10:jetty-ee10-servlet:$jettyVersion")
     val lombokVersion = "1.18.38"
     compileOnly("org.projectlombok:lombok:$lombokVersion")
     annotationProcessor("org.projectlombok:lombok:$lombokVersion")
@@ -26,11 +23,20 @@ dependencies {
 }
 
 java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
     sourceSets["main"].java.srcDirs("src/main/java")
 }
 
 tasks.withType<War> {
     archiveFileName.set("backend.war")
+    manifest {
+        attributes(
+            "Implementation-Title" to "MangaBaka",
+            "Implementation-Version" to "1.0.0",
+            "Created-By" to "Gradle"
+        )
+    }
 }
 
 tasks.test {
