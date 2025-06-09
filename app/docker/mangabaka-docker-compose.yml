@@ -32,7 +32,6 @@ services:
       --module=ee10-deploy,ee10-webapp,http,ee10-annotations,ee10-servlet
       -Djetty.http.port=9090
       -Djetty.deploy.scanInterval=10
-      -Djetty.webapp.addServerClasses=org.eclipse.jetty.server.webapp.WebInfConfiguration
     networks:
       - mangabaka-network
     restart: always

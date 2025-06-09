@@ -41,11 +41,18 @@ tasks.withType<War> {
     archiveFileName.set("backend.war")
     manifest {
         attributes(
-            "Implementation-Title" to "MangaBaka",
-            "Implementation-Version" to "1.0.0",
-            "Created-By" to "Gradle"
+            "Implementation-Title" to "MangaBaka", "Implementation-Version" to "1.0.0", "Created-By" to "Gradle"
         )
     }
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from("src/main/webapp") {
+        into("")
+    }
+}
+
+tasks.named("war") {
+    dependsOn(":frontend:copyFrontendDist")
 }
 
 tasks.test {
