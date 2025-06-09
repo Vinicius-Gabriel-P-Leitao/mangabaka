@@ -55,8 +55,7 @@ project(":backend") {
         doLast {
             val envVars = rootProject.extra["envVars"] as Map<*, *>
 
-            val envContent =
-                """
+            val envContent = """
                 PG_DB_NAME_PROD=${envVars["PG_DB_NAME_PROD"]}
                 PG_PASSWORD_PROD=${envVars["PG_PASSWORD_PROD"]}
                 PG_USERNAME_PROD=${envVars["PG_USERNAME_PROD"]}
@@ -76,8 +75,8 @@ project(":backend") {
     }
 
     tasks.register("buildBackend") {
+        dependsOn(":frontend:buildFrontend")
         dependsOn(":backend:build")
-        dependsOn(":frontend:copyFrontendDist")
         finalizedBy(generateEnv)
     }
 }
@@ -100,6 +99,12 @@ project(":docker") {
         )
     }
 
+    tasks.register<Exec>("dockerRecreate") {
+        commandLine(
+            dockerCommand, "-f", "mangabaka-docker-compose.yml", "-p", "mangabaka", "up", "-d", "--force-recreate"
+        )
+    }
+
     tasks.register<Exec>("dockerJettyModules") {
         commandLine("docker", "run", "--rm", "jetty:12.0.22-jdk17", "--list-modules")
     }
@@ -113,6 +118,12 @@ tasks.register("build") {
     dependsOn(":frontend:buildFrontend")
     dependsOn(":backend:buildBackend")
     finalizedBy(":docker:setupDocker")
+}
+
+tasks.register("recreate") {
+    dependsOn(":frontend:buildFrontend")
+    dependsOn(":backend:buildBackend")
+    dependsOn(":docker:dockerRecreate")
 }
 
 tasks.register("info") {
