@@ -1,32 +1,18 @@
 package br.mangabaka;
 
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-import br.mangabaka.controller.Test;
-import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
-import org.eclipse.jetty.ee10.servlet.ServletHolder;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
+import java.io.IOException;
 
-    public class Main {
-        public static void main(String[] args) {
-            Server server = new Server();
-            ServerConnector connector = new ServerConnector(server);
-            ServletContextHandler servletContextHandler = new ServletContextHandler();
 
-            connector.setHost("localhost");
-            connector.setPort(8080);
-
-            server.addConnector(connector);
-
-            servletContextHandler.setContextPath("/v1/");
-            servletContextHandler.addServlet(new ServletHolder(new Test()), "/hello ");
-
-            server.setHandler(servletContextHandler);
-
-            try {
-                server.start();
-            } catch (Exception exception) {
-                throw new RuntimeException(exception);
-            }
-        }
+@WebServlet("/")
+public class Main extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("application/json");
+        resp.getWriter().write("{ \"key\": \"Jetty 12 + Java 17 + Jakarta EE10 = sucesso!\" }");
     }
+}

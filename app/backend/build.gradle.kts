@@ -11,8 +11,8 @@ repositories {
 }
 
 dependencies {
-    val jakartaVersion = "6.1.0"
-    compileOnly("jakarta.servlet:jakarta.servlet-api:$jakartaVersion")
+    val servletApiVersion = "6.0.0"
+    providedCompile("jakarta.servlet:jakarta.servlet-api:$servletApiVersion")
     val jettyVersion = "12.0.13"
     implementation("org.eclipse.jetty:jetty-server:$jettyVersion")
     implementation("org.eclipse.jetty.ee10:jetty-ee10-servlet:$jettyVersion")
