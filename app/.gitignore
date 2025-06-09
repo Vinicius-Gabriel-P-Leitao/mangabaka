@@ -62,6 +62,9 @@ out/
 *dist-ssr/
 *.local
 
+# Vite
+*deps*/
+
 # Editor temporary and project files
 *.suo
 *.ntvs*
