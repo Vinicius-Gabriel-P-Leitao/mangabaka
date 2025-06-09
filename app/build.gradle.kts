@@ -6,6 +6,7 @@ subprojects {
         mavenCentral()
     }
 }
+
 val isWindows = System.getProperty("os.name").toDefaultLowerCase().contains("windows")
 val props = Properties()
 val localPropsFile = file("local.properties")
@@ -23,40 +24,76 @@ extra["envVars"] = mapOf(
     "PG_JDBC_URL_PROD" to props.getProperty("PG_JDBC_URL_PROD")
 )
 
-tasks.register("generateEnv") {
-    doLast {
-        val envVars = rootProject.extra["envVars"] as Map<*, *>
+project(":frontend") {
+    val npmCommand = if (isWindows) "npm.cmd" else "npm"
 
-        val envContent =
-            """
-            PG_DB_NAME_PROD=${envVars["PG_DB_NAME_PROD"]}
-            PG_PASSWORD_PROD=${envVars["PG_PASSWORD_PROD"]}
-            PG_USERNAME_PROD=${envVars["PG_USERNAME_PROD"]}
-            PG_JDBC_URL_PROD=${envVars["PG_JDBC_URL_PROD"]}
-            """.trimIndent()
+    val npmInstall = tasks.register<Exec>("npmInstall") {
+        workingDir = file("mangabaka")
+        commandLine(npmCommand, "install")
+    }
 
-        val dockerEnvFile = file("$rootDir/docker/.env")
-        val backendEnvFile = file("$rootDir/backend/.env")
+    val buildVue = tasks.register<Exec>("buildVue") {
+        dependsOn(npmInstall)
+        workingDir = file("mangabaka")
+        commandLine(npmCommand, "run", "build")
+    }
 
-        listOf(dockerEnvFile, backendEnvFile).forEach { file ->
-            file.writeText(envContent)
-            println("Gerado: ${file.path}")
+    val copyFrontendDist = tasks.register<Copy>("copyFrontendDist") {
+        dependsOn(buildVue)
+        from("$rootDir/frontend/mangabaka/dist") { include("**/*") }
+        into("$rootDir/backend/src/main/webapp")
+    }
+
+    tasks.register("buildFrontend") {
+        dependsOn(buildVue)
+        dependsOn(copyFrontendDist)
+    }
+}
+
+project(":backend") {
+    val generateEnv = tasks.register("generateEnv") {
+        doLast {
+            val envVars = rootProject.extra["envVars"] as Map<*, *>
+
+            val envContent =
+                """
+                PG_DB_NAME_PROD=${envVars["PG_DB_NAME_PROD"]}
+                PG_PASSWORD_PROD=${envVars["PG_PASSWORD_PROD"]}
+                PG_USERNAME_PROD=${envVars["PG_USERNAME_PROD"]}
+                PG_JDBC_URL_PROD=${envVars["PG_JDBC_URL_PROD"]}
+                """.trimIndent()
+
+            val dockerEnvFile = file("$rootDir/docker/.env")
+            val backendEnvFile = file("$rootDir/backend/.env")
+
+            listOf(dockerEnvFile, backendEnvFile).forEach { file ->
+                file.writeText(envContent)
+            }
+
+            backendEnvFile.writeText(envContent)
+            println("Gerado: ${backendEnvFile.path}")
         }
+    }
+
+    tasks.register("buildBackend") {
+        dependsOn(":backend:build")
+        dependsOn(":frontend:copyFrontendDist")
+        finalizedBy(generateEnv)
     }
 }
 
 project(":docker") {
-    // NOTE: docker precisa tá instalado e configurado no path
     val dockerCommand = if (isWindows) "docker-compose.exe" else "docker-compose"
 
     val dockerSetupPostgresql = tasks.register<Exec>("dockerPostgresql") {
-        dependsOn(":generateEnv")
+        dependsOn(":backend:buildBackend")
         commandLine(
             dockerCommand, "-f", "mangabaka-docker-compose.yml", "-p", "mangabaka", "up", "-d", "postgresql"
         )
     }
 
     val dockerSetupJettyServer = tasks.register<Exec>("dockerJetty") {
+        dependsOn(":backend:buildBackend")
         dependsOn(dockerSetupPostgresql)
         commandLine(
             dockerCommand, "-f", "mangabaka-docker-compose.yml", "-p", "mangabaka", "up", "-d", "jetty"
@@ -72,36 +109,9 @@ project(":docker") {
     }
 }
 
-project(":frontend") {
-    // NOTE: npm tem que estar no path para poder dar certo.
-    val npmCommand = if (isWindows) "npm.cmd" else "npm"
-
-    val npmInstall = tasks.register<Exec>("npmInstall") {
-        workingDir = file("mangabaka")
-        commandLine(npmCommand, "-v")
-    }
-
-    val buildFrontend = tasks.register<Exec>("buildVue") {
-        dependsOn(npmInstall)
-        workingDir = file("mangabaka")
-        commandLine(npmCommand, "run", "build")
-    }
-
-    tasks.register("buildFrontend") {
-        dependsOn(buildFrontend)
-    }
-}
-
-project(":backend") {
-    tasks.register("buildBackend") {
-        dependsOn(rootProject.tasks.named("generateEnv"))
-        dependsOn(tasks.named("build"))
-    }
-}
-
 tasks.register("build") {
-    dependsOn(":backend:buildBackend")
     dependsOn(":frontend:buildFrontend")
+    dependsOn(":backend:buildBackend")
     finalizedBy(":docker:setupDocker")
 }
 

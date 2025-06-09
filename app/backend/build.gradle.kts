@@ -46,6 +46,16 @@ tasks.withType<War> {
             "Created-By" to "Gradle"
         )
     }
+    
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    
+    from("src/main/webapp") {
+        into("")
+    }
+}
+
+tasks.named("war") {
+    dependsOn(":frontend:copyFrontendDist")
 }
 
 tasks.test {
