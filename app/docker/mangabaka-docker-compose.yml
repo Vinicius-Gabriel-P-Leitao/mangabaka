@@ -1,0 +1,9 @@
+services:
+  jetty:
+    image: jetty:12.0.0-jdk17-amazoncorretto
+    container_name: mangabaka-jetty
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../backend/build/libs/backend.war:/var/lib/jetty/webapps/ROOT.war
+    restart: always
