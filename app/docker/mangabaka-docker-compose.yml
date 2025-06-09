@@ -1,0 +1,9 @@
+services:
+  jetty:
+    image: jetty:11-jdk17
+    container_name: mangabaka-jetty
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../backend/build/libs/backend.war:/var/lib/jetty/webapps/ROOT.war
+    restart: always
