@@ -65,6 +65,9 @@ out/
 # Vite
 *.vite/
 
+# Build app
+*webapp/
+
 # Editor temporary and project files
 *.suo
 *.ntvs*
