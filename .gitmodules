@@ -1,9 +1,6 @@
 [submodule "references/pgjdbc"]
 	path = references/pgjdbc
 	url = https://github.com/pgjdbc/pgjdbc.git
-[submodule "references/dotenv-java"]
-	path = references/dotenv-java
-	url = https://github.com/cdimascio/dotenv-java.git
 [submodule "references/ebean"]
 	path = references/ebean
 	url = https://github.com/ebean-orm/ebean.git
