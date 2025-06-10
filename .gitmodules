@@ -1,0 +1,21 @@
+[submodule "references/pgjdbc"]
+	path = references/pgjdbc
+	url = https://github.com/pgjdbc/pgjdbc.git
+[submodule "references/dotenv-java"]
+	path = references/dotenv-java
+	url = https://github.com/cdimascio/dotenv-java.git
+[submodule "references/ebean"]
+	path = references/ebean
+	url = https://github.com/ebean-orm/ebean.git
+[submodule "references/vue"]
+	path = references/vue
+	url = https://github.com/vuejs/core.git
+[submodule "references/vue-router"]
+	path = references/vue-router
+	url = https://github.com/vuejs/vue-router.git
+[submodule "references/tailwindcss"]
+	path = references/tailwindcss
+	url = https://github.com/tailwindlabs/tailwindcss.git
+[submodule "references/vite"]
+	path = references/vite
+	url = https://github.com/vitejs/vite.git
