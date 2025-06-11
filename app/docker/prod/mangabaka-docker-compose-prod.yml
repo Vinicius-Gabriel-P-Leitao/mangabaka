@@ -23,12 +23,12 @@ services:
       context: ../..
       dockerfile: docker/prod/Dockerfile
     container_name: mangabaka
-    environment:
-      PG_PASSWORD_PROD: ${PG_PASSWORD}
-      PG_USERNAME_PROD: ${PG_USERNAME}
-      PG_JDBC_URL_PROD: ${PG_JDBC_URL}
     depends_on:
       - postgresql
+    environment:
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_USER: ${PG_USERNAME}
+      POSTGRES_JDBC_URL: ${PG_JDBC_URL}
     ports:
       - "9090:9090"
     networks:

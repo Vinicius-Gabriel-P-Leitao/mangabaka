@@ -15,13 +15,13 @@ WORKDIR /app
 COPY backend /app/backend
 COPY --from=frontend /app/frontend/mangabaka/dist/ /app/backend/src/main/webapp
 
-ARG PG_PASSWORD_PROD
-ARG PG_USERNAME_PROD
-ARG PG_JDBC_URL_PROD
+ARG POSTGRES_PASSWORD
+ARG POSTGRES_USER
+ARG POSTGRES_JDBC_URL
 
-RUN echo "PG_PASSWORD_PROD=${PG_PASSWORD_PROD}" > /app/backend/.env && \
-    echo "PG_USERNAME_PROD=${PG_USERNAME_PROD}" >> /app/backend/.env && \
-    echo "PG_JDBC_URL_PROD=${PG_JDBC_URL_PROD}" >> /app/backend/.env
+RUN echo "PG_PASSWORD=${POSTGRES_PASSWORD}" > /app/backend/.env && \
+    echo "PG_USERNAME=${POSTGRES_USER}" >> /app/backend/.env && \
+    echo "PG_JDBC_URL=${POSTGRES_JDBC_URL}" >> /app/backend/.env
 
 WORKDIR /app/backend
 
