@@ -1,22 +1,15 @@
-package br.mangabaka.controller;
+package br.mangabaka.database.config;
 
 import io.ebean.DatabaseFactory;
 import io.ebean.annotation.Platform;
 import io.ebean.config.DatabaseConfig;
 import io.ebean.datasource.DataSourceConfig;
 import io.github.cdimascio.dotenv.Dotenv;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 
-@Path("/example")
-public class ExampleResource {
-    private final Dotenv dotenv = Dotenv.load();
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getExample() {
+public class PostgresqlConfig {
+    private static final Dotenv dotenv = Dotenv.load();
+
+    public static void configure() {
         DataSourceConfig dataSourceConfig = new DataSourceConfig();
 
         dataSourceConfig.setPassword(dotenv.get("PG_PASSWORD"));
@@ -25,7 +18,7 @@ public class ExampleResource {
         dataSourceConfig.setSchema("mangabaka");
         dataSourceConfig.setPlatform(Platform.POSTGRES.name());
 
-        DatabaseConfig databaseConfig = new DatabaseConfig();
+        io.ebean.config.DatabaseConfig databaseConfig = new DatabaseConfig();
 
         databaseConfig.setDataSourceConfig(dataSourceConfig);
         databaseConfig.setDdlGenerate(true);
@@ -33,11 +26,5 @@ public class ExampleResource {
         databaseConfig.setDbSchema("mangabaka");
 
         DatabaseFactory.create(databaseConfig);
-
-        var data = new ExampleData("Hello", "World");
-        return Response.ok(data).build();
     }
-}
-
-record ExampleData(String key, String value) {
 }

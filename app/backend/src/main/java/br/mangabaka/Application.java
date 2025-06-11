@@ -1,29 +1,20 @@
 package br.mangabaka;
 
-import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import br.mangabaka.api.controller.ExampleResource;
+import br.mangabaka.api.mapper.NotFoundExceptionMapper;
+import jakarta.ws.rs.ApplicationPath;
 
-import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
-@WebFilter("/*")
-public class Application implements Filter {
+@ApplicationPath("/v1")
+public class Application extends jakarta.ws.rs.core.Application {
     @Override
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
-            throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) req;
-        HttpServletResponse response = (HttpServletResponse) res;
+    public Set<Class<?>> getClasses() {
+        Set<Class<?>> classes = new HashSet<>();
+        classes.add(ExampleResource.class);
+        classes.add(NotFoundExceptionMapper.class);
 
-        String uri = request.getRequestURI();
-
-        boolean isApi = uri.startsWith("/v1");
-        boolean isStatic = uri.matches(".*\\.(js|css|png|jpg|svg|ico|json|woff2?)$");
-
-        if (!isApi && !isStatic && !uri.equals("/") && !uri.contains(".")) {
-            request.getRequestDispatcher("/index.html").forward(request, response);
-        } else {
-            chain.doFilter(req, res);
-        }
+        return classes;
     }
 }
