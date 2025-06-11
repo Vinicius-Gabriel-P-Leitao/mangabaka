@@ -12,7 +12,11 @@ public class Application extends jakarta.ws.rs.core.Application {
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> classes = new HashSet<>();
+
+        // Controller
         classes.add(ExampleResource.class);
+
+        // Mappers
         classes.add(NotFoundExceptionMapper.class);
 
         return classes;
