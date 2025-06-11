@@ -51,10 +51,6 @@ tasks.withType<War> {
     }
 }
 
-tasks.named("war") {
-    dependsOn(":frontend:copyFrontendDist")
-}
-
 tasks.test {
     useJUnitPlatform()
 }

@@ -1,5 +1,4 @@
 import java.util.Properties
-import org.gradle.internal.extensions.stdlib.toDefaultLowerCase
 
 subprojects {
     repositories {
@@ -7,125 +6,95 @@ subprojects {
     }
 }
 
-val isWindows = System.getProperty("os.name").toDefaultLowerCase().contains("windows")
 val props = Properties()
 val localPropsFile = file("local.properties")
 
-if (localPropsFile.exists()) {
-    localPropsFile.inputStream().use { props.load(it) }
-} else {
+if (!localPropsFile.exists()) {
     error("Arquivo local.properties não encontrado na raiz do projeto!")
 }
 
-extra["envVars"] = mapOf(
-    "PG_DB_NAME_PROD" to props.getProperty("PG_DB_NAME_PROD"),
-    "PG_PASSWORD_PROD" to props.getProperty("PG_PASSWORD_PROD"),
-    "PG_USERNAME_PROD" to props.getProperty("PG_USERNAME_PROD"),
-    "PG_JDBC_URL_PROD" to props.getProperty("PG_JDBC_URL_PROD")
-)
+localPropsFile.inputStream().use { props.load(it) }
 
+fun generateEnvContent(prefix: String): String {
+    return """
+        PG_DB_NAME=${props.getProperty("${prefix}_DB_NAME")}
+        PG_PASSWORD=${props.getProperty("${prefix}_PASSWORD")}
+        PG_USERNAME=${props.getProperty("${prefix}_USERNAME")}
+        PG_JDBC_URL=${props.getProperty("${prefix}_JDBC_URL")}
+            """.trimIndent()
+}
+
+val generateEnvProd = tasks.register("generateEnvProd") {
+    doLast {
+        val content = generateEnvContent("PG_PROD")
+        file("$rootDir/docker/prod/.env").writeText(content)
+        println("✅ Arquivo .env de PRODUÇÃO gerado!")
+    }
+}
+
+val generateEnvDev = tasks.register("generateEnvDev") {
+    doLast {
+        val content = generateEnvContent("PG_DEV")
+        listOf(
+            file("$rootDir/docker/dev/.env"), file("$rootDir/backend/.env")
+        ).forEach {
+            it.writeText(content)
+        }
+        println("✅ Arquivos .env de DESENVOLVIMENTO gerados!")
+    }
+}
+
+// Project tasks
 project(":frontend") {
-    val npmCommand = if (isWindows) "npm.cmd" else "npm"
-
-    val npmInstall = tasks.register<Exec>("npmInstall") {
-        workingDir = file("mangabaka")
-        commandLine(npmCommand, "install")
-    }
-
-    val buildVue = tasks.register<Exec>("buildVue") {
-        dependsOn(npmInstall)
-        workingDir = file("mangabaka")
-        commandLine(npmCommand, "run", "build")
-    }
-
-    val copyFrontendDist = tasks.register<Copy>("copyFrontendDist") {
-        dependsOn(buildVue)
-        from("$rootDir/frontend/mangabaka/dist") { include("**/*") }
-        into("$rootDir/backend/src/main/webapp")
-    }
-
     tasks.register("buildFrontend") {
-        dependsOn(buildVue)
-        dependsOn(copyFrontendDist)
+        dependsOn(generateEnvDev)
+        dependsOn(":frontend:build")
     }
 }
 
 project(":backend") {
-    val generateEnv = tasks.register("generateEnv") {
-        doLast {
-            val envVars = rootProject.extra["envVars"] as Map<*, *>
-
-            val envContent = """
-                PG_DB_NAME_PROD=${envVars["PG_DB_NAME_PROD"]}
-                PG_PASSWORD_PROD=${envVars["PG_PASSWORD_PROD"]}
-                PG_USERNAME_PROD=${envVars["PG_USERNAME_PROD"]}
-                PG_JDBC_URL_PROD=${envVars["PG_JDBC_URL_PROD"]}
-                """.trimIndent()
-
-            val dockerEnvFile = file("$rootDir/docker/.env")
-            val backendEnvFile = file("$rootDir/backend/.env")
-
-            listOf(dockerEnvFile, backendEnvFile).forEach { file ->
-                file.writeText(envContent)
-            }
-
-            backendEnvFile.writeText(envContent)
-            println("Gerado: ${backendEnvFile.path}")
-        }
-    }
-
     tasks.register("buildBackend") {
+        dependsOn(generateEnvDev)
         dependsOn(":frontend:buildFrontend")
         dependsOn(":backend:build")
-        finalizedBy(generateEnv)
     }
 }
 
 project(":docker") {
-    val dockerCommand = if (isWindows) "docker-compose.exe" else "docker-compose"
-
-    val dockerSetupPostgresql = tasks.register<Exec>("dockerPostgresql") {
+    // --- DEV: Build backend/frontend local + sobe docker dev ---
+    tasks.register("dev") {
+        dependsOn(generateEnvDev)
+        dependsOn(":frontend:buildFrontend")
         dependsOn(":backend:buildBackend")
-        commandLine(
-            dockerCommand, "-f", "mangabaka-docker-compose.yml", "-p", "mangabaka", "up", "-d", "postgresql"
-        )
+        dependsOn(":docker:setupDockerDev")
+        description = "Build completo para desenvolvimento (build local + docker dev)"
     }
 
-    val dockerSetupJettyServer = tasks.register<Exec>("dockerJetty") {
-        dependsOn(":backend:buildBackend")
-        dependsOn(dockerSetupPostgresql)
-        commandLine(
-            dockerCommand, "-f", "mangabaka-docker-compose.yml", "-p", "mangabaka", "up", "-d", "jetty"
-        )
+    // --- PROD: Sobe docker prod que já build dentro do container, sem build local ---
+    tasks.register("prod") {
+        dependsOn(generateEnvProd)
+        dependsOn(":docker:dockerSetupProd")
+        description = "Sobe o ambiente de produção (build feito dentro do container)"
     }
+}
 
-    tasks.register<Exec>("dockerRecreate") {
-        commandLine(
-            dockerCommand, "-f", "mangabaka-docker-compose.yml", "-p", "mangabaka", "up", "-d", "--force-recreate"
-        )
-    }
+// --- Aliás, para fazer um Build mais fácil
 
-    tasks.register<Exec>("dockerJettyModules") {
-        commandLine("docker", "run", "--rm", "jetty:12.0.22-jdk17", "--list-modules")
-    }
-
-    tasks.register("setupDocker") {
-        dependsOn(dockerSetupJettyServer)
-    }
+tasks.register("dev") {
+    dependsOn(generateEnvDev)
+    dependsOn(":docker:dev")
+    description = "Alias para dev (devesenvolvimento via Docker)"
 }
 
 tasks.register("build") {
-    dependsOn(":frontend:buildFrontend")
-    dependsOn(":backend:buildBackend")
-    finalizedBy(":docker:setupDocker")
+    dependsOn(generateEnvProd)
+    dependsOn(":docker:prod")
+    description = "Alias para prod (produção via Docker)"
 }
 
-tasks.register("recreate") {
-    dependsOn(":frontend:buildFrontend")
-    dependsOn(":backend:buildBackend")
-    dependsOn(":docker:dockerRecreate")
+tasks.register("clean") {
+    dependsOn(":frontend:clean")
+    dependsOn(":backend:clean")
+    description = "Limpa o build do front e backend."
 }
 
-tasks.register("info") {
-    dependsOn(":docker:dockerJettyModules")
-}

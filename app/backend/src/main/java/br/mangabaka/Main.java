@@ -21,9 +21,9 @@ public class Main extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         DataSourceConfig dataSourceConfig = new DataSourceConfig();
 
-        dataSourceConfig.setUsername(dotenv.get("PG_USERNAME_PROD"));
-        dataSourceConfig.setPassword(dotenv.get("PG_PASSWORD_PROD"));
-        dataSourceConfig.setUrl(dotenv.get("PG_JDBC_URL_PROD"));
+        dataSourceConfig.setPassword(dotenv.get("PG_PASSWORD"));
+        dataSourceConfig.setUsername(dotenv.get("PG_USERNAME"));
+        dataSourceConfig.setUrl(dotenv.get("PG_JDBC_URL"));
         dataSourceConfig.setSchema("mangabaka");
         dataSourceConfig.setPlatform(Platform.POSTGRES.name());
 
