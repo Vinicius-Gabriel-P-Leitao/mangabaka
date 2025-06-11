@@ -1,24 +1,22 @@
-package br.mangabaka;
+package br.mangabaka.controller;
 
 import io.ebean.DatabaseFactory;
 import io.ebean.annotation.Platform;
 import io.ebean.config.DatabaseConfig;
 import io.ebean.datasource.DataSourceConfig;
 import io.github.cdimascio.dotenv.Dotenv;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
-import java.io.IOException;
-
-@WebServlet(urlPatterns = {"/v1/"})
-public class Main extends HttpServlet {
+@Path("/example")
+public class ExampleResource {
     private final Dotenv dotenv = Dotenv.load();
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getExample() {
         DataSourceConfig dataSourceConfig = new DataSourceConfig();
 
         dataSourceConfig.setPassword(dotenv.get("PG_PASSWORD"));
@@ -36,7 +34,10 @@ public class Main extends HttpServlet {
 
         DatabaseFactory.create(databaseConfig);
 
-        resp.setContentType("application/json");
-        resp.getWriter().write("{ \"key\": \"Servidor jetty 12.0.22 rodando!\" }");
+        var data = new ExampleData("Hello", "World");
+        return Response.ok(data).build();
     }
+}
+
+record ExampleData(String key, String value) {
 }
