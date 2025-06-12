@@ -29,8 +29,18 @@ tasks.register("setupDockerDev") {
     description = "Configura o ambiente Docker de desenvolvimento"
 }
 
+tasks.register<Exec>("dockerRecreateDev") {
+    commandLine(dockerCommand, "-f", devComposeFile, "-p", devProjectName, "up", "-d", "--force-recreate")
+    description = "Recria o ambiente de produção"
+}
+
 // NOTE: Tasks para build de produção
-tasks.register<Exec>("dockerSetupProd") {
+tasks.register<Exec>("setupDockerProd") {
     commandLine(dockerCommand, "-f", prodComposeFile, "-p", prodProjectName, "up", "-d")
     description = "Inicia o ambiente de produção"
+}
+
+tasks.register<Exec>("dockerRecreateProd") {
+    commandLine(dockerCommand, "-f", prodComposeFile, "-p", prodProjectName, "up", "-d", "--force-recreate")
+    description = "Recria o ambiente de produção"
 }

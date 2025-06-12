@@ -73,7 +73,7 @@ project(":docker") {
     // --- PROD: Sobe docker prod que já build dentro do container, sem build local ---
     tasks.register("prod") {
         dependsOn(generateEnvProd)
-        dependsOn(":docker:dockerSetupProd")
+        dependsOn(":docker:setupDockerProd")
         description = "Sobe o ambiente de produção (build feito dentro do container)"
     }
 }
@@ -96,5 +96,18 @@ tasks.register("clean") {
     dependsOn(":frontend:clean")
     dependsOn(":backend:clean")
     description = "Limpa o build do front e backend."
+}
+
+tasks.register("recreate-dev") {
+    dependsOn("clean")
+    dependsOn(":frontend:buildFrontend")
+    dependsOn(":backend:buildBackend")
+    dependsOn(":docker:dockerRecreateDev")
+    description = "Limpa o backend e frontend e recria os containers docker."
+}
+
+tasks.register("recreate-prod") {
+    dependsOn(generateEnvProd)
+    dependsOn(":docker:dockerRecreateProd")
 }
 

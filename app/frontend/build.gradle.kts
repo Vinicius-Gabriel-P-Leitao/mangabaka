@@ -33,7 +33,7 @@ tasks.named("build") {
 }
 
 tasks.named("clean") {
-    doLast {
+    doFirst {
         delete("$frontendDir/dist")
         delete("${rootProject.projectDir}/backend/src/main/webapp")
     }
