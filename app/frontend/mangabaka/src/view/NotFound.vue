@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
 
 const originalPath = ref("");
 
 onMounted(() => {
   const url = new URL(window.location.href);
-  originalPath.value = url.searchParams.get("original") || "Desconhecido";
+  const route = useRoute();
+
+  originalPath.value = url.searchParams.get("original") || route.fullPath;
 });
 </script>
 
