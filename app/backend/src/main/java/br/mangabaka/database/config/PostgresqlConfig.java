@@ -1,24 +1,15 @@
-package br.mangabaka;
+package br.mangabaka.database.config;
 
 import io.ebean.DatabaseFactory;
 import io.ebean.annotation.Platform;
 import io.ebean.config.DatabaseConfig;
 import io.ebean.datasource.DataSourceConfig;
 import io.github.cdimascio.dotenv.Dotenv;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
+public class PostgresqlConfig {
+    private static final Dotenv dotenv = Dotenv.load();
 
-@WebServlet(urlPatterns = {"/v1/"})
-public class Main extends HttpServlet {
-    private final Dotenv dotenv = Dotenv.load();
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+    public static void configure() {
         DataSourceConfig dataSourceConfig = new DataSourceConfig();
 
         dataSourceConfig.setPassword(dotenv.get("PG_PASSWORD"));
@@ -27,7 +18,7 @@ public class Main extends HttpServlet {
         dataSourceConfig.setSchema("mangabaka");
         dataSourceConfig.setPlatform(Platform.POSTGRES.name());
 
-        DatabaseConfig databaseConfig = new DatabaseConfig();
+        io.ebean.config.DatabaseConfig databaseConfig = new DatabaseConfig();
 
         databaseConfig.setDataSourceConfig(dataSourceConfig);
         databaseConfig.setDdlGenerate(true);
@@ -35,8 +26,5 @@ public class Main extends HttpServlet {
         databaseConfig.setDbSchema("mangabaka");
 
         DatabaseFactory.create(databaseConfig);
-
-        resp.setContentType("application/json");
-        resp.getWriter().write("{ \"key\": \"Servidor jetty 12.0.22 rodando!\" }");
     }
 }
