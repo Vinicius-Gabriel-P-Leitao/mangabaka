@@ -13,8 +13,8 @@ repositories {
 dependencies {
     // OUTRAS
     implementation("org.postgresql:postgresql:42.7.6")
+    implementation("com.graphql-java:graphql-java:22.1")
     implementation("io.github.cdimascio:dotenv-java:3.2.0")
-    implementation("com.graphql-java-generator:graphql-java-client-dependencies:2.9")
     // EBEAN
     val ebeanVersion = "15.11.0"
     implementation("io.ebean:ebean:$ebeanVersion")
@@ -61,17 +61,23 @@ java {
     sourceSets["main"].java.srcDirs("src/main/java")
 }
 
-tasks.withType<War> {
+tasks.named<War>("war") {
+    dependsOn(":frontend:copyFrontendDist")
     archiveFileName.set("backend.war")
     manifest {
         attributes(
-            "Implementation-Title" to "MangaBaka", "Implementation-Version" to "1.0.0", "Created-By" to "Gradle"
+            "Implementation-Title" to "MangaBaka",
+            "Implementation-Version" to "1.0.0",
+            "Created-By" to "Gradle"
         )
     }
-
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from("src/main/webapp") {
+        include("**/*")
         into("")
+    }
+    doLast {
+        println("WAR gerado em: ${archiveFile.get().asFile.absolutePath}")
     }
 }
 

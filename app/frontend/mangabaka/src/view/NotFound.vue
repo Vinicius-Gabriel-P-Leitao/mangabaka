@@ -15,7 +15,7 @@ onMounted(() => {
 
 <template>
   <div class="not-found text-center mt-16">
-    <img :src="frieren" alt="frieren sleppy 404 error" />
+    <img :src="frieren" alt="frieren sleppy 404 error" class="w-2xl" />
 
     <h1>404 - Página não encontrada 😢</h1>
     <p>Não foi posivel encontrar: <strong>{{ originalPath }}</strong></p>
