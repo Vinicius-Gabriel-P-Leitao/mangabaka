@@ -1,16 +1,11 @@
 import org.gradle.internal.extensions.stdlib.toDefaultLowerCase
-import java.io.ByteArrayOutputStream
-import java.util.Properties;
+import java.util.*
 
 subprojects {
     repositories {
         mavenCentral()
     }
 }
-
-val isWindows = System.getProperty("os.name").toDefaultLowerCase().contains("windows")
-val npmCommand = if (isWindows) "npm.cmd" else "npm"
-val dockerCommand = if (isWindows) "docker-compose.exe" else "docker-compose"
 
 val props = Properties()
 val localPropsFile = file("local.properties")
@@ -20,7 +15,6 @@ if (!localPropsFile.exists()) {
 }
 
 localPropsFile.inputStream().use { props.load(it) }
-
 fun generateEnvContent(prefix: String): String {
     return """
         PG_DB_NAME=${props.getProperty("${prefix}_DB_NAME") ?: error("Propriedade ${prefix}_DB_NAME não encontrada em local.properties")}
@@ -58,6 +52,11 @@ project(":frontend") {
         dependsOn(":frontend:build")
         description = "Build do frontend com Vue.js"
     }
+
+    tasks.register("setupFrontendDev") {
+        dependsOn(":frontend:dev")
+        description = "Run dev do frontend com Vue.js + vite"
+    }
 }
 
 project(":backend") {
@@ -70,21 +69,29 @@ project(":backend") {
 }
 
 project(":docker") {
-    tasks.register("dev") {
-        dependsOn(":frontend:buildFrontend")
-        dependsOn(":frontend:copyFrontendDist")
-        dependsOn(generateEnvDev)
-        dependsOn(":backend:buildBackend")
-        dependsOn(":docker:setupDockerDev")
-        description = "Build completo para desenvolvimento (build local + docker dev)"
-    }
-
     tasks.register("prod") {
         dependsOn(generateEnvProd)
         dependsOn(":docker:setupDockerProd")
-        description = "Sobe o ambiente de produção (build feito dentro do container)"
+    }
+
+    tasks.register("dev") {
+        dependsOn(generateEnvDev)
+        dependsOn(":backend:buildBackend")
+        dependsOn(":docker:setupDockerDev")
+        dependsOn(":frontend:setupFrontendDev")
     }
 }
+
+tasks.register("build") {
+    dependsOn(":docker:prod")
+    description = "Sobe o ambiente de produção (build feito dentro do container)"
+}
+
+tasks.register("dev") {
+    dependsOn(":docker:dev")
+    description = "Build completo para desenvolvimento (build local + docker dev)"
+}
+
 
 tasks.register("clean") {
     dependsOn(":frontend:clean")
@@ -94,8 +101,6 @@ tasks.register("clean") {
 
 tasks.register("recreate-dev") {
     dependsOn("clean")
-    dependsOn(":frontend:buildFrontend")
-    dependsOn(":frontend:copyFrontendDist")
     dependsOn(generateEnvDev)
     dependsOn(":backend:buildBackend")
     dependsOn(":docker:dockerRecreateDev")
