@@ -28,14 +28,12 @@ tasks.register<Copy>("copyFrontendDist") {
 }
 
 tasks.named("build") {
-    dependsOn("buildVue", "copyFrontendDist")
+    dependsOn("copyFrontendDist")
     description = "Build completo do frontend"
 }
 
 tasks.named("clean") {
-    doFirst {
-        delete("$frontendDir/dist")
-        delete("${rootProject.projectDir}/backend/src/main/webapp")
-    }
+    delete("$frontendDir/dist")
+    delete("${rootProject.projectDir}/backend/src/main/webapp")
     description = "Limpa os artefatos de build do frontend"
 }
