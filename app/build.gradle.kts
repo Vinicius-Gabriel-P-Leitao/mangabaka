@@ -76,6 +76,7 @@ project(":docker") {
 
     tasks.register("dev") {
         dependsOn(generateEnvDev)
+        dependsOn(":frontend:copyFrontendDist")
         dependsOn(":backend:buildBackend")
         dependsOn(":docker:setupDockerDev")
         dependsOn(":frontend:setupFrontendDev")

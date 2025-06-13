@@ -34,9 +34,11 @@ onMounted(() => {
     </section>
 
     <nav>
-      <button class="btn-primary">
-        <router-link to="/">Voltar pra Home</router-link>
-      </button>
+      <router-link to="/" custom v-slot="{ navigate }">
+        <button @click="navigate" class="meu-botao">
+          Voltar pra Home
+        </button>
+      </router-link>
     </nav>
   </main>
 </template>
