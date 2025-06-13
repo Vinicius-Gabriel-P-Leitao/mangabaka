@@ -4,12 +4,13 @@ plugins {
     base
 }
 
-val isWindows = System.getProperty("os.name").toDefaultLowerCase().contains("windows")
-val dockerCommand = if (isWindows) "docker-compose.exe" else "docker-compose"
+val dockerCommand = if (System.getProperty("os.name").toDefaultLowerCase().contains("windows")
+) "docker-compose.exe" else "docker-compose"
 
 val devComposeFile = "dev/mangabaka-docker-compose-dev.yml"
-val prodComposeFile = "prod/mangabaka-docker-compose-prod.yml"
 val devProjectName = "mangabaka-dev"
+
+val prodComposeFile = "prod/mangabaka-docker-compose-prod.yml"
 val prodProjectName = "mangabaka-prod"
 
 val dockerSetupPostgresqlDev = tasks.register<Exec>("dockerPostgresqlDev") {
@@ -24,6 +25,7 @@ val dockerSetupJettyServerDev = tasks.register<Exec>("dockerJettyDev") {
     description = "Inicia o Jetty para desenvolvimento"
 }
 
+// NOTE: Setup dev compila o código do backend + frontend e joga dentro do jetty via volume
 tasks.register("setupDockerDev") {
     dependsOn(dockerSetupJettyServerDev)
     description = "Configura o ambiente Docker de desenvolvimento"
@@ -37,6 +39,7 @@ tasks.register<Exec>("dockerRecreateDev") {
     }
 }
 
+// NOTE: Ambiente de produção leva todo o código para o container e compila lá dentro
 tasks.register<Exec>("setupDockerProd") {
     commandLine(dockerCommand, "-f", prodComposeFile, "-p", prodProjectName, "up", "-d")
     description = "Inicia o ambiente de produção"

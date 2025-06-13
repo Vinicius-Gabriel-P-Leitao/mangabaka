@@ -1,32 +1,35 @@
 import org.gradle.internal.extensions.stdlib.toDefaultLowerCase
+import org.gradle.api.tasks.Exec
+import org.gradle.api.tasks.Copy
 
 plugins {
     base
 }
 
-val isWindows = System.getProperty("os.name").toDefaultLowerCase().contains("windows")
-val npmCommand = if (isWindows) "npm.cmd" else "npm"
-
+val npmCommand = if (System.getProperty("os.name").toDefaultLowerCase().contains("windows")
+) "npm.cmd" else "npm"
 val frontendDir = file("mangabaka")
 
-tasks.register<Exec>("npmInstall") {
+val npmInstall = tasks.register<Exec>("npmInstall") {
     workingDir = frontendDir
     commandLine(npmCommand, "install")
-    description = "Instala as dependências do Vue.js"
 }
 
-tasks.register<Exec>("buildVue") {
-    dependsOn("npmInstall")
+val buildVue = tasks.register<Exec>("buildVue") {
     workingDir = frontendDir
+    dependsOn(npmInstall)
     commandLine(npmCommand, "run", "build")
-    description = "Executa o build do Vue.js"
 }
 
-tasks.register<Copy>("copyFrontendDist") {
-    dependsOn("buildVue")
-    from("$frontendDir/dist") {
-        include("**/*")
-    }
+val devVue = tasks.register<Exec>("devVue") {
+    workingDir = frontendDir
+    dependsOn(npmInstall)
+    commandLine(npmCommand, "run", "dev")
+}
+
+val copyFrontendDist = tasks.register<Copy>("copyFrontendDist") {
+    dependsOn(buildVue)
+    from("$frontendDir/dist") { include("**/*") }
     into("${rootProject.projectDir}/backend/src/main/webapp")
     onlyIf {
         val distDir = file("$frontendDir/dist")
@@ -45,15 +48,30 @@ tasks.register<Copy>("copyFrontendDist") {
     description = "Copia os arquivos de build do Vue.js para o backend"
 }
 
+
 tasks.named("build") {
-    dependsOn("copyFrontendDist")
-    description = "Build completo do frontend"
+    dependsOn(copyFrontendDist)
+    description = "Build completo do frontend e movido para dentro do backend."
+}
+
+tasks.register("dev") {
+    dependsOn(devVue)
+    description = "Ambiente de desenvolvimento Vue."
 }
 
 tasks.named("clean") {
-    delete("$frontendDir/dist")
-    delete(fileTree("${rootProject.projectDir}/backend/src/main/webapp") {
-        include("**/*")
-    })
+    doFirst {
+        val distDir = file("$frontendDir/dist")
+        if (distDir.exists()) {
+            delete(distDir)
+        }
+
+        val webappDir = file("${rootProject.projectDir}/backend/src/main/webapp")
+        if (webappDir.exists()) {
+            delete(fileTree(webappDir) {
+                include("**/*")
+            })
+        }
+    }
     description = "Limpa os artefatos de build do frontend"
 }

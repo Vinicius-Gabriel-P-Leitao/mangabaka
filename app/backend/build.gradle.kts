@@ -62,7 +62,6 @@ java {
 }
 
 tasks.named<War>("war") {
-    dependsOn(":frontend:copyFrontendDist")
     archiveFileName.set("backend.war")
     manifest {
         attributes(
@@ -71,6 +70,7 @@ tasks.named<War>("war") {
             "Created-By" to "Gradle"
         )
     }
+
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from("src/main/webapp") {
         include("**/*")
