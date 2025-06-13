@@ -4,7 +4,9 @@ plugins {
     base
 }
 
-val npmCommand = if (System.getProperty("os.name").toDefaultLowerCase().contains("windows")) "npm.cmd" else "npm"
+val isWindows = System.getProperty("os.name").toDefaultLowerCase().contains("windows")
+val npmCommand = if (isWindows) "npm.cmd" else "npm"
+
 val frontendDir = file("mangabaka")
 
 tasks.register<Exec>("npmInstall") {
@@ -22,20 +24,36 @@ tasks.register<Exec>("buildVue") {
 
 tasks.register<Copy>("copyFrontendDist") {
     dependsOn("buildVue")
-    from("$frontendDir/dist") { include("**/*") }
+    from("$frontendDir/dist") {
+        include("**/*")
+    }
     into("${rootProject.projectDir}/backend/src/main/webapp")
+    onlyIf {
+        val distDir = file("$frontendDir/dist")
+        if (!distDir.exists()) {
+            logger.warn("Diretório $frontendDir/dist não existe. Build do Vue.js falhou?")
+            false
+        } else {
+            true
+        }
+    }
+    doLast {
+        val targetDir = file("${rootProject.projectDir}/backend/src/main/webapp")
+        println("Arquivos copiados para ${targetDir.absolutePath}:")
+        targetDir.listFiles()?.forEach { println("  - ${it.name}") }
+    }
     description = "Copia os arquivos de build do Vue.js para o backend"
 }
 
 tasks.named("build") {
-    dependsOn("buildVue", "copyFrontendDist")
+    dependsOn("copyFrontendDist")
     description = "Build completo do frontend"
 }
 
 tasks.named("clean") {
-    doLast {
-        delete("$frontendDir/dist")
-        delete("${rootProject.projectDir}/backend/src/main/webapp")
-    }
+    delete("$frontendDir/dist")
+    delete(fileTree("${rootProject.projectDir}/backend/src/main/webapp") {
+        include("**/*")
+    })
     description = "Limpa os artefatos de build do frontend"
 }
