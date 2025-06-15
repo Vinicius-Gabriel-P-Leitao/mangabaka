@@ -14,7 +14,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="grid grid-flow-row grid-cols-1 gap-5 place-items-center">
+  <main class="grid grid-flow-row grid-cols-1 gap-y-10 place-items-center">
     <section class="not-found text-center sm:text-left grid gap-5 grid-rows-2 sm:grid-rows-1 sm:grid-cols-2">
       <div class="grid grid-rows-1 grid-cols-3 gap-3">
         <span class="content-center text-end text-7xl sm:text-9xl" aria-hidden="true">4</span>

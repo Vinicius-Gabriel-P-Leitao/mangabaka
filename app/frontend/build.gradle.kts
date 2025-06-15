@@ -11,23 +11,27 @@ val npmCommand = if (System.getProperty("os.name").toDefaultLowerCase().contains
 val frontendDir = file("mangabaka")
 
 val npmInstall = tasks.register<Exec>("npmInstall") {
+    group = "frontend"
     workingDir = frontendDir
     commandLine(npmCommand, "install")
 }
 
 val buildVue = tasks.register<Exec>("buildVue") {
+    group = "frontend"
     workingDir = frontendDir
     dependsOn(npmInstall)
     commandLine(npmCommand, "run", "build")
 }
 
 val devVue = tasks.register<Exec>("devVue") {
-    workingDir = frontendDir
+    group = "frontend"
     dependsOn(npmInstall)
-    commandLine(npmCommand, "run", "dev")
+    workingDir = frontendDir
+    commandLine(npmCommand, "run", "dev") 
 }
 
 val copyFrontendDist = tasks.register<Copy>("copyFrontendDist") {
+    group = "frontend"
     dependsOn(buildVue)
     from("$frontendDir/dist") { include("**/*") }
     into("${rootProject.projectDir}/backend/src/main/webapp")
@@ -45,21 +49,24 @@ val copyFrontendDist = tasks.register<Copy>("copyFrontendDist") {
         println("Arquivos copiados para ${targetDir.absolutePath}:")
         targetDir.listFiles()?.forEach { println("  - ${it.name}") }
     }
-    description = "Copia os arquivos de build do Vue.js para o backend"
+    description = "Copia os arquivos de build do Vue.js para o backend."
 }
 
 
 tasks.named("build") {
+    group = "frontend"
     dependsOn(copyFrontendDist)
     description = "Build completo do frontend e movido para dentro do backend."
 }
 
 tasks.register("dev") {
+    group = "frontend"
     dependsOn(devVue)
-    description = "Ambiente de desenvolvimento Vue."
+    description = "Ambiente de desenvolvimento Vue + Vite."
 }
 
 tasks.named("clean") {
+    group = "frontend"
     doFirst {
         val distDir = file("$frontendDir/dist")
         if (distDir.exists()) {
