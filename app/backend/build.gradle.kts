@@ -1,6 +1,13 @@
 plugins {
-    id("java")
+    kotlin("plugin.allopen") version "2.0.0"
+    kotlin("jvm") version "2.0.0"
     id("war")
+}
+
+allOpen {
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Embeddable")
 }
 
 group = "br.mangabaka"
@@ -44,21 +51,17 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl:$jwtVersion")
     implementation("io.jsonwebtoken:jjwt-api:$jwtVersion")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jwtVersion")
-    // LOMBOK
-    val lombokVersion = "1.18.38"
-    compileOnly("org.projectlombok:lombok:$lombokVersion")
-    testCompileOnly("org.projectlombok:lombok:$lombokVersion")
-    annotationProcessor("org.projectlombok:lombok:$lombokVersion")
-    testAnnotationProcessor("org.projectlombok:lombok:$lombokVersion")
     // JUNIT
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-    sourceSets["main"].java.srcDirs("src/main/java")
+    sourceSets["main"].java.srcDirs("src/main/kotlin")
 }
 
 tasks.named<War>("war") {
