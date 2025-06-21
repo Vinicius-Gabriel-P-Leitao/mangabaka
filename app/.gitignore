@@ -80,6 +80,7 @@ kls_database.db
 
 # Other IDEs or editors (just in case)
 *.idea/
+*.kotlin/
 
 # Optional: Ignore coverage reports (if you use any coverage tool)
 coverage/
