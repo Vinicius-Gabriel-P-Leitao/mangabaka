@@ -23,13 +23,6 @@ val buildVue = tasks.register<Exec>("buildVue") {
     commandLine(npmCommand, "run", "build")
 }
 
-val devVue = tasks.register<Exec>("devVue") {
-    group = "frontend"
-    dependsOn(npmInstall)
-    workingDir = frontendDir
-    commandLine(npmCommand, "run", "dev") 
-}
-
 val copyFrontendDist = tasks.register<Copy>("copyFrontendDist") {
     group = "frontend"
     dependsOn(buildVue)
@@ -57,12 +50,6 @@ tasks.named("build") {
     group = "frontend"
     dependsOn(copyFrontendDist)
     description = "Build completo do frontend e movido para dentro do backend."
-}
-
-tasks.register("dev") {
-    group = "frontend"
-    dependsOn(devVue)
-    description = "Ambiente de desenvolvimento Vue + Vite."
 }
 
 tasks.named("clean") {

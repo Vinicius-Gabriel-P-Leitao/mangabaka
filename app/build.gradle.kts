@@ -53,11 +53,6 @@ project(":frontend") {
         dependsOn(":frontend:build")
         description = "Build do frontend com Vue.js"
     }
-
-    tasks.register("setupFrontendDev") {
-        dependsOn(":frontend:dev")
-        description = "Run dev do frontend com Vue.js + vite"
-    }
 }
 
 project(":backend") {
@@ -80,7 +75,6 @@ project(":docker") {
         dependsOn(":frontend:copyFrontendDist")
         dependsOn(":backend:buildBackend")
         dependsOn(":docker:setupDockerDev")
-        dependsOn(":frontend:setupFrontendDev")
     }
 }
 
