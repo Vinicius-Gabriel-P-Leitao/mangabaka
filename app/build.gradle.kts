@@ -94,18 +94,3 @@ tasks.register("clean") {
     description = "Limpa os artefatos de build do frontend e backend"
 }
 
-tasks.register("recreate-dev") {
-    dependsOn("clean")
-    dependsOn(generateEnvDev)
-    dependsOn(":backend:buildBackend")
-    dependsOn(":docker:dockerRecreateDev")
-    description = "Limpa os builds e recria o ambiente de desenvolvimento via Docker"
-}
-
-tasks.register("recreate-prod") {
-    dependsOn("clean")
-    dependsOn(generateEnvProd)
-    dependsOn(":docker:dockerRecreateProd")
-    description = "Limpa os builds e recria o ambiente de produ??o via Docker"
-}
-
