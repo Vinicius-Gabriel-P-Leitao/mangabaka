@@ -1,11 +1,13 @@
-package br.mangabaka.client.type.anilist
+package br.mangabaka.infrastructure.http.anilist.dto.anilist
 
-import br.mangabaka.client.type.sealed.Status
+import br.mangabaka.infrastructure.http.anilist.dto.serializable.Status
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MangaPaginatedQuery(@SerialName("Page") val page: Page)
+data class MangaPaginatedDto(
+    @SerialName("Page") val page: Page
+)
 
 @Serializable
 data class Page(
@@ -65,6 +67,6 @@ data class Tag(
 
 @Serializable
 data class CoverImage(
-    val large: String,
+    val large: String?,
     val color: String?
 )

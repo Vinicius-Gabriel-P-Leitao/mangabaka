@@ -1,26 +1,15 @@
-package br.mangabaka.api.controller
+package br.mangabaka.infrastructure.http.anilist.query
 
-import br.mangabaka.client.graphql.GraphQLClient
-import br.mangabaka.client.type.anilist.MangaPaginatedQuery
-import jakarta.ws.rs.GET
-import jakarta.ws.rs.Path
-import jakarta.ws.rs.PathParam
-import jakarta.ws.rs.Produces
-import jakarta.ws.rs.QueryParam
-import jakarta.ws.rs.core.MediaType
-import jakarta.ws.rs.core.Response
+import br.mangabaka.exception.throwable.http.GraphqlException
+import br.mangabaka.infrastructure.config.graphql.GraphqlClient
+import br.mangabaka.infrastructure.http.anilist.dto.anilist.MangaPaginatedDto
 
-@Path("/example")
-class ExampleResource {
+class MangaPaginatedQuery {
     companion object {
         private const val GRAPHQL_ENDPOINT = "https://graphql.anilist.co"
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    fun example(@QueryParam("manga") manga: String?): Response {
-        val client = GraphQLClient(GRAPHQL_ENDPOINT)
-
+    fun queryFactory(manga: String?, page: Int, perPage: Int): MangaPaginatedDto {
         val query = """
                     query (${'$'}id: Int, ${'$'}page: Int, ${'$'}perPage: Int, ${'$'}search: String) {
                         Page(page: ${'$'}page, perPage: ${'$'}perPage) {
@@ -74,16 +63,16 @@ class ExampleResource {
 
         val variables: Map<String, Any> = mapOf(
             "search" to manga.orEmpty(),
-            "page" to 1,
-            "perPage" to 3
+            "page" to page,
+            "perPage" to perPage
         )
 
+        val client = GraphqlClient(GRAPHQL_ENDPOINT)
         try {
-            val response: MangaPaginatedQuery = client.executeQuery(query, variables)
-            return Response.ok(response).build()
-        } catch (exception: Exception) {
-            System.err.println("Erro: " + exception.message)
-            throw RuntimeException(exception)
+            val response: MangaPaginatedDto = client.executeQuery(query, variables)
+            return response
+        } catch (exception: GraphqlException) {
+            throw exception;
         } finally {
             client.close()
         }

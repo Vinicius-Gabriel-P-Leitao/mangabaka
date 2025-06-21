@@ -1,4 +1,4 @@
-package br.mangabaka.client.singleton
+package br.mangabaka.infrastructure.config.singleton
 
 import kotlinx.serialization.json.Json
 

@@ -1,4 +1,4 @@
-package br.mangabaka.database.config
+package br.mangabaka.infrastructure.config.database
 
 import io.ebean.DatabaseFactory
 import io.ebean.annotation.Platform

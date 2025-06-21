@@ -52,6 +52,8 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl:$jwtVersion")
     implementation("io.jsonwebtoken:jjwt-api:$jwtVersion")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jwtVersion")
+    // MOCKITO
+    testImplementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
     // JUNIT
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))

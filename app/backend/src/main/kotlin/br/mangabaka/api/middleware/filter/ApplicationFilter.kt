@@ -1,4 +1,4 @@
-package br.mangabaka.api.filter
+package br.mangabaka.api.middleware.filter
 
 import jakarta.servlet.*
 import jakarta.servlet.annotation.WebFilter

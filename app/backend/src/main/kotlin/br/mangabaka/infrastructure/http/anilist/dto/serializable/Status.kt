@@ -1,4 +1,4 @@
-package br.mangabaka.client.type.sealed
+package br.mangabaka.infrastructure.http.anilist.dto.serializable
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable

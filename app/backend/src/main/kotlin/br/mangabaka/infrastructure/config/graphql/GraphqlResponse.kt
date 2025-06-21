@@ -1,4 +1,4 @@
-package br.mangabaka.client.type
+package br.mangabaka.infrastructure.config.graphql
 
 import kotlinx.serialization.Serializable
 
