@@ -1,4 +1,5 @@
 plugins {
+    kotlin("plugin.serialization") version "2.0.0"
     kotlin("plugin.allopen") version "2.0.0"
     kotlin("jvm") version "2.0.0"
     id("war")
@@ -20,8 +21,8 @@ repositories {
 dependencies {
     // OUTRAS
     implementation("org.postgresql:postgresql:42.7.6")
-    implementation("com.graphql-java:graphql-java:22.1")
     implementation("io.github.cdimascio:dotenv-java:3.2.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
     // EBEAN
     val ebeanVersion = "15.11.0"
     implementation("io.ebean:ebean:$ebeanVersion")
