@@ -15,7 +15,7 @@ class PostgresqlConfig {
         dataSourceConfig.setPassword(dotenv.get("PG_PASSWORD"))
         dataSourceConfig.setUsername(dotenv.get("PG_USERNAME"))
         dataSourceConfig.setUrl(dotenv.get("PG_JDBC_URL"))
-        dataSourceConfig.setSchema("br/mangabaka")
+        dataSourceConfig.setSchema("mangabaka")
         dataSourceConfig.setPlatform(Platform.POSTGRES.name)
 
         val databaseConfig = DatabaseConfig()
@@ -23,7 +23,7 @@ class PostgresqlConfig {
         databaseConfig.setDataSourceConfig(dataSourceConfig)
         databaseConfig.setDdlGenerate(true)
         databaseConfig.setDdlRun(true)
-        databaseConfig.setDbSchema("br/mangabaka")
+        databaseConfig.setDbSchema("mangabaka")
 
         DatabaseFactory.create(databaseConfig)
     }
