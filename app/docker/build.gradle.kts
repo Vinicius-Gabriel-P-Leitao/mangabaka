@@ -21,7 +21,7 @@ val dockerSetupPostgresqlDev = tasks.register<Exec>("dockerPostgresqlDev") {
 
 val dockerSetupJettyServerDev = tasks.register<Exec>("dockerJettyDev") {
     dependsOn(":backend:buildBackend", dockerSetupPostgresqlDev)
-    commandLine(dockerCommand, "-f", devComposeFile, "-p", devProjectName, "up", "-d", "jetty")
+    commandLine(dockerCommand, "-f", devComposeFile, "-p", devProjectName, "up", "-d", "jetty", "--force-recreate")
     description = "Inicia o Jetty para desenvolvimento"
 }
 
