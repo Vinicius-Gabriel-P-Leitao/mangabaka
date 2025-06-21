@@ -9,11 +9,9 @@ import jakarta.ws.rs.core.Application
 @ApplicationPath("/v1")
 class Application : Application() {
     override fun getClasses(): MutableSet<Class<*>?> {
-        val classes: MutableSet<Class<*>?> = HashSet<Class<*>?>()
-
-        classes.add(ExampleResource::class.java)
-        classes.add(NotFoundExceptionMapper::class.java)
-
-        return classes
+        return mutableSetOf(
+            ExampleResource::class.java,
+            NotFoundExceptionMapper::class.java
+        )
     }
 }
