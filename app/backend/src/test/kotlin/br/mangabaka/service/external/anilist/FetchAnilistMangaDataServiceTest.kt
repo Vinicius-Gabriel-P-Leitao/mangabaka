@@ -65,7 +65,6 @@ class FetchAnilistMangaDataServiceTest {
     @Test
     fun `test fetchMangaData successful response`() {
         val mangaName = "Example Manga"
-        val assetListUrl = arrayOfNulls<AssetInfo?>(2)
         val mangaAssets = listOf<DownloadedAssetDto>()
 
         val mockQuery = mock(MangaPaginatedQuery::class.java)
