@@ -14,7 +14,7 @@ import br.mangabaka.infrastructure.http.anilist.dto.anilist.MangaPaginatedDto
 import jakarta.annotation.Nonnull
 
 class MangaPaginatedQuery(
-    private val client: GraphqlClient = GraphqlClient(GRAPHQL_ENDPOINT)
+    private val client: GraphqlClient = GraphqlClient(endpoint = GRAPHQL_ENDPOINT)
 ) {
     companion object {
         private const val GRAPHQL_ENDPOINT = "https://graphql.anilist.co"
@@ -73,7 +73,9 @@ class MangaPaginatedQuery(
                     """.trimIndent()
 
         val variables: Map<String, Any> = mapOf(
-            "search" to manga.orEmpty(), "page" to page, "perPage" to perPage
+            "search" to manga.orEmpty(),
+            "page" to page,
+            "perPage" to perPage
         )
 
         return try {

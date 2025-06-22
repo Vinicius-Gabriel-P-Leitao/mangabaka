@@ -13,28 +13,32 @@ import br.mangabaka.exception.code.http.AssetDownloadErrorCode
 import br.mangabaka.exception.throwable.http.AssetDownloadException
 import br.mangabaka.infrastructure.http.anilist.dto.anilist.DownloadedAssetDto
 import jakarta.annotation.Nonnull
+import jakarta.ws.rs.ProcessingException
 import jakarta.ws.rs.client.Client
 import jakarta.ws.rs.client.ClientBuilder
 import jakarta.ws.rs.core.Response
+import org.glassfish.jersey.client.ClientConfig
+import org.glassfish.jersey.client.ClientProperties
 import java.net.URLConnection
-import java.util.concurrent.TimeUnit
 
-class MangaAssetDownload {
-    private val client: Client = ClientBuilder.newBuilder()
-        .connectTimeout(5, TimeUnit.SECONDS)
-        .readTimeout(10, TimeUnit.SECONDS)
-        .build()
-
+class MangaAssetDownload(
+    private val client: Client = ClientBuilder.newBuilder().withConfig(
+        ClientConfig()
+            .property(ClientProperties.CONNECT_TIMEOUT, 5000)
+            .property(ClientProperties.READ_TIMEOUT, 10000)
+    ).build()
+) {
     @Nonnull
     fun fetchAsset(url: String, mangaName: String, assetType: AssetType): DownloadedAssetDto {
         require(value = url.startsWith(prefix = "http://") || url.startsWith(prefix = "https://")) {
             throw AssetDownloadException(
                 message = AssetDownloadErrorCode.ERROR_INVALID_URL.handle(value = "URL inválida ou não suportada: $url"),
-                errorCode = AssetDownloadErrorCode.ERROR_INVALID_URL
+                errorCode = AssetDownloadErrorCode.ERROR_INVALID_URL, httpError = Response.Status.BAD_GATEWAY
             )
         }
 
         val mediaType: String = URLConnection.guessContentTypeFromName(url) ?: "application/octet-stream"
+
         val extension: String = when (mediaType) {
             "image/jpeg" -> ".jpg"
             "image/png" -> ".png"
@@ -55,7 +59,7 @@ class MangaAssetDownload {
                 response.close()
                 throw AssetDownloadException(
                     message = AssetDownloadErrorCode.ERROR_CLIENT_STATUS.handle(value = "Erro ao baixar: $url (status ${response.status})"),
-                    errorCode = AssetDownloadErrorCode.ERROR_CLIENT_STATUS
+                    errorCode = AssetDownloadErrorCode.ERROR_CLIENT_STATUS, httpError = Response.Status.BAD_GATEWAY
                 )
             }
 
@@ -68,11 +72,17 @@ class MangaAssetDownload {
                 content = content,
                 assetType = assetType
             )
+        } catch (processingException: ProcessingException) {
+            throw AssetDownloadException(
+                message = AssetDownloadErrorCode.ERROR_CLIENT_EXCEPTION.handle(value = "Tempo de espera para download do asset excedido: ${processingException.message}"),
+                errorCode = AssetDownloadErrorCode.ERROR_CLIENT_EXCEPTION,
+                cause = processingException, httpError = Response.Status.GATEWAY_TIMEOUT
+            )
         } catch (exception: Exception) {
             throw AssetDownloadException(
                 message = AssetDownloadErrorCode.ERROR_CLIENT_EXCEPTION.handle(value = "Erro ao acessar o asset: ${exception.message}"),
                 errorCode = AssetDownloadErrorCode.ERROR_CLIENT_EXCEPTION,
-                cause = exception
+                cause = exception, httpError = Response.Status.BAD_GATEWAY
             )
         }
     }
