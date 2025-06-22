@@ -54,6 +54,7 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jwtVersion")
     // LOG4J
     val log4jVersion = "2.25.0"
+    implementation("org.fusesource.jansi:jansi:2.4.2")
     implementation("org.apache.logging.log4j:log4j-api:$log4jVersion")
     implementation("org.apache.logging.log4j:log4j-core:$log4jVersion")
     // MOCKITO

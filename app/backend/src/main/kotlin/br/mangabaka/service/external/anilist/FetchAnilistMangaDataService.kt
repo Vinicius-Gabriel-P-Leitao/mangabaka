@@ -1,12 +1,15 @@
 package br.mangabaka.service.external.anilist
 
+import br.mangabaka.api.dto.AssetInfo
+import br.mangabaka.api.dto.AssetType
 import br.mangabaka.api.dto.MangaMetadata
-import br.mangabaka.exception.throwable.http.AssetDownloadException
 import br.mangabaka.infrastructure.http.anilist.dto.anilist.DownloadedAssetDto
 import br.mangabaka.infrastructure.http.anilist.dto.anilist.MangaPaginatedDto
-import br.mangabaka.infrastructure.http.anilist.query.MangaAssetDownload
 import br.mangabaka.infrastructure.http.anilist.query.MangaPaginatedQuery
 import br.mangabaka.service.external.ExternalMetadataService
+import jakarta.ws.rs.BadRequestException
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 class FetchAnilistMangaDataService : ExternalMetadataService {
     companion object {
@@ -14,17 +17,12 @@ class FetchAnilistMangaDataService : ExternalMetadataService {
         private const val PER_PAGE: Int = 1
     }
 
-    data class AssetInfo(
-        val url: String,
-        val mangaName: String,
-        val type: String
-    )
-
     override fun fetchMangaData(mangaName: String): MangaMetadata {
-        val mangaMetadata: MangaPaginatedDto = MangaPaginatedQuery().queryFactory(mangaName, PAGE, PER_PAGE)
+        val mangaMetadata: MangaPaginatedDto =
+            MangaPaginatedQuery().queryFactory(manga = mangaName, page = PAGE, perPage = PER_PAGE)
 
         val maxAssets = PER_PAGE * 2
-        val assetList = arrayOfNulls<AssetInfo>(maxAssets)
+        val assetListUrl: Array<AssetInfo?> = arrayOfNulls(size = maxAssets)
 
         var index = 0
         for (value in mangaMetadata.page.media) {
@@ -33,30 +31,18 @@ class FetchAnilistMangaDataService : ExternalMetadataService {
             val coverUrl: String? = value.coverImage.large
             val bannerUrl: String? = value.bannerImage
 
-            if (coverUrl != null && index < maxAssets) {
-                assetList[index] = AssetInfo(coverUrl, mangaName, "cover")
-                index++
-            }
-
             if (bannerUrl != null && index < maxAssets) {
-                assetList[index] = AssetInfo(bannerUrl, mangaName, "banner")
+                assetListUrl[index] = AssetInfo(url = bannerUrl, mangaName = mangaName, type = AssetType.BANNER)
+                index++
+            }
+
+            if (coverUrl != null && index < maxAssets) {
+                assetListUrl[index] = AssetInfo(url = coverUrl, mangaName = mangaName, type = AssetType.COVER)
                 index++
             }
         }
 
-        for (assetInfo in assetList.filterNotNull()) {
-            try {
-                val mangaAsset: DownloadedAssetDto =
-                    MangaAssetDownload().fetchAsset(assetInfo.url, assetInfo.mangaName, assetInfo.type)
-                print(mangaAsset.content)
-                print(mangaAsset.filename)
-                print(mangaAsset.mediaType)
-
-            } catch (exception: AssetDownloadException) {
-                throw exception
-            }
-        }
-
-        return MangaMetadata(1)
+        val mangaAssets: List<DownloadedAssetDto> = FetchAnilistMangaAssetService().mangaAsset(assetListUrl)
+        return MangaMetadata(paginationInfo = mangaMetadata, assets = mangaAssets)
     }
 }

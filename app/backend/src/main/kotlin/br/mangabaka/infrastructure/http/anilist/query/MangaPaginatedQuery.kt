@@ -70,8 +70,6 @@ class MangaPaginatedQuery(
 
         return try {
             client.executeQuery(query, variables)
-        } catch (exception: GraphqlException) {
-            throw exception;
         } finally {
             client.close()
         }

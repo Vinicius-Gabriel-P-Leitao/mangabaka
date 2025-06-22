@@ -1,5 +1,6 @@
 package br.mangabaka.infrastructure.http.anilist.query
 
+import br.mangabaka.api.dto.AssetType
 import br.mangabaka.exception.code.http.AssetDownloadErrorCode
 import br.mangabaka.exception.throwable.http.AssetDownloadException
 import br.mangabaka.infrastructure.http.anilist.dto.anilist.DownloadedAssetDto
@@ -17,16 +18,15 @@ class MangaAssetDownload {
         .build()
 
     @Nonnull
-    fun fetchAsset(url: String, mangaName: String, type: String): DownloadedAssetDto {
-        require(url.startsWith("http://") || url.startsWith("https://")) {
+    fun fetchAsset(url: String, mangaName: String, assetType: AssetType): DownloadedAssetDto {
+        require(value = url.startsWith(prefix = "http://") || url.startsWith(prefix = "https://")) {
             throw AssetDownloadException(
-                AssetDownloadErrorCode.ERROR_INVALID_URL.handle("URL inválida ou não suportada: $url"),
-                AssetDownloadErrorCode.ERROR_INVALID_URL
+                message = AssetDownloadErrorCode.ERROR_INVALID_URL.handle(value = "URL inválida ou não suportada: $url"),
+                errorCode = AssetDownloadErrorCode.ERROR_INVALID_URL
             )
         }
 
         val mediaType: String = URLConnection.guessContentTypeFromName(url) ?: "application/octet-stream"
-
         val extension: String = when (mediaType) {
             "image/jpeg" -> ".jpg"
             "image/png" -> ".png"
@@ -36,20 +36,18 @@ class MangaAssetDownload {
         val safeName: String = mangaName
             .trim()
             .lowercase()
-            .replace(Regex("[\\\\/:*?\"<>|]+"), "-")
-            .replace(Regex("\\s+"), "-")
-            .replace(Regex("-+"), "-")
-            .trim('-')
-
-        val fileName = "$safeName-$type$extension"
+            .replace(Regex(pattern = "[\\\\/:*?\"<>|]+"), replacement = "-")
+            .replace(Regex(pattern = "\\s+"), replacement = "-")
+            .replace(Regex(pattern = "-+"), replacement = "-")
+            .trim(chars = charArrayOf('-'))
 
         try {
             val response: Response = client.target(url).request().get()
             if (response.status != 200) {
                 response.close()
                 throw AssetDownloadException(
-                    AssetDownloadErrorCode.ERROR_CLIENT_STATUS.handle("Erro ao baixar: $url (status ${response.status})"),
-                    AssetDownloadErrorCode.ERROR_CLIENT_STATUS
+                    message = AssetDownloadErrorCode.ERROR_CLIENT_STATUS.handle(value = "Erro ao baixar: $url (status ${response.status})"),
+                    errorCode = AssetDownloadErrorCode.ERROR_CLIENT_STATUS
                 )
             }
 
@@ -57,15 +55,16 @@ class MangaAssetDownload {
             response.close()
 
             return DownloadedAssetDto(
-                filename = fileName,
+                filename = "$safeName-${assetType.code}$extension",
                 mediaType = mediaType,
-                content = content
+                content = content,
+                assetType = assetType
             )
         } catch (exception: Exception) {
             throw AssetDownloadException(
-                AssetDownloadErrorCode.ERROR_CLIENT_EXCEPTION.handle("Erro ao acessar o asset: ${exception.message}"),
-                AssetDownloadErrorCode.ERROR_CLIENT_EXCEPTION,
-                exception
+                message = AssetDownloadErrorCode.ERROR_CLIENT_EXCEPTION.handle(value = "Erro ao acessar o asset: ${exception.message}"),
+                errorCode = AssetDownloadErrorCode.ERROR_CLIENT_EXCEPTION,
+                cause = exception
             )
         }
     }

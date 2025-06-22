@@ -1,14 +1,14 @@
 package br.mangabaka.api.mapper
 
-import br.mangabaka.exception.throwable.http.GraphqlException
+import br.mangabaka.exception.throwable.base.InternalException
 import jakarta.ws.rs.core.Response
 import jakarta.ws.rs.ext.ExceptionMapper
 import jakarta.ws.rs.ext.Provider
 
 @Provider
-class GraphqlExceptionMapper : ExceptionMapper<GraphqlException> {
-    override fun toResponse(exception: GraphqlException): Response {
-        return Response.status(Response.Status.BAD_REQUEST)
+class InternalExceptionMapper : ExceptionMapper<InternalException> {
+    override fun toResponse(exception: InternalException): Response {
+        return Response.status(exception.httpError)
             .entity(
                 mapOf(
                     "error" to exception.message,

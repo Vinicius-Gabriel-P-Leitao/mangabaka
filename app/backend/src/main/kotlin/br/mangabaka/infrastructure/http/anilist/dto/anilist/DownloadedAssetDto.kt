@@ -1,9 +1,12 @@
 package br.mangabaka.infrastructure.http.anilist.dto.anilist
 
+import br.mangabaka.api.dto.AssetType
+
 data class DownloadedAssetDto(
     val filename: String,
     val mediaType: String,
-    val content: ByteArray
+    val content: ByteArray,
+    val assetType: AssetType
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

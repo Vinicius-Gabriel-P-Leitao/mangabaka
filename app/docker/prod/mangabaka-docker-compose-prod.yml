@@ -31,6 +31,8 @@ services:
       POSTGRES_JDBC_URL: ${PG_JDBC_URL}
     ports:
       - "9090:9090"
+    volumes:
+      - ~/docker:/app/data/mangabaka
     networks:
       - mangabaka-network
     restart: always
