@@ -14,7 +14,7 @@ import jakarta.ws.rs.core.Response
 class MangaComicinfoService {
     fun createComicinfo(nameManga: String): Response.Status {
         val fetchAnilistMangaDataService = FetchAnilistMangaDataService()
-        val resolverService = MangaResolverService(listOf(fetchAnilistMangaDataService))
+        val resolverService = MangaResolverService(fetchAnilistMangaDataService)
 
         return Response.Status.CREATED
     }

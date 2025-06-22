@@ -8,15 +8,11 @@
 
 package br.mangabaka.api.controller
 
-import br.mangabaka.api.dto.MangaMetadata
 import br.mangabaka.exception.code.http.InternalErrorCode
 import br.mangabaka.exception.code.http.InvalidParameterErrorCode
 import br.mangabaka.exception.throwable.base.InternalException
 import br.mangabaka.exception.throwable.http.InvalidParameterException
-import br.mangabaka.service.external.anilist.FetchAnilistMangaDataService
 import br.mangabaka.service.internal.MangaComicinfoService
-import br.mangabaka.service.internal.MangaResolverService
-import jakarta.ws.rs.GET
 import jakarta.ws.rs.POST
 import jakarta.ws.rs.Path
 import jakarta.ws.rs.Produces

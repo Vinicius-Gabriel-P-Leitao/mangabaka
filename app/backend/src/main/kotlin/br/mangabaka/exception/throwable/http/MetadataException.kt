@@ -9,6 +9,7 @@ package br.mangabaka.exception.throwable.http;
 
 import br.mangabaka.exception.code.ErrorCodeProvider
 import br.mangabaka.exception.throwable.base.AppException
+import jakarta.ws.rs.core.Response
 
 // @formatter:off
-class MetadataException(message: String, errorCode: ErrorCodeProvider) : AppException(message, errorCode)
+class MetadataException(message: String, errorCode: ErrorCodeProvider, val httpError: Response.Status) : AppException(message, errorCode)

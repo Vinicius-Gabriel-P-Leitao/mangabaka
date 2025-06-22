@@ -8,7 +8,6 @@
 
 package br.mangabaka.service.external.anilist
 
-import br.mangabaka.api.dto.AssetInfo
 import br.mangabaka.infrastructure.http.anilist.dto.anilist.*
 import br.mangabaka.infrastructure.http.anilist.dto.serializable.Status
 import br.mangabaka.infrastructure.http.anilist.query.MangaPaginatedQuery
@@ -19,15 +18,15 @@ import org.mockito.kotlin.any
 import kotlin.test.assertEquals
 
 class FetchAnilistMangaDataServiceTest {
-    private val mangaMetadata = MangaPaginatedDto(
-        page = Page(
-            pageInfo = PageInfo(
+    private val mangaMetadata = MangaPaginatedMetadataDto(
+        page = PageMetadata(
+            pageInfo = PageInfoMetadata(
                 currentPage = 1,
                 hasNextPage = false,
                 perPage = 1
             ),
             media = listOf(
-                Media(
+                MediaMetadata(
                     id = 1234,
                     idMal = 5678,
                     status = Status.Finished,
@@ -37,9 +36,9 @@ class FetchAnilistMangaDataServiceTest {
                     averageScore = 85,
                     countryOfOrigin = "JP",
                     format = "MANGA",
-                    startDate = FuzzyDateInt(2020, 1, 1),
-                    endDate = FuzzyDateInt(2021, 12, 31),
-                    title = Title(
+                    startDate = FuzzyDateIntMetadata(2020, 1, 1),
+                    endDate = FuzzyDateIntMetadata(2021, 12, 31),
+                    title = TitleMetadata(
                         romaji = "Romaji Title",
                         english = "English Title",
                         native = "日本語タイトル"
@@ -48,10 +47,10 @@ class FetchAnilistMangaDataServiceTest {
                     description = "A fake manga used for testing purposes.",
                     genres = listOf("Action", "Adventure"),
                     tags = listOf(
-                        Tag(name = "Shounen", rank = 90),
-                        Tag(name = "Comedy", rank = 75)
+                        TagMetadata(name = "Shounen", rank = 90),
+                        TagMetadata(name = "Comedy", rank = 75)
                     ),
-                    coverImage = CoverImage(
+                    coverImage = CoverImageMetadata(
                         large = "https://example.com/cover.jpg",
                         color = "#FFFFFF"
                     ),
@@ -65,24 +64,18 @@ class FetchAnilistMangaDataServiceTest {
     @Test
     fun `test fetchMangaData successful response`() {
         val mangaName = "Example Manga"
-        val mangaAssets = listOf<DownloadedAssetDto>()
-
         val mockQuery = mock(MangaPaginatedQuery::class.java)
-        val mockAssetService = mock(FetchAnilistMangaAssetService::class.java)
 
-        `when`(mockQuery.queryFactory("Test Manga", 1, 1)).thenReturn(mangaMetadata)
-        `when`(mockAssetService.mangaAsset(any())).thenReturn(emptyList())
+        `when`(mockQuery.queryAllDataFactory("Test Manga", 1, 1)).thenReturn(mangaMetadata)
 
         val service = FetchAnilistMangaDataService(
-            query = mockQuery,
-            assetService = mockAssetService
+            query = mockQuery
         )
 
-        `when`(mockQuery.queryFactory(manga = mangaName, page = 1, perPage = 1)).thenReturn(mangaMetadata)
+        `when`(mockQuery.queryAllDataFactory(manga = mangaName, page = 1, perPage = 1)).thenReturn(mangaMetadata)
 
         val result = service.fetchMangaData("Test Manga")
 
         assertEquals(mangaMetadata, result.paginationInfo)
-        assertEquals(mangaAssets, result.assets)
     }
 }

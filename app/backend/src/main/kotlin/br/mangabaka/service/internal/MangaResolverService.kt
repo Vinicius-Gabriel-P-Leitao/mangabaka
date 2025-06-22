@@ -8,17 +8,21 @@
 
 package br.mangabaka.service.internal
 
-import br.mangabaka.api.dto.MangaMetadata
+import br.mangabaka.api.dto.MangaDataDto
 import br.mangabaka.service.external.ExternalMetadataService
 import java.nio.file.Paths
 
-class MangaResolverService(private val services: List<ExternalMetadataService>) {
+class MangaResolverService(
+    private val services: ExternalMetadataService
+) {
     companion object {
+        const val PAGE: Int = 1
+        const val PER_PAGE: Int = 1
         private const val PATH_FILE: String = "/app/data/mangabaka"
     }
 
-    fun mangaResolver(mangaName: String): MangaMetadata {
-        val result: List<MangaMetadata> = services.map { it.fetchMangaData(mangaName) }
+    fun mangaResolver(mangaName: String): MangaDataDto {
+        val result: MangaDataDto = services.fetchMangaData(mangaName)
 
         // TODO: Implementar salvamento no banco de dados e container os arquivos, covers e banners
         //  não vão ser armazenados de forma fixa esse método vai implementar um salvamento rápido
@@ -28,13 +32,17 @@ class MangaResolverService(private val services: List<ExternalMetadataService>) 
         //  ao invés de retornar o json com dados ou cover/banner vai criar um comicinfo.xml
         //  e esse arquivo será salvo na pasta da obra titulo/comicinfo.xml junto aos capítulos
         //  banner e cover também serão salvos lá
-        val resultMetadata = result[0]
-        resultMetadata.assets.forEach { asset ->
-            val file = Paths.get(PATH_FILE, asset.filename).toFile()
-            file.parentFile?.mkdirs()
-            file.writeBytes(asset.content)
-        }
 
-        return result[0]
+        //if (result.assets == null) {
+        //    throw RuntimeException("")
+        //}
+
+        //result.assets.forEach { value ->
+        //    val file = Paths.get(PATH_FILE, value.filename).toFile()
+        //    file.parentFile?.mkdirs()
+        //    file.writeBytes(value.content)
+        //}
+
+        return result
     }
 }

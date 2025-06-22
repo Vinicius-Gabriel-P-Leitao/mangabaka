@@ -13,25 +13,25 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MangaPaginatedDto(
-    @SerialName("Page") val page: Page
+data class MangaPaginatedMetadataDto(
+    @SerialName("Page") val page: PageMetadata
 )
 
 @Serializable
-data class Page(
-    val pageInfo: PageInfo,
-    val media: List<Media>
+data class PageMetadata(
+    val pageInfo: PageInfoMetadata,
+    val media: List<MediaMetadata>
 )
 
 @Serializable
-data class PageInfo(
+data class PageInfoMetadata(
     val currentPage: Int,
     val hasNextPage: Boolean,
     val perPage: Int,
 )
 
 @Serializable
-data class Media(
+data class MediaMetadata(
     val id: Int,
     val idMal: Int?,
     val status: Status,
@@ -41,40 +41,40 @@ data class Media(
     val averageScore: Int?,
     val countryOfOrigin: String,
     val format: String,
-    val startDate: FuzzyDateInt,
-    val endDate: FuzzyDateInt,
-    val title: Title,
+    val startDate: FuzzyDateIntMetadata,
+    val endDate: FuzzyDateIntMetadata,
+    val title: TitleMetadata,
     val synonyms: List<String>,
     val description: String?,
     val genres: List<String>,
-    val tags: List<Tag>,
-    val coverImage: CoverImage,
+    val tags: List<TagMetadata>,
+    val coverImage: CoverImageMetadata,
     val bannerImage: String?,
     val siteUrl: String?
 )
 
 @Serializable
-data class Title(
+data class TitleMetadata(
     val romaji: String?,
     val english: String?,
     val native: String?
 )
 
 @Serializable
-data class FuzzyDateInt(
+data class FuzzyDateIntMetadata(
     val year: Int?,
     val month: Int?,
     val day: Int?
 )
 
 @Serializable
-data class Tag(
+data class TagMetadata(
     val name: String,
     val rank: Int
 )
 
 @Serializable
-data class CoverImage(
+data class CoverImageMetadata(
     val large: String?,
     val color: String?
 )

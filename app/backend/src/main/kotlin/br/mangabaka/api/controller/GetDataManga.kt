@@ -9,12 +9,13 @@
 package br.mangabaka.api.controller
 
 import br.mangabaka.api.dto.AssetType
-import br.mangabaka.api.dto.MangaMetadata
+import br.mangabaka.api.dto.MangaDataDto
 import br.mangabaka.exception.code.http.InternalErrorCode
 import br.mangabaka.exception.code.http.InvalidParameterErrorCode
 import br.mangabaka.exception.throwable.base.InternalException
 import br.mangabaka.exception.throwable.http.InvalidParameterException
 import br.mangabaka.infrastructure.http.anilist.dto.anilist.DownloadedAssetDto
+import br.mangabaka.service.external.anilist.FetchAnilistMangaAssetService
 import br.mangabaka.service.external.anilist.FetchAnilistMangaDataService
 import br.mangabaka.service.internal.MangaResolverService
 import jakarta.ws.rs.GET
@@ -39,9 +40,13 @@ class GetDataManga {
             }
 
             val fetchAnilistMangaDataService = FetchAnilistMangaDataService()
-            val resolverService = MangaResolverService(listOf(fetchAnilistMangaDataService))
+            val resolverService = MangaResolverService(services = fetchAnilistMangaDataService)
 
-            val result: MangaMetadata = resolverService.mangaResolver(nameManga)
+            val result: MangaDataDto = resolverService.mangaResolver(nameManga)
+            if (result.paginationInfo == null) {
+                throw RuntimeException("Tà vázio")
+            }
+
             return Response
                 .ok(result.paginationInfo.page)
                 .build()
@@ -75,10 +80,13 @@ class GetDataManga {
                 )
             }
 
-            val fetchAnilistMangaDataService = FetchAnilistMangaDataService()
-            val resolverService = MangaResolverService(listOf(fetchAnilistMangaDataService))
+            val fetchAnilistMangaAssetService = FetchAnilistMangaAssetService()
+            val resolverService = MangaResolverService(services = fetchAnilistMangaAssetService)
 
-            val result: MangaMetadata = resolverService.mangaResolver(nameManga)
+            val result: MangaDataDto = resolverService.mangaResolver(nameManga)
+            if (result.assets == null) {
+                throw RuntimeException("Tà vázio")
+            }
 
             val asset = when (assetType) {
                 AssetType.COVER -> result.assets.find { asset: DownloadedAssetDto -> asset.assetType == AssetType.COVER }

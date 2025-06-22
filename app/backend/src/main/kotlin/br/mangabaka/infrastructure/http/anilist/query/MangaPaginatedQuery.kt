@@ -8,9 +8,9 @@
 
 package br.mangabaka.infrastructure.http.anilist.query
 
-import br.mangabaka.exception.throwable.http.GraphqlException
 import br.mangabaka.infrastructure.config.graphql.GraphqlClient
-import br.mangabaka.infrastructure.http.anilist.dto.anilist.MangaPaginatedDto
+import br.mangabaka.infrastructure.http.anilist.dto.anilist.MangaPaginatedAssetsDto
+import br.mangabaka.infrastructure.http.anilist.dto.anilist.MangaPaginatedMetadataDto
 import jakarta.annotation.Nonnull
 
 class MangaPaginatedQuery(
@@ -20,7 +20,7 @@ class MangaPaginatedQuery(
         private const val GRAPHQL_ENDPOINT = "https://graphql.anilist.co"
     }
 
-    fun queryFactory(manga: String?, @Nonnull page: Int, @Nonnull perPage: Int): MangaPaginatedDto {
+    fun queryAllDataFactory(manga: String?, @Nonnull page: Int, @Nonnull perPage: Int): MangaPaginatedMetadataDto {
         val query = """
                     query (${'$'}id: Int, ${'$'}page: Int, ${'$'}perPage: Int, ${'$'}search: String) {
                         Page(page: ${'$'}page, perPage: ${'$'}perPage) {
@@ -67,6 +67,45 @@ class MangaPaginatedQuery(
                                 }
                                 bannerImage
                                 siteUrl
+                            }
+                        }
+                    }
+                    """.trimIndent()
+
+        val variables: Map<String, Any> = mapOf(
+            "search" to manga.orEmpty(),
+            "page" to page,
+            "perPage" to perPage
+        )
+
+        return try {
+            client.executeQuery(query, variables)
+        } finally {
+            client.close()
+        }
+    }
+
+    fun queryAssetDataFactory(manga: String?, @Nonnull page: Int, @Nonnull perPage: Int): MangaPaginatedAssetsDto {
+        val query = """
+                    query (${'$'}id: Int, ${'$'}page: Int, ${'$'}perPage: Int, ${'$'}search: String) {
+                        Page(page: ${'$'}page, perPage: ${'$'}perPage) {
+                            pageInfo {
+                                currentPage
+                                hasNextPage
+                                perPage
+                            }
+                            media(id: ${'$'}id, search: ${'$'}search, sort: POPULARITY_DESC, type: MANGA) {
+                                id
+                                idMal
+                                title {
+                                    romaji
+                                    english
+                                    native
+                                }
+                                coverImage {
+                                    large
+                                }
+                                bannerImage
                             }
                         }
                     }
