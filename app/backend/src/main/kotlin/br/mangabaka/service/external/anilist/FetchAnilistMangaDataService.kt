@@ -29,14 +29,15 @@ class FetchAnilistMangaDataService(
     }
 
     override fun fetchMangaData(mangaName: String): MangaMetadata {
-         val mangaMetadata: MangaPaginatedDto = query.queryFactory(manga = mangaName, page = PAGE, perPage = PER_PAGE)
+        val mangaMetadata: MangaPaginatedDto = query.queryFactory(manga = mangaName, page = PAGE, perPage = PER_PAGE)
 
         val maxAssets = PER_PAGE * 2
         val assetListUrl: Array<AssetInfo?> = arrayOfNulls(size = maxAssets)
 
         var index = 0
         for (value in mangaMetadata.page.media) {
-            val mangaName = value.title.english ?: value.title.romaji ?: value.title.native ?: "unknown"
+            val mangaName =
+                value.title.english ?: value.title.romaji ?: value.title.native ?: throw RuntimeException("")
 
             val coverUrl: String? = value.coverImage.large
             val bannerUrl: String? = value.bannerImage
