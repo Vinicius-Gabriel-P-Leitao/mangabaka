@@ -1,3 +1,11 @@
+/*
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * Copyright (c) {year} Vinícius Gabriel Pereira Leitão
+ * Licensed under the BSD 3-Clause License.
+ * See LICENSE file in the project root for full license information.
+ */
+
 package br.mangabaka.api.controller
 
 import br.mangabaka.api.dto.AssetType
@@ -7,7 +15,6 @@ import br.mangabaka.exception.code.http.InvalidParameterErrorCode
 import br.mangabaka.exception.throwable.base.InternalException
 import br.mangabaka.exception.throwable.http.InvalidParameterException
 import br.mangabaka.infrastructure.http.anilist.dto.anilist.DownloadedAssetDto
-import br.mangabaka.service.external.anilist.FetchAnilistMangaAssetService
 import br.mangabaka.service.external.anilist.FetchAnilistMangaDataService
 import br.mangabaka.service.internal.MangaResolverService
 import jakarta.ws.rs.GET
@@ -16,21 +23,15 @@ import jakarta.ws.rs.Produces
 import jakarta.ws.rs.QueryParam
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
 
 @Path("/manga")
 class GetDataManga {
-    companion object {
-        private val logger: Logger = LogManager.getLogger(GetDataManga::class.java)
-    }
-
     @GET
     @Path("/metadata")
     @Produces(MediaType.APPLICATION_JSON)
-    fun getMetadataManga(@QueryParam("name") name: String?): Response {
+    fun getMetadataManga(@QueryParam("name") nameManga: String?): Response {
         try {
-            if (name == null) {
+            if (nameManga == null) {
                 throw InvalidParameterException(
                     message = InvalidParameterErrorCode.ERROR_PARAMETER_EMPTY.handle(value = "O parâmetro de consulta 'nome' é obrigatório."),
                     errorCode = InvalidParameterErrorCode.ERROR_PARAMETER_EMPTY, httpError = Response.Status.BAD_REQUEST
@@ -40,7 +41,7 @@ class GetDataManga {
             val fetchAnilistMangaDataService = FetchAnilistMangaDataService()
             val resolverService = MangaResolverService(listOf(fetchAnilistMangaDataService))
 
-            val result: MangaMetadata = resolverService.mangaResolver(name)
+            val result: MangaMetadata = resolverService.mangaResolver(nameManga)
             return Response
                 .ok(result.paginationInfo.page)
                 .build()
@@ -55,9 +56,9 @@ class GetDataManga {
     @GET
     @Path("/assets")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    fun getAssetsManga(@QueryParam("name") name: String?, @QueryParam("type") typeParam: String?): Response {
+    fun getAssetsManga(@QueryParam("name") nameManga: String?, @QueryParam("type") typeParam: String?): Response {
         try {
-            if (name == null || typeParam == null) {
+            if (nameManga == null || typeParam == null) {
                 throw InvalidParameterException(
                     message = InvalidParameterErrorCode.ERROR_PARAMETER_EMPTY.handle(value = "Os parâmetros de consulta 'nome' e 'tipo' são obrigatórios."),
                     errorCode = InvalidParameterErrorCode.ERROR_PARAMETER_EMPTY, httpError = Response.Status.BAD_REQUEST
@@ -77,7 +78,7 @@ class GetDataManga {
             val fetchAnilistMangaDataService = FetchAnilistMangaDataService()
             val resolverService = MangaResolverService(listOf(fetchAnilistMangaDataService))
 
-            val result: MangaMetadata = resolverService.mangaResolver(name)
+            val result: MangaMetadata = resolverService.mangaResolver(nameManga)
 
             val asset = when (assetType) {
                 AssetType.COVER -> result.assets.find { asset: DownloadedAssetDto -> asset.assetType == AssetType.COVER }
