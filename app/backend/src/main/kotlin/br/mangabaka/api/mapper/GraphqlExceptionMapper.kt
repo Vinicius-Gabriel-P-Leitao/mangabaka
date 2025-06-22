@@ -16,7 +16,7 @@ import jakarta.ws.rs.ext.Provider
 @Provider
 class GraphqlExceptionMapper : ExceptionMapper<GraphqlException> {
     override fun toResponse(exception: GraphqlException): Response {
-        return Response.status(Response.Status.BAD_REQUEST)
+        return Response.status(exception.httpError)
             .entity(
                 mapOf(
                     "error" to exception.message,

@@ -16,7 +16,7 @@ import jakarta.ws.rs.ext.Provider
 @Provider
 class AssetDownloaderExceptionMapper : ExceptionMapper<AssetDownloadException> {
     override fun toResponse(exception: AssetDownloadException): Response {
-        return Response.status(Response.Status.BAD_REQUEST)
+        return Response.status(exception.httpError)
             .entity(
                 mapOf(
                     "error" to exception.message,

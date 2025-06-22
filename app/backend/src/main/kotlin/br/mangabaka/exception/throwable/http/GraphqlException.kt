@@ -10,5 +10,7 @@ package br.mangabaka.exception.throwable.http
 
 import br.mangabaka.exception.code.ErrorCodeProvider
 import br.mangabaka.exception.throwable.base.AppException
+import jakarta.ws.rs.core.Response
 
-open class GraphqlException(message: String, errorCode: ErrorCodeProvider) : AppException(message, errorCode)
+// @formatter:off
+open class GraphqlException(message: String, errorCode: ErrorCodeProvider, val httpError: Response.Status) : AppException(message, errorCode)
