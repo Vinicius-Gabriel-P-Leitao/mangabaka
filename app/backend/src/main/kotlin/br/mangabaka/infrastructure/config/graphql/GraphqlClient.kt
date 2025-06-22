@@ -3,6 +3,7 @@ package br.mangabaka.infrastructure.config.graphql
 import br.mangabaka.exception.code.http.GraphqlErrorCode
 import br.mangabaka.exception.throwable.http.GraphqlException
 import br.mangabaka.infrastructure.config.singleton.JsonConfig
+import jakarta.annotation.Nonnull
 import jakarta.ws.rs.client.Client
 import jakarta.ws.rs.client.ClientBuilder
 import jakarta.ws.rs.client.Entity
@@ -17,6 +18,7 @@ class GraphqlClient(
     )
 ) {
 
+    @Nonnull
     inline fun <reified T> executeQuery(query: String, variables: Map<String, Any>): T {
         val requestBody: Map<String, Any> = mapOf(
             "query" to query, "variables" to variables

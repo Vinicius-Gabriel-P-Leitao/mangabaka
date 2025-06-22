@@ -3,13 +3,16 @@ package br.mangabaka.infrastructure.http.anilist.query
 import br.mangabaka.exception.throwable.http.GraphqlException
 import br.mangabaka.infrastructure.config.graphql.GraphqlClient
 import br.mangabaka.infrastructure.http.anilist.dto.anilist.MangaPaginatedDto
+import jakarta.annotation.Nonnull
 
-class MangaPaginatedQuery {
+class MangaPaginatedQuery(
+    private val client: GraphqlClient = GraphqlClient(GRAPHQL_ENDPOINT)
+) {
     companion object {
         private const val GRAPHQL_ENDPOINT = "https://graphql.anilist.co"
     }
 
-    fun queryFactory(manga: String?, page: Int, perPage: Int): MangaPaginatedDto {
+    fun queryFactory(manga: String?, @Nonnull page: Int, @Nonnull perPage: Int): MangaPaginatedDto {
         val query = """
                     query (${'$'}id: Int, ${'$'}page: Int, ${'$'}perPage: Int, ${'$'}search: String) {
                         Page(page: ${'$'}page, perPage: ${'$'}perPage) {
@@ -62,15 +65,11 @@ class MangaPaginatedQuery {
                     """.trimIndent()
 
         val variables: Map<String, Any> = mapOf(
-            "search" to manga.orEmpty(),
-            "page" to page,
-            "perPage" to perPage
+            "search" to manga.orEmpty(), "page" to page, "perPage" to perPage
         )
 
-        val client = GraphqlClient(GRAPHQL_ENDPOINT)
-        try {
-            val response: MangaPaginatedDto = client.executeQuery(query, variables)
-            return response
+        return try {
+            client.executeQuery(query, variables)
         } catch (exception: GraphqlException) {
             throw exception;
         } finally {
