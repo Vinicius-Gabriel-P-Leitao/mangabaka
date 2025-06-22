@@ -69,7 +69,7 @@ class GraphqlClientTest {
 
         try {
             graphqlClient.executeQuery<Map<String, String>>(query, variables)
-            assert(false) { "Esperava GraphqlException" }
+            assert(false) { "Expected GraphqlException" }
         } catch (exception: GraphqlException) {
             assert(exception.errorCode == GraphqlErrorCode.ERROR_CLIENT_STATUS)
         }

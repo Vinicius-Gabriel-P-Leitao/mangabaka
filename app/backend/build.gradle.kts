@@ -27,9 +27,11 @@ repositories {
 }
 
 dependencies {
-    // OUTRAS
+    // Postgresql
     implementation("org.postgresql:postgresql:42.7.6")
+    // Dotenv
     implementation("io.github.cdimascio:dotenv-java:3.2.0")
+    // Serialização
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
     // EBEAN
     val ebeanVersion = "15.11.0"
@@ -65,6 +67,8 @@ dependencies {
     implementation("org.fusesource.jansi:jansi:2.4.2")
     implementation("org.apache.logging.log4j:log4j-api:$log4jVersion")
     implementation("org.apache.logging.log4j:log4j-core:$log4jVersion")
+    // Kotlin testes
+    testImplementation(kotlin("test"))
     // MOCKITO
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
     // JUNIT

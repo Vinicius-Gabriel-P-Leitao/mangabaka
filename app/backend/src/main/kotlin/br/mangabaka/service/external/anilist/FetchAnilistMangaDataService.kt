@@ -19,15 +19,17 @@ import jakarta.ws.rs.BadRequestException
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
-class FetchAnilistMangaDataService : ExternalMetadataService {
+class FetchAnilistMangaDataService(
+    private val query: MangaPaginatedQuery = MangaPaginatedQuery(),
+    private val assetService: FetchAnilistMangaAssetService = FetchAnilistMangaAssetService()
+) : ExternalMetadataService {
     companion object {
         private const val PAGE: Int = 1
         private const val PER_PAGE: Int = 1
     }
 
     override fun fetchMangaData(mangaName: String): MangaMetadata {
-        val mangaMetadata: MangaPaginatedDto =
-            MangaPaginatedQuery().queryFactory(manga = mangaName, page = PAGE, perPage = PER_PAGE)
+         val mangaMetadata: MangaPaginatedDto = query.queryFactory(manga = mangaName, page = PAGE, perPage = PER_PAGE)
 
         val maxAssets = PER_PAGE * 2
         val assetListUrl: Array<AssetInfo?> = arrayOfNulls(size = maxAssets)
@@ -50,7 +52,7 @@ class FetchAnilistMangaDataService : ExternalMetadataService {
             }
         }
 
-        val mangaAssets: List<DownloadedAssetDto> = FetchAnilistMangaAssetService().mangaAsset(assetListUrl)
+        val mangaAssets = assetService.mangaAsset(assetListUrl)
         return MangaMetadata(paginationInfo = mangaMetadata, assets = mangaAssets)
     }
 }
