@@ -128,4 +128,6 @@ class GraphqlClientTest {
 
         assertEquals(GraphqlErrorCode.ERROR_EMPTY_RESPONSE, exception.errorCode)
     }
+
+    // TODO: Teste de rate limit
 }
