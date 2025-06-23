@@ -26,7 +26,7 @@ import kotlinx.serialization.SerializationException
 
 class FetchAnilistMangaAssetService(
     private val query: AnilistMangaPaginatedQuery = AnilistMangaPaginatedQuery(),
-    private val anilistMangaAssetDownload: AnilistMangaAssetDownload = AnilistMangaAssetDownload(),
+    private val anilistMangaAssetClientDownload: AnilistMangaAssetDownload = AnilistMangaAssetDownload(),
 ) : ExternalMetadataService {
 
     override fun fetchMangaData(mangaName: String): MangaDataDto {
@@ -38,7 +38,7 @@ class FetchAnilistMangaAssetService(
             )
         }
 
-        try {
+        return try {
             val mangaAssetData: MangaPaginatedAssetsDto =
                 query.queryAssetDataFactory(manga = mangaName, page = PAGE, perPage = PER_PAGE)
 
@@ -87,8 +87,8 @@ class FetchAnilistMangaAssetService(
             }
 
             val assetData = assetListUrl.filterNotNull().map { assetInfo ->
-                val assetDownload = anilistMangaAssetDownload.fetchAsset(
-                    url = assetInfo.url, mangaName = assetInfo.mangaName, assetType = assetInfo.type
+                val assetDownload = anilistMangaAssetClientDownload.fetchAsset(
+                    endpoint = assetInfo.url, mangaName = assetInfo.mangaName, assetType = assetInfo.type
                 )
 
                 if (assetDownload.filename.isBlank() || assetDownload.filename.isEmpty()) throw AssetDownloadException(
@@ -112,13 +112,15 @@ class FetchAnilistMangaAssetService(
                 assetDownload
             }.toMutableList()
 
-            return MangaDataDto(null, assetData)
+            MangaDataDto(null, assetData)
         } catch (exception: SerializationException) {
             throw MetadataException(
                 message = MetadataErrorCode.ERROR_JSON_MALFORMED.handle(value = "Nenhuma media foi encontrada para o manga: ${exception.message}"),
                 errorCode = MetadataErrorCode.ERROR_JSON_MALFORMED,
                 httpError = Response.Status.NOT_FOUND
             )
+        } finally {
+            anilistMangaAssetClientDownload.close();
         }
     }
 }

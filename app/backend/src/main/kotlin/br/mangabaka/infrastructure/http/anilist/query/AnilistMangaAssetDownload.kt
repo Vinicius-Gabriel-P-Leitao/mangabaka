@@ -10,12 +10,14 @@ package br.mangabaka.infrastructure.http.anilist.query
 
 import br.mangabaka.api.dto.AssetType
 import br.mangabaka.exception.code.http.AssetDownloadErrorCode
+import br.mangabaka.exception.throwable.base.AppException
 import br.mangabaka.exception.throwable.http.AssetDownloadException
 import br.mangabaka.infrastructure.http.anilist.dto.DownloadedAssetDto
 import jakarta.annotation.Nonnull
 import jakarta.ws.rs.ProcessingException
 import jakarta.ws.rs.client.Client
 import jakarta.ws.rs.client.ClientBuilder
+import jakarta.ws.rs.client.WebTarget
 import jakarta.ws.rs.core.Response
 import org.glassfish.jersey.client.ClientConfig
 import org.glassfish.jersey.client.ClientProperties
@@ -29,19 +31,19 @@ class AnilistMangaAssetDownload(
     ).build()
 ) {
     @Nonnull
-    fun fetchAsset(url: String, mangaName: String, assetType: AssetType): DownloadedAssetDto {
-        require(value = url.startsWith(prefix = "http://") || url.startsWith(prefix = "https://")) {
+    fun fetchAsset(endpoint: String, mangaName: String, assetType: AssetType): DownloadedAssetDto {
+        require(value = endpoint.startsWith(prefix = "http://") || endpoint.startsWith(prefix = "https://")) {
             throw AssetDownloadException(
-                message = AssetDownloadErrorCode.ERROR_INVALID_URL.handle(value = "URL inválida ou não suportada: $url"),
+                message = AssetDownloadErrorCode.ERROR_INVALID_URL.handle(value = "URL inválida ou não suportada: $endpoint"),
                 errorCode = AssetDownloadErrorCode.ERROR_INVALID_URL, httpError = Response.Status.BAD_GATEWAY
             )
         }
 
-        val mediaType: String = URLConnection.guessContentTypeFromName(url) ?: "application/octet-stream"
+        val mediaType: String = URLConnection.guessContentTypeFromName(endpoint) ?: "application/octet-stream"
 
-        val extension: String = when (mediaType) {
-            "image/jpeg" -> ".jpg"
-            "image/png" -> ".png"
+        val extension = when {
+            mediaType.contains(other = "jpeg", ignoreCase = true) -> ".jpg"
+            mediaType.contains(other = "png", ignoreCase = true) -> ".png"
             else -> ".bin"
         }
 
@@ -53,20 +55,21 @@ class AnilistMangaAssetDownload(
             .replace(Regex(pattern = "-+"), replacement = "-")
             .trim(chars = charArrayOf('-'))
 
-        try {
-            val response: Response = client.target(url).request().get()
+        return try {
+            val target: WebTarget = client.target(endpoint)
+            val response: Response = target.request().get()
+
             if (response.status != 200) {
                 response.close()
                 throw AssetDownloadException(
-                    message = AssetDownloadErrorCode.ERROR_CLIENT_STATUS.handle(value = "Erro ao baixar: $url (status ${response.status})"),
+                    message = AssetDownloadErrorCode.ERROR_CLIENT_STATUS.handle(value = "Erro ao baixar: $endpoint (status ${response.status})"),
                     errorCode = AssetDownloadErrorCode.ERROR_CLIENT_STATUS, httpError = Response.Status.BAD_GATEWAY
                 )
             }
 
             val content: ByteArray = response.readEntity(ByteArray::class.java)
-            response.close()
 
-            return DownloadedAssetDto(
+            DownloadedAssetDto(
                 filename = "$safeName-${assetType.code}$extension",
                 mediaType = mediaType,
                 content = content,
@@ -74,16 +77,23 @@ class AnilistMangaAssetDownload(
             )
         } catch (processingException: ProcessingException) {
             throw AssetDownloadException(
-                message = AssetDownloadErrorCode.ERROR_CLIENT_EXCEPTION.handle(value = "Tempo de espera para download do asset excedido: ${processingException.message}"),
-                errorCode = AssetDownloadErrorCode.ERROR_CLIENT_EXCEPTION,
+                message = AssetDownloadErrorCode.ERROR_TIMEOUT.handle(value = "Tempo de espera para download do asset excedido: ${processingException.message}"),
+                errorCode = AssetDownloadErrorCode.ERROR_TIMEOUT,
                 cause = processingException, httpError = Response.Status.GATEWAY_TIMEOUT
             )
         } catch (exception: Exception) {
-            throw AssetDownloadException(
-                message = AssetDownloadErrorCode.ERROR_CLIENT_EXCEPTION.handle(value = "Erro ao acessar o asset: ${exception.message}"),
-                errorCode = AssetDownloadErrorCode.ERROR_CLIENT_EXCEPTION,
-                cause = exception, httpError = Response.Status.BAD_GATEWAY
-            )
+            when (exception) {
+                is AppException -> throw exception
+                else -> throw AssetDownloadException(
+                    message = AssetDownloadErrorCode.ERROR_CLIENT_EXCEPTION.handle(value = "Erro ao acessar o asset: ${exception.message}"),
+                    errorCode = AssetDownloadErrorCode.ERROR_CLIENT_EXCEPTION,
+                    cause = exception, httpError = Response.Status.BAD_GATEWAY
+                )
+            }
         }
+    }
+
+    fun close() {
+        client.close()
     }
 }

@@ -12,14 +12,18 @@ import br.mangabaka.exception.code.ErrorCodeProvider
 
 enum class GraphqlErrorCode : ErrorCodeProvider {
     ERROR_CLIENT {
-        override fun handle(value: String) = "Erro no cliente Graphql: $value"
+        override fun handle(value: String) = "Erro no Graphql: $value"
     },
 
-    ERROR_CLIENT_STATUS {
-        override fun handle(value: String) = "Erro no cliente Graphql: $value"
+    ERROR_TIMEOUT {
+        override fun handle(value: String) = "Erro no Graphql, timeout tempo foi excedido na requisiçaõ: $value"
     },
 
     ERROR_EMPTY_RESPONSE {
-        override fun handle(value: String) = "Erro no cliente Graphql: $value"
+        override fun handle(value: String) = "Erro no Graphql, valor vázio: $value"
+    },
+
+    ERROR_INVALID_URL {
+        override fun handle(value: String) = "Erro no Graphql, url é invalida: $value"
     }
 }
