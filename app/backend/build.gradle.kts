@@ -29,8 +29,6 @@ repositories {
 dependencies {
     // Postgresql
     implementation("org.postgresql:postgresql:42.7.6")
-    // Dotenv
-    implementation("io.github.cdimascio:dotenv-java:3.2.0")
     // Serialização
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
     // EBEAN
