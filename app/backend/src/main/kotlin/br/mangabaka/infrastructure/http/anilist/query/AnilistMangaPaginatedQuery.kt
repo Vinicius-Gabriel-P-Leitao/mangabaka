@@ -13,7 +13,7 @@ import br.mangabaka.infrastructure.http.anilist.dto.MangaPaginatedAssetsDto
 import br.mangabaka.infrastructure.http.anilist.dto.MangaPaginatedMetadataDto
 import jakarta.annotation.Nonnull
 
-class MangaPaginatedQuery(
+class AnilistMangaPaginatedQuery(
     private val client: GraphqlClient = GraphqlClient(endpoint = GRAPHQL_ENDPOINT)
 ) {
     companion object {

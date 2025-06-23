@@ -19,7 +19,7 @@ import br.mangabaka.infrastructure.http.anilist.dto.PageMetadata
 import br.mangabaka.infrastructure.http.anilist.dto.StatusManga
 import br.mangabaka.infrastructure.http.anilist.dto.TagMetadata
 import br.mangabaka.infrastructure.http.anilist.dto.TitleMetadata
-import br.mangabaka.infrastructure.http.anilist.query.MangaPaginatedQuery
+import br.mangabaka.infrastructure.http.anilist.query.AnilistMangaPaginatedQuery
 import br.mangabaka.service.internal.MangaResolverService.Companion.PAGE
 import br.mangabaka.service.internal.MangaResolverService.Companion.PER_PAGE
 import kotlinx.serialization.SerializationException
@@ -27,7 +27,6 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.mock
-import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import kotlin.test.assertEquals
 
@@ -76,7 +75,7 @@ class FetchAnilistMangaDataServiceTest {
         )
     )
 
-    private val mockQuery = mock(MangaPaginatedQuery::class.java)
+    private val mockQuery = mock(AnilistMangaPaginatedQuery::class.java)
     private val mangaName = "Manga"
 
     private val service = FetchAnilistMangaDataService(

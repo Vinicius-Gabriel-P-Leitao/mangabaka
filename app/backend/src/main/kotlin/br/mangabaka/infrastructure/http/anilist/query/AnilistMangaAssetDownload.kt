@@ -21,7 +21,7 @@ import org.glassfish.jersey.client.ClientConfig
 import org.glassfish.jersey.client.ClientProperties
 import java.net.URLConnection
 
-class MangaAssetDownload(
+class AnilistMangaAssetDownload(
     private val client: Client = ClientBuilder.newBuilder().withConfig(
         ClientConfig()
             .property(ClientProperties.CONNECT_TIMEOUT, 5000)

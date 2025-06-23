@@ -12,7 +12,7 @@ import br.mangabaka.api.dto.MangaDataDto
 import br.mangabaka.exception.code.http.MetadataErrorCode
 import br.mangabaka.exception.throwable.http.MetadataException
 import br.mangabaka.infrastructure.http.anilist.dto.MangaPaginatedMetadataDto
-import br.mangabaka.infrastructure.http.anilist.query.MangaPaginatedQuery
+import br.mangabaka.infrastructure.http.anilist.query.AnilistMangaPaginatedQuery
 import br.mangabaka.service.external.ExternalMetadataService
 import br.mangabaka.service.internal.MangaResolverService.Companion.PAGE
 import br.mangabaka.service.internal.MangaResolverService.Companion.PER_PAGE
@@ -20,7 +20,7 @@ import jakarta.ws.rs.core.Response
 import kotlinx.serialization.SerializationException
 
 class FetchAnilistMangaDataService(
-        private val query: MangaPaginatedQuery = MangaPaginatedQuery(),
+    private val query: AnilistMangaPaginatedQuery = AnilistMangaPaginatedQuery(),
     ) : ExternalMetadataService {
         override fun fetchMangaData(mangaName: String): MangaDataDto {
             try {

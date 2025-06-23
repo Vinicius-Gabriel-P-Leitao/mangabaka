@@ -16,8 +16,8 @@ import br.mangabaka.exception.code.http.MetadataErrorCode
 import br.mangabaka.exception.throwable.http.AssetDownloadException
 import br.mangabaka.exception.throwable.http.MetadataException
 import br.mangabaka.infrastructure.http.anilist.dto.MangaPaginatedAssetsDto
-import br.mangabaka.infrastructure.http.anilist.query.MangaAssetDownload
-import br.mangabaka.infrastructure.http.anilist.query.MangaPaginatedQuery
+import br.mangabaka.infrastructure.http.anilist.query.AnilistMangaAssetDownload
+import br.mangabaka.infrastructure.http.anilist.query.AnilistMangaPaginatedQuery
 import br.mangabaka.service.external.ExternalMetadataService
 import br.mangabaka.service.internal.MangaResolverService.Companion.PAGE
 import br.mangabaka.service.internal.MangaResolverService.Companion.PER_PAGE
@@ -25,8 +25,8 @@ import jakarta.ws.rs.core.Response
 import kotlinx.serialization.SerializationException
 
 class FetchAnilistMangaAssetService(
-    private val query: MangaPaginatedQuery = MangaPaginatedQuery(),
-    private val mangaAssetDownload: MangaAssetDownload = MangaAssetDownload(),
+    private val query: AnilistMangaPaginatedQuery = AnilistMangaPaginatedQuery(),
+    private val anilistMangaAssetDownload: AnilistMangaAssetDownload = AnilistMangaAssetDownload(),
 ) : ExternalMetadataService {
 
     override fun fetchMangaData(mangaName: String): MangaDataDto {
@@ -87,7 +87,7 @@ class FetchAnilistMangaAssetService(
             }
 
             val assetData = assetListUrl.filterNotNull().map { assetInfo ->
-                val assetDownload = mangaAssetDownload.fetchAsset(
+                val assetDownload = anilistMangaAssetDownload.fetchAsset(
                     url = assetInfo.url, mangaName = assetInfo.mangaName, assetType = assetInfo.type
                 )
 

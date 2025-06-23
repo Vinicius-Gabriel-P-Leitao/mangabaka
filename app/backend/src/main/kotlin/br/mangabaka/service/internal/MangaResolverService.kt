@@ -20,6 +20,9 @@ class MangaResolverService(
     }
 
     fun mangaResolver(mangaName: String): MangaDataDto {
+        // TODO: Fazer todo tratamento de dados após fazer toda parte do mangadex e testes
+        //  após fazer mangádex e rotas de dados e estiver como o anilist funcionando perfeitamente
+        //  e essa classe também iniciar parte do serviço de ComicInfo e rotas do comicinfo talvez
         val result: MangaDataDto = services.fetchMangaData(mangaName)
         return result
     }

@@ -33,10 +33,6 @@ import org.apache.logging.log4j.Logger
 
 @Path("/manga")
 class GetDataManga {
-    companion object {
-        private val logger: Logger = LogManager.getLogger(GetDataManga::class.java)
-    }
-
     @GET
     @Path("/metadata")
     @Produces(MediaType.APPLICATION_JSON)

@@ -20,8 +20,8 @@ import br.mangabaka.infrastructure.http.anilist.dto.MediaAsset
 import br.mangabaka.infrastructure.http.anilist.dto.PageAsset
 import br.mangabaka.infrastructure.http.anilist.dto.PageInfoAsset
 import br.mangabaka.infrastructure.http.anilist.dto.TitleAsset
-import br.mangabaka.infrastructure.http.anilist.query.MangaAssetDownload
-import br.mangabaka.infrastructure.http.anilist.query.MangaPaginatedQuery
+import br.mangabaka.infrastructure.http.anilist.query.AnilistMangaAssetDownload
+import br.mangabaka.infrastructure.http.anilist.query.AnilistMangaPaginatedQuery
 import br.mangabaka.service.internal.MangaResolverService.Companion.PAGE
 import br.mangabaka.service.internal.MangaResolverService.Companion.PER_PAGE
 import kotlinx.serialization.SerializationException
@@ -92,12 +92,12 @@ class FetchAnilistMangaAssetServiceTest {
         filename = "", mediaType = "", content = byteArrayOf(), assetType = AssetType.COVER
     )
 
-    private val queryMock = mock<MangaPaginatedQuery>()
-    private val mangaAssetDownloadMock = mock<MangaAssetDownload>()
+    private val queryMock = mock<AnilistMangaPaginatedQuery>()
+    private val anilistMangaAssetDownloadMock = mock<AnilistMangaAssetDownload>()
     private val mangaName = "Manga"
 
     private val service = FetchAnilistMangaAssetService(
-        query = queryMock, mangaAssetDownload = mangaAssetDownloadMock
+        query = queryMock, anilistMangaAssetDownload = anilistMangaAssetDownloadMock
     )
 
     @Test
@@ -111,7 +111,7 @@ class FetchAnilistMangaAssetServiceTest {
         )
 
         whenever(
-            methodCall = mangaAssetDownloadMock.fetchAsset(url = any(), mangaName = any(), assetType = any())
+            methodCall = anilistMangaAssetDownloadMock.fetchAsset(url = any(), mangaName = any(), assetType = any())
         ).thenReturn(mangaValidDownloadedAsset)
 
         val result = service.fetchMangaData(mangaName)
@@ -137,7 +137,7 @@ class FetchAnilistMangaAssetServiceTest {
         ).thenReturn(mangaInvalidMetadataMedia)
 
         whenever(
-            methodCall = mangaAssetDownloadMock.fetchAsset(url = any(), mangaName = any(), assetType = any())
+            methodCall = anilistMangaAssetDownloadMock.fetchAsset(url = any(), mangaName = any(), assetType = any())
         ).thenReturn(mangaValidDownloadedAsset)
 
         val exception = assertThrows<MetadataException> {
@@ -155,7 +155,7 @@ class FetchAnilistMangaAssetServiceTest {
         ).thenThrow(SerializationException(message = "Dados malformados"))
 
         whenever(
-            methodCall = mangaAssetDownloadMock.fetchAsset(url = any(), mangaName = any(), assetType = any())
+            methodCall = anilistMangaAssetDownloadMock.fetchAsset(url = any(), mangaName = any(), assetType = any())
         ).thenReturn(mangaValidDownloadedAsset)
 
         val exception = assertThrows<MetadataException> {
@@ -173,7 +173,7 @@ class FetchAnilistMangaAssetServiceTest {
         ).thenReturn(mangaInvalidMetadataFieldMediaAsset)
 
         whenever(
-            methodCall = mangaAssetDownloadMock.fetchAsset(url = any(), mangaName = any(), assetType = any())
+            methodCall = anilistMangaAssetDownloadMock.fetchAsset(url = any(), mangaName = any(), assetType = any())
         ).thenReturn(mangaValidDownloadedAsset)
 
         val exception = assertThrows<MetadataException> {
@@ -191,7 +191,7 @@ class FetchAnilistMangaAssetServiceTest {
         ).thenReturn(mangaValidMetadata)
 
         whenever(
-            methodCall = mangaAssetDownloadMock.fetchAsset(url = any(), mangaName = any(), assetType = any())
+            methodCall = anilistMangaAssetDownloadMock.fetchAsset(url = any(), mangaName = any(), assetType = any())
         ).thenReturn(mangaInvalidDownloadedAssetData)
 
         val exception = assertThrows<AssetDownloadException> {
