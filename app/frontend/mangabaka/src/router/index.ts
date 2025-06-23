@@ -5,27 +5,30 @@
 // See LICENSE file in the project root for full license information.
 
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "../view/Home.vue";
-import About from "../view/About.vue";
-import NotFound from "../view/NotFound.vue";
 
 const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home,
+    component: () => import("@/view/Home.vue"),
   },
   {
     path: "/about",
     name: "About",
-    component: About,
+    component: () => import("@/view/About.vue"),
   },
 
+  // NOTE: Rotas de erros HTTP
+  {
+    path: "/api-bad-request",
+    name: "ApiBadRequest",
+    component: () => import("@/view/BadRequest.vue"),
+  },
   // NOTE: Necessário estar em ultimo
   {
     path: "/:pathMatch(.*)*",
     name: "NotFound",
-    component: NotFound,
+    component: () => import("@/view/NotFound.vue"),
   },
 ];
 

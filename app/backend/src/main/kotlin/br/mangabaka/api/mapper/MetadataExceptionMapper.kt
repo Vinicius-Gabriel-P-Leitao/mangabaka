@@ -7,12 +7,13 @@
  */
 package br.mangabaka.api.mapper;
 
-import br.mangabaka.exception.throwable.http.InvalidParameterException
 import br.mangabaka.exception.throwable.http.MetadataException
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import jakarta.ws.rs.ext.ExceptionMapper
+import jakarta.ws.rs.ext.Provider
 
+@Provider
 class MetadataExceptionMapper : ExceptionMapper<MetadataException> {
     override fun toResponse(exception: MetadataException): Response {
         return Response.status(exception.httpError)

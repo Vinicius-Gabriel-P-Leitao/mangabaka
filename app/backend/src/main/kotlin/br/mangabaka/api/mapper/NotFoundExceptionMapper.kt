@@ -17,7 +17,10 @@ import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import jakarta.ws.rs.ext.ExceptionMapper
 import jakarta.ws.rs.ext.Provider
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
+// @formatter:off
 @Provider
 class NotFoundExceptionMapper : ExceptionMapper<NotFoundException> {
     @Context
@@ -33,13 +36,17 @@ class NotFoundExceptionMapper : ExceptionMapper<NotFoundException> {
 
             BackendMode.ALL, BackendMode.CUSTOM -> {
                 if (uri.startsWith("/v1")) {
+                    val encodedUri = URLEncoder.encode(uri, StandardCharsets.UTF_8)
+                    val redirectUrl = "/api-not-found?original=$encodedUri"
+
                     val htmlRedirect = """
                                     <!DOCTYPE html>
                                     <html>
                                       <head>
-                                        <meta http-equiv="refresh" content="0;URL='/'" />
+                                        <meta charset="UTF-8">
+                                        <meta http-equiv="refresh" content="0;URL='$redirectUrl'" />
                                         <script>
-                                          window.location.href = '/api-not-found?original=$uri&message=${exception.message}';
+                                            window.location.href = '$redirectUrl';
                                         </script>
                                       </head>
                                       <body>
@@ -48,7 +55,8 @@ class NotFoundExceptionMapper : ExceptionMapper<NotFoundException> {
                                     </html>
                                        """.trimIndent()
 
-                    Response.status(Response.Status.OK).entity(htmlRedirect).type(MediaType.TEXT_HTML).build()
+                    Response.status(Response.Status.OK).entity(htmlRedirect).type(MediaType.TEXT_HTML)
+                        .build()
                 } else {
                     Response.status(Response.Status.NOT_FOUND).entity("404 Not Found").type(MediaType.TEXT_PLAIN)
                         .build()
