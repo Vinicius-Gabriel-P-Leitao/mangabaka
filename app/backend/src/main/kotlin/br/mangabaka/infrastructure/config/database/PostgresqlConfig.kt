@@ -12,17 +12,15 @@ import io.ebean.DatabaseFactory
 import io.ebean.annotation.Platform
 import io.ebean.config.DatabaseConfig
 import io.ebean.datasource.DataSourceConfig
-import io.github.cdimascio.dotenv.Dotenv
 
 class PostgresqlConfig {
-    private val dotenv: Dotenv = Dotenv.load()
 
     fun configure() {
         val dataSourceConfig = DataSourceConfig()
 
-        dataSourceConfig.setPassword(dotenv.get("PG_PASSWORD"))
-        dataSourceConfig.setUsername(dotenv.get("PG_USERNAME"))
-        dataSourceConfig.setUrl(dotenv.get("PG_JDBC_URL"))
+        dataSourceConfig.setPassword(System.getenv("PG_PASSWORD"))
+        dataSourceConfig.setUsername(System.getenv("PG_USERNAME"))
+        dataSourceConfig.setUrl(System.getenv("PG_JDBC_URL"))
         dataSourceConfig.setSchema("mangabaka")
         dataSourceConfig.setPlatform(Platform.POSTGRES.name)
 

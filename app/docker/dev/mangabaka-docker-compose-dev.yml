@@ -26,6 +26,11 @@ services:
       - postgresql
     ports:
       - "8080:9090"
+    environment:
+      BACKEND_MODE: ${BACKEND_MODE}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_USER: ${PG_USERNAME}
+      POSTGRES_JDBC_URL: ${PG_JDBC_URL}
     volumes:
       - ../../backend/build/libs/backend.war:/var/lib/jetty/webapps/ROOT.war
       - ../../backend/.env:/var/lib/jetty/.env
