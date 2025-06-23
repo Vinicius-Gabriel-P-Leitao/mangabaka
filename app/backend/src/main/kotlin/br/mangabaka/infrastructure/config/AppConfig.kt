@@ -8,9 +8,18 @@
 package br.mangabaka.infrastructure.config;
 
 enum class BackendMode {
-    ALL, API, CUSTOM
+    ALL, API, CUSTOM;
+
+    companion object {
+        fun fromEnv(envValue: String?): BackendMode = when (envValue?.uppercase()) {
+            "ALL" -> ALL
+            "API" -> API
+            "CUSTOM" -> CUSTOM
+            else -> ALL
+        }
+    }
 }
 
 object AppConfig {
-    lateinit var backendMode: BackendMode
+    val backendMode: BackendMode = BackendMode.fromEnv(System.getenv("BACKEND_MODE"))
 }

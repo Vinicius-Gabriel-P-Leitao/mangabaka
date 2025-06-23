@@ -25,33 +25,30 @@ localPropsFile.inputStream().use { props.load(it) }
 
 fun generateEnvContent(prefix: String): String =
     """
-    PG_DB_NAME=${props.getProperty("${prefix}_DB_NAME") ?: error("Propriedade ${prefix}_DB_NAME n?o encontrada em local.properties")}
-    PG_PASSWORD=${props.getProperty("${prefix}_PASSWORD") ?: error("Propriedade ${prefix}_PASSWORD n?o encontrada em local.properties")}
-    PG_USERNAME=${props.getProperty("${prefix}_USERNAME") ?: error("Propriedade ${prefix}_USERNAME n?o encontrada em local.properties")}
-    PG_JDBC_URL=${props.getProperty("${prefix}_JDBC_URL") ?: error("Propriedade ${prefix}_JDBC_URL n?o encontrada em local.properties")}
+    BACKEND_MODE=${props.getProperty("${prefix}_BACKEND_MODE") ?: error("Propriedade ${prefix}BACKEND_MODE não encontrada em local.properties") }
+    PG_DB_NAME=${props.getProperty("${prefix}_DB_NAME") ?: error("Propriedade ${prefix}_DB_NAME não encontrada em local.properties")}
+    PG_PASSWORD=${props.getProperty("${prefix}_PASSWORD") ?: error("Propriedade ${prefix}_PASSWORD não encontrada em local.properties")}
+    PG_USERNAME=${props.getProperty("${prefix}_USERNAME") ?: error("Propriedade ${prefix}_USERNAME não encontrada em local.properties")}
+    PG_JDBC_URL=${props.getProperty("${prefix}_JDBC_URL") ?: error("Propriedade ${prefix}_JDBC_URL não encontrada em local.properties")}
     """.trimIndent()
 
 val generateEnvProd =
     tasks.register("generateEnvProd") {
         doLast {
-            val content = generateEnvContent("PG_PROD")
+            val content = generateEnvContent("PROD")
             val envFile = file("$rootDir/docker/prod/.env")
             envFile.writeText(content)
-            println("? Arquivo .env de PRODU??O gerado em ${envFile.absolutePath}")
+            println("? Arquivo .env de PRODUÇÃO gerado em ${envFile.absolutePath}")
         }
     }
 
 val generateEnvDev =
     tasks.register("generateEnvDev") {
         doLast {
-            val content = generateEnvContent("PG_DEV")
-            listOf(
-                file("$rootDir/docker/dev/.env"),
-                file("$rootDir/backend/.env"),
-            ).forEach {
-                it.writeText(content)
-                println("? Arquivo .env de DESENVOLVIMENTO gerado em ${it.absolutePath}")
-            }
+            val content = generateEnvContent("DEV")
+            val envFile = file("$rootDir/docker/dev/.env")
+            envFile.writeText(content)
+            println("? Arquivo .env de DESENVOLVIMENTO gerado em ${envFile.absolutePath}")
         }
     }
 
@@ -80,6 +77,7 @@ project(":docker") {
 
     tasks.register("dev") {
         dependsOn(generateEnvDev)
+        dependsOn(":frontend:buildFrontend")
         dependsOn(":frontend:copyFrontendDist")
         dependsOn(":backend:buildBackend")
         dependsOn(":docker:setupDockerDev")
@@ -99,6 +97,8 @@ tasks.register("dev") {
 tasks.register("clean") {
     dependsOn(":frontend:clean")
     dependsOn(":backend:clean")
+    delete("${rootProject.projectDir}/docker/dev/.env")
+    delete("${rootProject.projectDir}/docker/prod/.env")
     description = "Limpa os artefatos de build do frontend e backend"
 }
 
