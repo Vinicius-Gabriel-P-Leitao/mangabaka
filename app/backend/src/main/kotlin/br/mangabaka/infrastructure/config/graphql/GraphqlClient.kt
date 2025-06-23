@@ -47,8 +47,8 @@ class GraphqlClient(
 
             if (response.status != 200) {
                 throw GraphqlException(
-                    message = GraphqlErrorCode.ERROR_CLIENT_STATUS.handle(value = "Erro na requisição GraphQL: $response.status"),
-                    errorCode = GraphqlErrorCode.ERROR_CLIENT_STATUS,
+                    message = GraphqlErrorCode.ERROR_CLIENT.handle(value = "Erro na requisição GraphQL: $response.status"),
+                    errorCode = GraphqlErrorCode.ERROR_CLIENT,
                     httpError = Response.Status.BAD_GATEWAY
                 )
             }
@@ -70,8 +70,8 @@ class GraphqlClient(
             )
         } catch (processingException: ProcessingException) {
             throw GraphqlException(
-                message = GraphqlErrorCode.ERROR_CLIENT_STATUS.handle(value = "Tempo de espera para download dos métadados excedido: ${processingException.message}"),
-                errorCode = GraphqlErrorCode.ERROR_CLIENT_STATUS, httpError = Response.Status.GATEWAY_TIMEOUT
+                message = GraphqlErrorCode.ERROR_TIMEOUT.handle(value = "Tempo de espera para download dos métadados excedido: ${processingException.message}"),
+                errorCode = GraphqlErrorCode.ERROR_TIMEOUT, httpError = Response.Status.GATEWAY_TIMEOUT
             )
         }
     }

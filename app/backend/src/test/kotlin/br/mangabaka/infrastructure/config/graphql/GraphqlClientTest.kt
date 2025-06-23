@@ -10,12 +10,18 @@ package br.mangabaka.infrastructure.config.graphql
 
 import br.mangabaka.exception.code.http.GraphqlErrorCode
 import br.mangabaka.exception.throwable.http.GraphqlException
+import jakarta.ws.rs.ProcessingException
 import jakarta.ws.rs.client.Client
+import jakarta.ws.rs.client.ClientBuilder
 import jakarta.ws.rs.client.Entity
 import jakarta.ws.rs.client.Invocation
 import jakarta.ws.rs.client.WebTarget
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
+import org.glassfish.jersey.client.ClientConfig
+import org.glassfish.jersey.client.ClientProperties
+import org.glassfish.jersey.jackson.JacksonFeature
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -71,7 +77,7 @@ class GraphqlClientTest {
             graphqlClient.executeQuery<Map<String, String>>(query, variables)
             assert(false) { "Expected GraphqlException" }
         } catch (exception: GraphqlException) {
-            assert(exception.errorCode == GraphqlErrorCode.ERROR_CLIENT_STATUS)
+            assert(exception.errorCode == GraphqlErrorCode.ERROR_CLIENT)
         }
     }
 
@@ -129,5 +135,23 @@ class GraphqlClientTest {
         assertEquals(GraphqlErrorCode.ERROR_EMPTY_RESPONSE, exception.errorCode)
     }
 
-    // TODO: Teste de rate limit
+    @Test
+    fun testGraphqlExceptionHandling() {
+        whenever(methodCall = mockClient.target(endpoint)).thenReturn(mockTarget)
+        whenever(methodCall = mockTarget.request(MediaType.APPLICATION_JSON)).thenReturn(mockInvocationBuilder)
+
+        whenever(methodCall = mockInvocationBuilder.post(any<Entity<Map<String, Any>>>())).thenThrow(
+            ProcessingException(
+                "timeout"
+            )
+        )
+
+        val graphqlClient = GraphqlClient(endpoint, mockClient)
+
+        val exception = assertThrows<GraphqlException> {
+            graphqlClient.executeQuery<Map<String, String>>(query, variables)
+        }
+
+        assertEquals(GraphqlErrorCode.ERROR_TIMEOUT, exception.errorCode)
+    }
 }
