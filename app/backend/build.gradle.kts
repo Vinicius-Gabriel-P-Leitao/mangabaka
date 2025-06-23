@@ -1,6 +1,22 @@
+/*
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * Copyright (c) {year} Vinícius Gabriel Pereira Leitão
+ * Licensed under the BSD 3-Clause License.
+ * See LICENSE file in the project root for full license information.
+ */
+
 plugins {
-    id("java")
+    kotlin("plugin.serialization") version "2.0.0"
+    kotlin("plugin.allopen") version "2.0.0"
+    kotlin("jvm") version "2.0.0"
     id("war")
+}
+
+allOpen {
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Embeddable")
 }
 
 group = "br.mangabaka"
@@ -11,10 +27,12 @@ repositories {
 }
 
 dependencies {
-    // OUTRAS
+    // Postgresql
     implementation("org.postgresql:postgresql:42.7.6")
-    implementation("com.graphql-java:graphql-java:22.1")
+    // Dotenv
     implementation("io.github.cdimascio:dotenv-java:3.2.0")
+    // Serialização
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
     // EBEAN
     val ebeanVersion = "15.11.0"
     implementation("io.ebean:ebean:$ebeanVersion")
@@ -44,21 +62,26 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl:$jwtVersion")
     implementation("io.jsonwebtoken:jjwt-api:$jwtVersion")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jwtVersion")
-    // LOMBOK
-    val lombokVersion = "1.18.38"
-    compileOnly("org.projectlombok:lombok:$lombokVersion")
-    testCompileOnly("org.projectlombok:lombok:$lombokVersion")
-    annotationProcessor("org.projectlombok:lombok:$lombokVersion")
-    testAnnotationProcessor("org.projectlombok:lombok:$lombokVersion")
+    // LOG4J
+    val log4jVersion = "2.25.0"
+    implementation("org.fusesource.jansi:jansi:2.4.2")
+    implementation("org.apache.logging.log4j:log4j-api:$log4jVersion")
+    implementation("org.apache.logging.log4j:log4j-core:$log4jVersion")
+    // Kotlin testes
+    testImplementation(kotlin("test"))
+    // MOCKITO
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
     // JUNIT
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-    sourceSets["main"].java.srcDirs("src/main/java")
+    sourceSets["main"].java.srcDirs("src/main/kotlin")
 }
 
 tasks.named<War>("war") {

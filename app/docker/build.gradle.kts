@@ -1,3 +1,11 @@
+/*
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * Copyright (c) {year} Vinícius Gabriel Pereira Leitão
+ * Licensed under the BSD 3-Clause License.
+ * See LICENSE file in the project root for full license information.
+ */
+
 import org.gradle.internal.extensions.stdlib.toDefaultLowerCase
 
 plugins {
@@ -21,7 +29,7 @@ val dockerSetupPostgresqlDev = tasks.register<Exec>("dockerPostgresqlDev") {
 
 val dockerSetupJettyServerDev = tasks.register<Exec>("dockerJettyDev") {
     dependsOn(":backend:buildBackend", dockerSetupPostgresqlDev)
-    commandLine(dockerCommand, "-f", devComposeFile, "-p", devProjectName, "up", "-d", "jetty")
+    commandLine(dockerCommand, "-f", devComposeFile, "-p", devProjectName, "up", "-d", "jetty", "--force-recreate")
     description = "Inicia o Jetty para desenvolvimento"
 }
 
@@ -31,24 +39,8 @@ tasks.register("setupDockerDev") {
     description = "Configura o ambiente Docker de desenvolvimento"
 }
 
-tasks.register<Exec>("dockerRecreateDev") {
-    commandLine(dockerCommand, "-f", devComposeFile, "-p", devProjectName, "up", "-d", "--force-recreate")
-    description = "Recria o ambiente de desenvolvimento"
-    doFirst {
-        println("Recriando containers Docker para desenvolvimento...")
-    }
-}
-
 // NOTE: Ambiente de produção leva todo o código para o container e compila lá dentro
 tasks.register<Exec>("setupDockerProd") {
     commandLine(dockerCommand, "-f", prodComposeFile, "-p", prodProjectName, "up", "-d")
     description = "Inicia o ambiente de produção"
-}
-
-tasks.register<Exec>("dockerRecreateProd") {
-    commandLine(dockerCommand, "-f", prodComposeFile, "-p", prodProjectName, "up", "-d", "--force-recreate")
-    description = "Recria o ambiente de produção"
-    doFirst {
-        println("Recriando containers Docker para produção...")
-    }
 }

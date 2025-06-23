@@ -44,6 +44,9 @@ out/
 # Keep recommended extensions config but ignore everything else inside .vscode
 !.vscode/extensions.json
 
+# Lazyvum files and folders
+kls_database.db
+
 # macOS system files
 .DS_Store
 
@@ -77,6 +80,7 @@ out/
 
 # Other IDEs or editors (just in case)
 *.idea/
+*.kotlin/
 
 # Optional: Ignore coverage reports (if you use any coverage tool)
 coverage/

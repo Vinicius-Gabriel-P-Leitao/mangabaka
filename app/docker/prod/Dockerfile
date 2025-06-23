@@ -35,4 +35,4 @@ COPY --from=backend /app/backend/build/libs/backend.war /var/lib/jetty/webapps/R
 EXPOSE 9090
 
 ENTRYPOINT ["java"]
-CMD [ "-jar", "/usr/local/jetty/start.jar", "--module=ee10-deploy,ee10-webapp,http,ee10-annotations,ee10-servlet", "-Djetty.http.port=9090", "-Djetty.deploy.scanInterval=10"]
+CMD [ "-jar", "/usr/local/jetty/start.jar", "--module=ee10-deploy,ee10-webapp,http,ee10-annotations,ee10-servlet", "-Djetty.http.port=9090", "-Djetty.deploy.scanInterval=10", "-Dlog4j.debug=true"]

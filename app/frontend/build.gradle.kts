@@ -1,3 +1,11 @@
+/*
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * Copyright (c) {year} Vinícius Gabriel Pereira Leitão
+ * Licensed under the BSD 3-Clause License.
+ * See LICENSE file in the project root for full license information.
+ */
+
 import org.gradle.internal.extensions.stdlib.toDefaultLowerCase
 import org.gradle.api.tasks.Exec
 import org.gradle.api.tasks.Copy
@@ -11,23 +19,20 @@ val npmCommand = if (System.getProperty("os.name").toDefaultLowerCase().contains
 val frontendDir = file("mangabaka")
 
 val npmInstall = tasks.register<Exec>("npmInstall") {
+    group = "frontend"
     workingDir = frontendDir
     commandLine(npmCommand, "install")
 }
 
 val buildVue = tasks.register<Exec>("buildVue") {
+    group = "frontend"
     workingDir = frontendDir
     dependsOn(npmInstall)
     commandLine(npmCommand, "run", "build")
 }
 
-val devVue = tasks.register<Exec>("devVue") {
-    workingDir = frontendDir
-    dependsOn(npmInstall)
-    commandLine(npmCommand, "run", "dev")
-}
-
 val copyFrontendDist = tasks.register<Copy>("copyFrontendDist") {
+    group = "frontend"
     dependsOn(buildVue)
     from("$frontendDir/dist") { include("**/*") }
     into("${rootProject.projectDir}/backend/src/main/webapp")
@@ -45,21 +50,18 @@ val copyFrontendDist = tasks.register<Copy>("copyFrontendDist") {
         println("Arquivos copiados para ${targetDir.absolutePath}:")
         targetDir.listFiles()?.forEach { println("  - ${it.name}") }
     }
-    description = "Copia os arquivos de build do Vue.js para o backend"
+    description = "Copia os arquivos de build do Vue.js para o backend."
 }
 
 
 tasks.named("build") {
+    group = "frontend"
     dependsOn(copyFrontendDist)
     description = "Build completo do frontend e movido para dentro do backend."
 }
 
-tasks.register("dev") {
-    dependsOn(devVue)
-    description = "Ambiente de desenvolvimento Vue."
-}
-
 tasks.named("clean") {
+    group = "frontend"
     doFirst {
         val distDir = file("$frontendDir/dist")
         if (distDir.exists()) {
