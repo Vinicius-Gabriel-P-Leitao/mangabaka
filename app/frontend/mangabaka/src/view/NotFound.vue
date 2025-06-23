@@ -26,7 +26,7 @@ onMounted(() => {
     >
       <div class="grid grid-rows-1 grid-cols-3 gap-3">
         <span
-          class="content-center text-end text-7xl sm:text-9xl"
+          class="content-center text-end text-7xl sm:text-[190px]"
           aria-hidden="true"
           >4</span
         >
@@ -38,7 +38,7 @@ onMounted(() => {
           />
         </span>
         <span
-          class="content-center text-start text-7xl sm:text-9xl"
+          class="content-center text-start text-7xl sm:text-[190px]"
           aria-hidden="true"
           >4</span
         >
