@@ -21,5 +21,9 @@ enum class GraphqlErrorCode : ErrorCodeProvider {
 
     ERROR_EMPTY_RESPONSE {
         override fun handle(value: String) = "Erro no Graphql, valor vázio: $value"
+    },
+
+    ERROR_INVALID_URL {
+        override fun handle(value: String) = "Erro no Graphql, url é invalida: $value"
     }
 }

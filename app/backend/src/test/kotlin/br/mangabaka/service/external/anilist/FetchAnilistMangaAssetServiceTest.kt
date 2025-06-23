@@ -97,7 +97,7 @@ class FetchAnilistMangaAssetServiceTest {
     private val mangaName = "Manga"
 
     private val service = FetchAnilistMangaAssetService(
-        query = queryMock, anilistMangaAssetDownload = anilistMangaAssetDownloadMock
+        query = queryMock, anilistMangaAssetClientDownload = anilistMangaAssetDownloadMock
     )
 
     @Test
@@ -111,7 +111,7 @@ class FetchAnilistMangaAssetServiceTest {
         )
 
         whenever(
-            methodCall = anilistMangaAssetDownloadMock.fetchAsset(url = any(), mangaName = any(), assetType = any())
+            methodCall = anilistMangaAssetDownloadMock.fetchAsset(endpoint = any(), mangaName = any(), assetType = any())
         ).thenReturn(mangaValidDownloadedAsset)
 
         val result = service.fetchMangaData(mangaName)
@@ -137,7 +137,7 @@ class FetchAnilistMangaAssetServiceTest {
         ).thenReturn(mangaInvalidMetadataMedia)
 
         whenever(
-            methodCall = anilistMangaAssetDownloadMock.fetchAsset(url = any(), mangaName = any(), assetType = any())
+            methodCall = anilistMangaAssetDownloadMock.fetchAsset(endpoint = any(), mangaName = any(), assetType = any())
         ).thenReturn(mangaValidDownloadedAsset)
 
         val exception = assertThrows<MetadataException> {
@@ -155,7 +155,7 @@ class FetchAnilistMangaAssetServiceTest {
         ).thenThrow(SerializationException(message = "Dados malformados"))
 
         whenever(
-            methodCall = anilistMangaAssetDownloadMock.fetchAsset(url = any(), mangaName = any(), assetType = any())
+            methodCall = anilistMangaAssetDownloadMock.fetchAsset(endpoint = any(), mangaName = any(), assetType = any())
         ).thenReturn(mangaValidDownloadedAsset)
 
         val exception = assertThrows<MetadataException> {
@@ -173,7 +173,7 @@ class FetchAnilistMangaAssetServiceTest {
         ).thenReturn(mangaInvalidMetadataFieldMediaAsset)
 
         whenever(
-            methodCall = anilistMangaAssetDownloadMock.fetchAsset(url = any(), mangaName = any(), assetType = any())
+            methodCall = anilistMangaAssetDownloadMock.fetchAsset(endpoint = any(), mangaName = any(), assetType = any())
         ).thenReturn(mangaValidDownloadedAsset)
 
         val exception = assertThrows<MetadataException> {
@@ -191,7 +191,7 @@ class FetchAnilistMangaAssetServiceTest {
         ).thenReturn(mangaValidMetadata)
 
         whenever(
-            methodCall = anilistMangaAssetDownloadMock.fetchAsset(url = any(), mangaName = any(), assetType = any())
+            methodCall = anilistMangaAssetDownloadMock.fetchAsset(endpoint = any(), mangaName = any(), assetType = any())
         ).thenReturn(mangaInvalidDownloadedAssetData)
 
         val exception = assertThrows<AssetDownloadException> {

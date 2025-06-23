@@ -12,18 +12,22 @@ import br.mangabaka.exception.code.ErrorCodeProvider
 
 enum class AssetDownloadErrorCode : ErrorCodeProvider {
     ERROR_CLIENT_STATUS {
-        override fun handle(value: String) = "Erro no cliente http: $value"
+        override fun handle(value: String) = "Erro ao baixar assets: $value"
     },
 
     ERROR_INVALID_URL {
-        override fun handle(value: String) = "Url invalida: $value"
+        override fun handle(value: String) = "Erro ao baixar assets, Url invalida: $value"
+    },
+
+    ERROR_TIMEOUT {
+        override fun handle(value: String) = "Erro ao baixar assets, timeout tempo foi excedido na requisiçaõ: $value"
     },
 
     ERROR_CLIENT_EXCEPTION {
-        override fun handle(value: String) = "Erro genérico lançado: $value"
+        override fun handle(value: String) = "Erro ao baixar assets: $value"
     },
 
-    ERROR_EMPTY_DATA{
-        override fun handle(value: String) = "Dados vázios: $value"
+    ERROR_EMPTY_DATA {
+        override fun handle(value: String) = "Erro ao baixar assets, dados vázios: $value"
     }
 }
