@@ -9,7 +9,11 @@
 package br.mangabaka
 
 import br.mangabaka.api.controller.GetDataManga
+import br.mangabaka.api.mapper.AssetDownloadExceptionMapper
 import br.mangabaka.api.mapper.GraphqlExceptionMapper
+import br.mangabaka.api.mapper.InternalExceptionMapper
+import br.mangabaka.api.mapper.InvalidParameterExceptionMapper
+import br.mangabaka.api.mapper.MetadataExceptionMapper
 import br.mangabaka.api.mapper.NotFoundExceptionMapper
 import jakarta.ws.rs.ApplicationPath
 import jakarta.ws.rs.core.Application
@@ -25,6 +29,10 @@ class Application : Application() {
             // NOTE: Classes de mapper
             NotFoundExceptionMapper::class.java,
             GraphqlExceptionMapper::class.java,
+            MetadataExceptionMapper::class.java,
+            InvalidParameterExceptionMapper::class.java,
+            InternalExceptionMapper::class.java,
+            AssetDownloadExceptionMapper::class.java,
         )
     }
 }

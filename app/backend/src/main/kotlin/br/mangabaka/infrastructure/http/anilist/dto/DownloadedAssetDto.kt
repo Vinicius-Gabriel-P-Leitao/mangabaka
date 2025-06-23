@@ -6,7 +6,7 @@
  * See LICENSE file in the project root for full license information.
  */
 
-package br.mangabaka.infrastructure.http.anilist.dto.anilist
+package br.mangabaka.infrastructure.http.anilist.dto
 
 import br.mangabaka.api.dto.AssetType
 import br.mangabaka.exception.code.http.AssetDownloadErrorCode
@@ -37,22 +37,5 @@ data class DownloadedAssetDto(
         result = 31 * result + mediaType.hashCode()
         result = 31 * result + content.contentHashCode()
         return result
-    }
-
-    fun validate() {
-        if (filename.isBlank()) throw AssetDownloadException(
-            message = AssetDownloadErrorCode.ERROR_INVALID_URL.handle(value = "Nome do arquivo ausente: $filename"),
-            errorCode = AssetDownloadErrorCode.ERROR_INVALID_URL, httpError = Response.Status.SERVICE_UNAVAILABLE
-        )
-
-        if (mediaType.isBlank()) throw AssetDownloadException(
-            message = AssetDownloadErrorCode.ERROR_INVALID_URL.handle(value = "MediaType ausente: $filename"),
-            errorCode = AssetDownloadErrorCode.ERROR_INVALID_URL, httpError = Response.Status.SERVICE_UNAVAILABLE
-        )
-
-        if (content.isEmpty()) throw AssetDownloadException(
-            message = AssetDownloadErrorCode.ERROR_INVALID_URL.handle(value = "Sem conteúdo no asset: $filename"),
-            errorCode = AssetDownloadErrorCode.ERROR_INVALID_URL, httpError = Response.Status.SERVICE_UNAVAILABLE
-        )
     }
 }

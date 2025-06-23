@@ -9,8 +9,8 @@
 package br.mangabaka.infrastructure.http.anilist.query
 
 import br.mangabaka.infrastructure.config.graphql.GraphqlClient
-import br.mangabaka.infrastructure.http.anilist.dto.anilist.MangaPaginatedAssetsDto
-import br.mangabaka.infrastructure.http.anilist.dto.anilist.MangaPaginatedMetadataDto
+import br.mangabaka.infrastructure.http.anilist.dto.MangaPaginatedAssetsDto
+import br.mangabaka.infrastructure.http.anilist.dto.MangaPaginatedMetadataDto
 import jakarta.annotation.Nonnull
 
 class MangaPaginatedQuery(

@@ -11,7 +11,7 @@ package br.mangabaka.infrastructure.http.anilist.query
 import br.mangabaka.api.dto.AssetType
 import br.mangabaka.exception.code.http.AssetDownloadErrorCode
 import br.mangabaka.exception.throwable.http.AssetDownloadException
-import br.mangabaka.infrastructure.http.anilist.dto.anilist.DownloadedAssetDto
+import br.mangabaka.infrastructure.http.anilist.dto.DownloadedAssetDto
 import jakarta.annotation.Nonnull
 import jakarta.ws.rs.ProcessingException
 import jakarta.ws.rs.client.Client

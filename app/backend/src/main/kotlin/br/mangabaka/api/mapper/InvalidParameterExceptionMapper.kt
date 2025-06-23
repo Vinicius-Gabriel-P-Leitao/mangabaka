@@ -15,14 +15,12 @@ import jakarta.ws.rs.ext.ExceptionMapper
 
 class InvalidParameterExceptionMapper : ExceptionMapper<InvalidParameterException> {
     override fun toResponse(exception: InvalidParameterException): Response {
-        return Response.status(exception.httpError)
-            .entity(
-                mapOf(
-                    "error" to exception.message,
-                    "code" to exception.errorCode,
-                    "cause" to exception.cause?.message
-                )
+        return Response.status(exception.httpError).entity(
+            mapOf(
+                "error" to exception.message,
+                "code" to exception.errorCode,
+                "cause" to exception.cause?.message
             )
-            .build()
+        ).build()
     }
 }

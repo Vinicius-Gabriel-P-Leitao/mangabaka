@@ -8,8 +8,8 @@
 
 package br.mangabaka.api.dto
 
-import br.mangabaka.infrastructure.http.anilist.dto.anilist.DownloadedAssetDto
-import br.mangabaka.infrastructure.http.anilist.dto.anilist.MangaPaginatedMetadataDto
+import br.mangabaka.infrastructure.http.anilist.dto.DownloadedAssetDto
+import br.mangabaka.infrastructure.http.anilist.dto.MangaPaginatedMetadataDto
 
 data class MangaDataDto(
     val paginationInfo: MangaPaginatedMetadataDto?,

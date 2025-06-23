@@ -6,9 +6,8 @@
  * See LICENSE file in the project root for full license information.
  */
 
-package br.mangabaka.infrastructure.http.anilist.dto.anilist
+package br.mangabaka.infrastructure.http.anilist.dto
 
-import br.mangabaka.infrastructure.http.anilist.dto.serializable.Status
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -34,7 +33,7 @@ data class PageInfoMetadata(
 data class MediaMetadata(
     val id: Int,
     val idMal: Int?,
-    val status: Status,
+    val status: StatusManga,
     val chapters: Int?,
     val volumes: Int?,
     val isAdult: Boolean,

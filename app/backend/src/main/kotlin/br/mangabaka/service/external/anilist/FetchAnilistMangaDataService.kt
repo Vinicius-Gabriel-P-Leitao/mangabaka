@@ -9,20 +9,39 @@
 package br.mangabaka.service.external.anilist
 
 import br.mangabaka.api.dto.MangaDataDto
-import br.mangabaka.infrastructure.http.anilist.dto.anilist.MangaPaginatedMetadataDto
+import br.mangabaka.exception.code.http.MetadataErrorCode
+import br.mangabaka.exception.throwable.http.MetadataException
+import br.mangabaka.infrastructure.http.anilist.dto.MangaPaginatedMetadataDto
 import br.mangabaka.infrastructure.http.anilist.query.MangaPaginatedQuery
 import br.mangabaka.service.external.ExternalMetadataService
 import br.mangabaka.service.internal.MangaResolverService.Companion.PAGE
 import br.mangabaka.service.internal.MangaResolverService.Companion.PER_PAGE
+import jakarta.ws.rs.core.Response
+import kotlinx.serialization.SerializationException
 
 class FetchAnilistMangaDataService(
-    private val query: MangaPaginatedQuery = MangaPaginatedQuery(),
-) : ExternalMetadataService {
-    override fun fetchMangaData(mangaName: String): MangaDataDto {
-        val mangaMetadata: MangaPaginatedMetadataDto = query.queryAllDataFactory(manga = mangaName, page = PAGE, perPage = PER_PAGE)
+        private val query: MangaPaginatedQuery = MangaPaginatedQuery(),
+    ) : ExternalMetadataService {
+        override fun fetchMangaData(mangaName: String): MangaDataDto {
+            try {
+                val mangaMetadata: MangaPaginatedMetadataDto =
+                    query.queryAllDataFactory(manga = mangaName, page = PAGE, perPage = PER_PAGE)
 
-        // TODO: Validar dados antes de mandar
+                if (mangaMetadata.page.media.isEmpty()) {
+                    throw MetadataException(
+                        message = MetadataErrorCode.ERROR_FIELD_EMPTY.handle(value = "Nenhuma media foi encontrada para o manga: $mangaName"),
+                        errorCode = MetadataErrorCode.ERROR_FIELD_EMPTY,
+                        httpError = Response.Status.NOT_FOUND
+                    )
+                }
 
-        return MangaDataDto(paginationInfo = mangaMetadata, assets = null)
+                return MangaDataDto(paginationInfo = mangaMetadata, assets = null)
+            } catch (exception: SerializationException) {
+                throw MetadataException(
+                    message = MetadataErrorCode.ERROR_JSON_MALFORMED.handle(value = "Nenhuma media foi encontrada para o manga: ${exception.message}"),
+                    errorCode = MetadataErrorCode.ERROR_JSON_MALFORMED,
+                    httpError = Response.Status.NOT_FOUND
+                )
+            }
+        }
     }
-}

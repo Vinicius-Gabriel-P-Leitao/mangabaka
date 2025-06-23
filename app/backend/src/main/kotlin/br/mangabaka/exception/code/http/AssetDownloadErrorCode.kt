@@ -21,5 +21,9 @@ enum class AssetDownloadErrorCode : ErrorCodeProvider {
 
     ERROR_CLIENT_EXCEPTION {
         override fun handle(value: String) = "Erro genérico lançado: $value"
+    },
+
+    ERROR_EMPTY_DATA{
+        override fun handle(value: String) = "Dados vázios: $value"
     }
 }

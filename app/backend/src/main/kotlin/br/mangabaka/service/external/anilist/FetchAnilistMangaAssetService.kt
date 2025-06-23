@@ -15,13 +15,14 @@ import br.mangabaka.exception.code.http.AssetDownloadErrorCode
 import br.mangabaka.exception.code.http.MetadataErrorCode
 import br.mangabaka.exception.throwable.http.AssetDownloadException
 import br.mangabaka.exception.throwable.http.MetadataException
-import br.mangabaka.infrastructure.http.anilist.dto.anilist.MangaPaginatedAssetsDto
+import br.mangabaka.infrastructure.http.anilist.dto.MangaPaginatedAssetsDto
 import br.mangabaka.infrastructure.http.anilist.query.MangaAssetDownload
 import br.mangabaka.infrastructure.http.anilist.query.MangaPaginatedQuery
 import br.mangabaka.service.external.ExternalMetadataService
 import br.mangabaka.service.internal.MangaResolverService.Companion.PAGE
 import br.mangabaka.service.internal.MangaResolverService.Companion.PER_PAGE
 import jakarta.ws.rs.core.Response
+import kotlinx.serialization.SerializationException
 
 class FetchAnilistMangaAssetService(
     private val query: MangaPaginatedQuery = MangaPaginatedQuery(),
@@ -31,52 +32,93 @@ class FetchAnilistMangaAssetService(
     override fun fetchMangaData(mangaName: String): MangaDataDto {
         if (mangaName.isEmpty()) {
             throw AssetDownloadException(
-                message = AssetDownloadErrorCode.ERROR_INVALID_URL.handle(value = "O nome do mangá não pode ser vázio."),
-                errorCode = AssetDownloadErrorCode.ERROR_INVALID_URL, httpError = Response.Status.BAD_GATEWAY
+                message = AssetDownloadErrorCode.ERROR_EMPTY_DATA.handle(value = "O nome do mangá não pode ser vázio."),
+                errorCode = AssetDownloadErrorCode.ERROR_EMPTY_DATA,
+                httpError = Response.Status.BAD_GATEWAY
             )
         }
 
-        val mangaAssetData: MangaPaginatedAssetsDto =
-            query.queryAssetDataFactory(manga = mangaName, page = PAGE, perPage = PER_PAGE)
+        try {
+            val mangaAssetData: MangaPaginatedAssetsDto =
+                query.queryAssetDataFactory(manga = mangaName, page = PAGE, perPage = PER_PAGE)
 
-        val maxAssets = PER_PAGE * 2
-        val assetListUrl: Array<AssetInfo?> = arrayOfNulls(size = maxAssets)
+            if (mangaAssetData.page.media.isEmpty()) {
+                throw MetadataException(
+                    message = MetadataErrorCode.ERROR_FIELD_EMPTY.handle(value = "Nenhuma media foi encontrada para o manga: $mangaName"),
+                    errorCode = MetadataErrorCode.ERROR_FIELD_EMPTY,
+                    httpError = Response.Status.NOT_FOUND
+                )
+            }
 
-        var index = 0
-        for (value in mangaAssetData.page.media) {
-            val mangaName =
-                value.title.english ?: value.title.romaji ?: value.title.native ?: throw MetadataException(
-                    message = MetadataErrorCode.ERROR_FIELD_EMPTY.handle(value = "Não foi possível definir nenhum nome de manga para buscar os assets."),
-                    errorCode = MetadataErrorCode.ERROR_FIELD_EMPTY, httpError = Response.Status.BAD_GATEWAY
+            val maxAssets = PER_PAGE * 2
+            val assetListUrl: Array<AssetInfo?> = arrayOfNulls(size = maxAssets)
+
+            var index = 0
+            for (value in mangaAssetData.page.media) {
+                val mangaName = listOf(
+                    value.title.english, value.title.romaji, value.title.native
+                ).firstOrNull { !it.isNullOrBlank() } ?: throw MetadataException(
+                    message = MetadataErrorCode.ERROR_FIELD_EMPTY.handle(value = "Não foi encontrado nome de manga para buscar os assets."),
+                    errorCode = MetadataErrorCode.ERROR_FIELD_EMPTY,
+                    httpError = Response.Status.BAD_GATEWAY
                 )
 
-            val coverUrl: String? = value.coverImage.large
-            val bannerUrl: String? = value.bannerImage
+                val coverUrl = value.coverImage.large?.takeIf { it.isNotBlank() } ?: throw MetadataException(
+                    message = MetadataErrorCode.ERROR_FIELD_EMPTY.handle(value = "Não foi encontrado nenhum cover."),
+                    errorCode = MetadataErrorCode.ERROR_FIELD_EMPTY,
+                    httpError = Response.Status.BAD_GATEWAY
+                )
 
-            if (bannerUrl != null && index < maxAssets) {
-                assetListUrl[index] = AssetInfo(url = bannerUrl, mangaName = mangaName, type = AssetType.BANNER)
-                index++
+                val bannerUrl = value.bannerImage?.takeIf { it.isNotBlank() } ?: throw MetadataException(
+                    message = MetadataErrorCode.ERROR_FIELD_EMPTY.handle(value = "Não foi encontrado nenhum banner."),
+                    errorCode = MetadataErrorCode.ERROR_FIELD_EMPTY,
+                    httpError = Response.Status.BAD_GATEWAY
+                )
+
+                if (index < maxAssets) {
+                    assetListUrl[index] = AssetInfo(url = bannerUrl, mangaName = mangaName, type = AssetType.BANNER)
+                    index++
+                }
+
+                if (index < maxAssets) {
+                    assetListUrl[index] = AssetInfo(url = coverUrl, mangaName = mangaName, type = AssetType.COVER)
+                    index++
+                }
             }
 
-            if (coverUrl != null && index < maxAssets) {
-                assetListUrl[index] = AssetInfo(url = coverUrl, mangaName = mangaName, type = AssetType.COVER)
-                index++
-            }
+            val assetData = assetListUrl.filterNotNull().map { assetInfo ->
+                val assetDownload = mangaAssetDownload.fetchAsset(
+                    url = assetInfo.url, mangaName = assetInfo.mangaName, assetType = assetInfo.type
+                )
+
+                if (assetDownload.filename.isBlank() || assetDownload.filename.isEmpty()) throw AssetDownloadException(
+                    message = AssetDownloadErrorCode.ERROR_EMPTY_DATA.handle(value = "Campo de nome ausente: ${assetDownload.filename}"),
+                    errorCode = AssetDownloadErrorCode.ERROR_EMPTY_DATA,
+                    httpError = Response.Status.SERVICE_UNAVAILABLE
+                )
+
+                if (assetDownload.mediaType.isBlank() || assetDownload.mediaType.isEmpty()) throw AssetDownloadException(
+                    message = AssetDownloadErrorCode.ERROR_EMPTY_DATA.handle(value = "Campo de nome mediaType ausente: ${assetDownload.filename}"),
+                    errorCode = AssetDownloadErrorCode.ERROR_EMPTY_DATA,
+                    httpError = Response.Status.SERVICE_UNAVAILABLE
+                )
+
+                if (assetDownload.content.isEmpty()) throw AssetDownloadException(
+                    message = AssetDownloadErrorCode.ERROR_EMPTY_DATA.handle(value = "Campo de nome content vázio: ${assetDownload.filename}"),
+                    errorCode = AssetDownloadErrorCode.ERROR_EMPTY_DATA,
+                    httpError = Response.Status.SERVICE_UNAVAILABLE
+                )
+
+                assetDownload
+            }.toMutableList()
+
+            return MangaDataDto(null, assetData)
+        } catch (exception: SerializationException) {
+            throw MetadataException(
+                message = MetadataErrorCode.ERROR_JSON_MALFORMED.handle(value = "Nenhuma media foi encontrada para o manga: ${exception.message}"),
+                errorCode = MetadataErrorCode.ERROR_JSON_MALFORMED,
+                httpError = Response.Status.NOT_FOUND
+            )
         }
-
-        val asset = assetListUrl.filterNotNull().map { assetInfo ->
-            try {
-                mangaAssetDownload.fetchAsset(
-                    url = assetInfo.url,
-                    mangaName = assetInfo.mangaName,
-                    assetType = assetInfo.type
-
-                ).also { it.validate() }
-            } catch (exception: AssetDownloadException) {
-                throw exception
-            }
-        }.toMutableList()
-
-        return MangaDataDto(null, asset)
     }
 }
