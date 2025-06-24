@@ -5,26 +5,8 @@
 <!-- See LICENSE file in the project root for full license information. -->
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
-import FallbackErro from "@/component/FallbackErro.vue";
+import FallbackErro from "@layout/ErrorFallbackLayout";
 import frieren from "@assets/frieren-404.png";
-
-const originalPath = ref({
-  original: "",
-  reason: "",
-});
-
-onMounted(() => {
-  const url = new URL(window.location.href);
-  const route = useRoute();
-  const params = url.searchParams;
-
-  originalPath.value = {
-    original: params.get("original") || route.fullPath,
-    reason: params.get("reason") || "",
-  };
-});
 </script>
 
 <template>

@@ -5,7 +5,7 @@
 <!-- See LICENSE file in the project root for full license information. -->
 
 <script setup lang="ts">
-import FallbackErro from "@/component/FallbackErro.vue";
+import FallbackErro from "@layout/ErrorFallbackLayout";
 import frieren from "@assets/frieren-404.png";
 import fern from "@assets/fern-400.png";
 </script>
