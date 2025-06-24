@@ -10,9 +10,10 @@ package br.mangabaka.api.controller
 
 import br.mangabaka.api.dto.AssetType
 import br.mangabaka.api.dto.MangaDataDto
-import br.mangabaka.exception.code.http.AssetDownloadErrorCode
-import br.mangabaka.exception.code.http.InternalErrorCode
-import br.mangabaka.exception.code.http.InvalidParameterErrorCode
+import br.mangabaka.exception.code.custom.AssetDownloadErrorCode
+import br.mangabaka.exception.code.custom.InternalErrorCode
+import br.mangabaka.exception.code.custom.InvalidParameterErrorCode
+import br.mangabaka.exception.code.custom.MetadataErrorCode
 import br.mangabaka.exception.throwable.base.AppException
 import br.mangabaka.exception.throwable.base.InternalException
 import br.mangabaka.exception.throwable.http.AssetDownloadException
@@ -28,8 +29,6 @@ import jakarta.ws.rs.Produces
 import jakarta.ws.rs.QueryParam
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
 
 @Path("/manga")
 class GetDataManga {
@@ -86,7 +85,7 @@ class GetDataManga {
                 AssetType.valueOf(typeParam.uppercase())
             } catch (exception: Exception) {
                 throw InvalidParameterException(
-                    message = InvalidParameterErrorCode.ERROR_PARAMETER_INVALID.handle(value = "Tipo inválido. Valores permitidos: capa, banner: ${exception.message}"),
+                    message = InvalidParameterErrorCode.ERROR_PARAMETER_INVALID.handle(value = "Tipo inválido, Valores permitidos: cover, banner"),
                     errorCode = InvalidParameterErrorCode.ERROR_PARAMETER_INVALID,
                     httpError = Response.Status.BAD_REQUEST
                 )
@@ -108,7 +107,7 @@ class GetDataManga {
                 AssetType.BANNER -> result.assets.find { asset: DownloadedAssetDto -> asset.assetType == AssetType.BANNER }
             } ?: throw InvalidParameterException(
                 message = InvalidParameterErrorCode.ERROR_PARAMETER_INVALID.handle(value = "Ativo do tipo $typeParam não encontrado."),
-                errorCode = InvalidParameterErrorCode.ERROR_PARAMETER_INVALID, httpError = Response.Status.NOT_FOUND
+                errorCode = InvalidParameterErrorCode.ERROR_PARAMETER_INVALID, httpError = Response.Status.BAD_REQUEST
             )
 
             return Response

@@ -13,4 +13,5 @@ import br.mangabaka.exception.throwable.base.AppException
 import jakarta.ws.rs.core.Response
 
 // @formatter:off
-class InvalidParameterException(message: String, errorCode: ErrorCodeProvider, val httpError: Response.Status, cause: Throwable? = null) : AppException(message,errorCode,cause)
+class InvalidParameterException(message: String, errorCode: ErrorCodeProvider, httpError: Response.Status, cause: Throwable? = null)
+    : AppException(message, errorCode, httpError, cause)

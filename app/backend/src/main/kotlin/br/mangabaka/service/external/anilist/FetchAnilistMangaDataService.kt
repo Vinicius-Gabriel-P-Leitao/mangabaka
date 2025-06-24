@@ -9,7 +9,7 @@
 package br.mangabaka.service.external.anilist
 
 import br.mangabaka.api.dto.MangaDataDto
-import br.mangabaka.exception.code.http.MetadataErrorCode
+import br.mangabaka.exception.code.custom.MetadataErrorCode
 import br.mangabaka.exception.throwable.http.MetadataException
 import br.mangabaka.infrastructure.http.anilist.dto.MangaPaginatedMetadataDto
 import br.mangabaka.infrastructure.http.anilist.query.AnilistMangaPaginatedQuery
@@ -40,7 +40,7 @@ class FetchAnilistMangaDataService(
                 throw MetadataException(
                     message = MetadataErrorCode.ERROR_JSON_MALFORMED.handle(value = "Nenhuma media foi encontrada para o manga: ${exception.message}"),
                     errorCode = MetadataErrorCode.ERROR_JSON_MALFORMED,
-                    httpError = Response.Status.NOT_FOUND
+                    httpError = Response.Status.BAD_REQUEST
                 )
             }
         }

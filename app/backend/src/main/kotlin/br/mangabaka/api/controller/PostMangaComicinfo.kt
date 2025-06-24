@@ -8,8 +8,8 @@
 
 package br.mangabaka.api.controller
 
-import br.mangabaka.exception.code.http.InternalErrorCode
-import br.mangabaka.exception.code.http.InvalidParameterErrorCode
+import br.mangabaka.exception.code.custom.InternalErrorCode
+import br.mangabaka.exception.code.custom.InvalidParameterErrorCode
 import br.mangabaka.exception.throwable.base.InternalException
 import br.mangabaka.exception.throwable.http.InvalidParameterException
 import br.mangabaka.service.internal.MangaComicinfoService

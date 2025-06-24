@@ -9,12 +9,9 @@
 package br.mangabaka
 
 import br.mangabaka.api.controller.GetDataManga
-import br.mangabaka.api.mapper.AssetDownloadExceptionMapper
-import br.mangabaka.api.mapper.GraphqlExceptionMapper
-import br.mangabaka.api.mapper.InternalExceptionMapper
-import br.mangabaka.api.mapper.InvalidParameterExceptionMapper
-import br.mangabaka.api.mapper.MetadataExceptionMapper
-import br.mangabaka.api.mapper.NotFoundExceptionMapper
+import br.mangabaka.api.mapper.custom.*
+import br.mangabaka.api.mapper.jersey.BadRequestExceptionMapper
+import br.mangabaka.api.mapper.jersey.NotFoundExceptionMapper
 import jakarta.ws.rs.ApplicationPath
 import jakarta.ws.rs.core.Application
 
@@ -24,9 +21,10 @@ class Application : Application() {
         return mutableSetOf(
             // NOTE: Classes de controller
             GetDataManga::class.java,
-
-            // NOTE: Classes de mapper
+            // NOTE: Mappers do jersey
             NotFoundExceptionMapper::class.java,
+            BadRequestExceptionMapper::class.java,
+            // NOTE: Mappers custom
             GraphqlExceptionMapper::class.java,
             MetadataExceptionMapper::class.java,
             InvalidParameterExceptionMapper::class.java,

@@ -8,9 +8,7 @@
 
 package br.mangabaka.infrastructure.config.graphql
 
-import br.mangabaka.exception.code.http.AssetDownloadErrorCode
-import br.mangabaka.exception.code.http.GraphqlErrorCode
-import br.mangabaka.exception.throwable.http.AssetDownloadException
+import br.mangabaka.exception.code.custom.GraphqlErrorCode
 import br.mangabaka.exception.throwable.http.GraphqlException
 import br.mangabaka.infrastructure.config.singleton.JsonConfig
 import jakarta.annotation.Nonnull
@@ -33,13 +31,12 @@ class GraphqlClient(
             .register(JacksonFeature::class.java)
     ).build()
 ) {
-
     @Nonnull
     inline fun <reified T> executeQuery(query: String, variables: Map<String, Any>): T {
         require(value = endpoint.startsWith(prefix = "http://") || endpoint.startsWith(prefix = "https://")) {
             throw GraphqlException(
                 message = GraphqlErrorCode.ERROR_INVALID_URL.handle(value = "URL inválida ou não suportada: $endpoint"),
-                errorCode = GraphqlErrorCode.ERROR_INVALID_URL, httpError = Response.Status.BAD_GATEWAY
+                errorCode = GraphqlErrorCode.ERROR_INVALID_URL, httpError = Response.Status.BAD_REQUEST
             )
         }
 
@@ -73,7 +70,7 @@ class GraphqlClient(
             }
 
             graphQLResponse.data ?: throw GraphqlException(
-                message = GraphqlErrorCode.ERROR_EMPTY_RESPONSE.handle(value = "Resposta sem dados"),
+                message = GraphqlErrorCode.ERROR_EMPTY_RESPONSE.handle(value = "Resposta sem dados."),
                 errorCode = GraphqlErrorCode.ERROR_EMPTY_RESPONSE,
                 httpError = Response.Status.BAD_GATEWAY
             )

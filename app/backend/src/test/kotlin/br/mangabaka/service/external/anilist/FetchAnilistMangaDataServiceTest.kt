@@ -8,7 +8,7 @@
 
 package br.mangabaka.service.external.anilist
 
-import br.mangabaka.exception.code.http.MetadataErrorCode
+import br.mangabaka.exception.code.custom.MetadataErrorCode
 import br.mangabaka.exception.throwable.http.MetadataException
 import br.mangabaka.infrastructure.http.anilist.dto.CoverImageMetadata
 import br.mangabaka.infrastructure.http.anilist.dto.FuzzyDateIntMetadata
