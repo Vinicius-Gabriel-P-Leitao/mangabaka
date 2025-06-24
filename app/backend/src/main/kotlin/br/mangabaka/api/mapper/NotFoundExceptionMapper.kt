@@ -19,6 +19,7 @@ import jakarta.ws.rs.ext.ExceptionMapper
 import jakarta.ws.rs.ext.Provider
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import kotlin.text.Charsets.UTF_8
 
 // @formatter:off
 @Provider
@@ -36,8 +37,10 @@ class NotFoundExceptionMapper : ExceptionMapper<NotFoundException> {
 
             BackendMode.ALL, BackendMode.CUSTOM -> {
                 if (uri.startsWith("/v1")) {
-                    val encodedUri = URLEncoder.encode(uri, StandardCharsets.UTF_8)
-                    val redirectUrl = "/api-not-found?original=$encodedUri"
+                    val encodedUri = URLEncoder.encode(uri, UTF_8)
+                    val reason = URLEncoder.encode(exception.message, UTF_8)
+
+                    val redirectUrl = "/api-bad-request?original=$encodedUri&reason=$reason"
 
                     val htmlRedirect = """
                                     <!DOCTYPE html>

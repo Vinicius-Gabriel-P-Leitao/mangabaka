@@ -86,7 +86,7 @@ class GetDataManga {
                 AssetType.valueOf(typeParam.uppercase())
             } catch (exception: Exception) {
                 throw InvalidParameterException(
-                    message = InvalidParameterErrorCode.ERROR_PARAMETER_INVALID.handle(value = "Tipo inválido. Valores permitidos: capa, banner: ${exception.message}"),
+                    message = InvalidParameterErrorCode.ERROR_PARAMETER_INVALID.handle(value = "Tipo inválido, Valores permitidos: cover, banner"),
                     errorCode = InvalidParameterErrorCode.ERROR_PARAMETER_INVALID,
                     httpError = Response.Status.BAD_REQUEST
                 )

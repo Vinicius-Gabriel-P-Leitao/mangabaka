@@ -30,7 +30,6 @@ class InvalidParameterExceptionMapper : ExceptionMapper<InvalidParameterExceptio
     override fun toResponse(exception: InvalidParameterException): Response {
         val uri = request.requestURI
 
-
         return when (AppConfig.backendMode) {
             BackendMode.API -> {
                 Response.status(exception.httpError).entity(
@@ -44,7 +43,6 @@ class InvalidParameterExceptionMapper : ExceptionMapper<InvalidParameterExceptio
 
             BackendMode.ALL, BackendMode.CUSTOM -> {
                 if (uri.startsWith("/v1")) {
-                    val uri = request.requestURI
                     val encodedUri = URLEncoder.encode(uri, UTF_8)
                     val reason = URLEncoder.encode(exception.message, UTF_8)
 
