@@ -36,7 +36,7 @@ class GraphqlClient(
         require(value = endpoint.startsWith(prefix = "http://") || endpoint.startsWith(prefix = "https://")) {
             throw GraphqlException(
                 message = GraphqlErrorCode.ERROR_INVALID_URL.handle(value = "URL inválida ou não suportada: $endpoint"),
-                errorCode = GraphqlErrorCode.ERROR_INVALID_URL, httpError = Response.Status.BAD_GATEWAY
+                errorCode = GraphqlErrorCode.ERROR_INVALID_URL, httpError = Response.Status.BAD_REQUEST
             )
         }
 
@@ -70,7 +70,7 @@ class GraphqlClient(
             }
 
             graphQLResponse.data ?: throw GraphqlException(
-                message = GraphqlErrorCode.ERROR_EMPTY_RESPONSE.handle(value = "Resposta sem dados"),
+                message = GraphqlErrorCode.ERROR_EMPTY_RESPONSE.handle(value = "Resposta sem dados."),
                 errorCode = GraphqlErrorCode.ERROR_EMPTY_RESPONSE,
                 httpError = Response.Status.BAD_GATEWAY
             )

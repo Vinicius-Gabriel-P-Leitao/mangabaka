@@ -17,7 +17,6 @@ const routes = [
     name: "About",
     component: () => import("@/view/About.vue"),
   },
-
   // NOTE: Rotas de erros HTTP
   {
     path: "/api-bad-request",
@@ -28,6 +27,11 @@ const routes = [
     path: "/api-bad-gateway",
     name: "ApiBadGateway",
     component: () => import("@/view/fallback/BadGateway.vue"),
+  },
+  {
+    path: "/api-gateway-timeout",
+    name: "ApiGatewayTimeout",
+    component: () => import("@/view/fallback/GatewayTimeout.vue"),
   },
   {
     path: "/api-internal-error",

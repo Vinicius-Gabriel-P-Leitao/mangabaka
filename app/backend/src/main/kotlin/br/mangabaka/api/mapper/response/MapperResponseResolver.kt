@@ -15,18 +15,22 @@ import kotlin.text.Charsets.UTF_8
 class MapperResponseResolver(
     private val response: MapperResponse,
     private val uri: String,
-    private val message: String?
+    private val message: String?,
+    private val validPrefix: String = "/v1"
 ) {
     fun resolve(): Response {
-        return if (uri.startsWith(prefix = "/v1")) {
-            val encodedUri = URLEncoder.encode(uri, UTF_8)
-            val reason = URLEncoder.encode(message, UTF_8)
+        if (!uri.startsWith(validPrefix)) return invalidUriResponse()
 
-            response.mapper(uri = encodedUri, message = reason)
-        } else {
-            Response.status(Response.Status.NOT_FOUND).entity("Erro ao redirecionar para o frontend.")
-                .type(MediaType.APPLICATION_JSON)
-                .build()
-        }
+        val encodedUri = URLEncoder.encode(uri, UTF_8)
+        val reason = URLEncoder.encode(message, UTF_8)
+
+        return response.mapper(uri = encodedUri, message = reason)
+    }
+
+    private fun invalidUriResponse(): Response {
+        return Response.status(Response.Status.NOT_FOUND)
+            .entity("""{"error":"Erro ao redirecionar para o frontend."}""")
+            .type(MediaType.APPLICATION_JSON)
+            .build()
     }
 }

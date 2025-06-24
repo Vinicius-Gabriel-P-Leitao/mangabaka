@@ -10,7 +10,7 @@ package br.mangabaka.api.mapper.jersey
 
 import br.mangabaka.api.mapper.response.MapperResponse
 import br.mangabaka.api.mapper.response.MapperResponseResolver
-import br.mangabaka.api.mapper.response.redirect.NotFoundResponse
+import br.mangabaka.api.mapper.response.NotFoundResponse
 import br.mangabaka.infrastructure.config.AppConfig
 import br.mangabaka.infrastructure.config.BackendMode
 import jakarta.servlet.http.HttpServletRequest

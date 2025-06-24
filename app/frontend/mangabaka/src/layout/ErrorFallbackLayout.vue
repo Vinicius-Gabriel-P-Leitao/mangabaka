@@ -34,7 +34,7 @@ onMounted(() => {
 <template>
   <main class="grid grid-flow-row grid-cols-1 gap-y-10 place-items-center">
     <section
-      class="not-found text-center sm:text-left grid gap-5 grid-rows-2 sm:grid-rows-1 sm:grid-cols-2"
+      class="not-found text-center sm:text-left grid gap-5 grid-rows-2 sm:grid-rows-2 sm:grid-cols-1"
     >
       <div class="grid grid-rows-1 grid-cols-3 gap-3">
         <slot />

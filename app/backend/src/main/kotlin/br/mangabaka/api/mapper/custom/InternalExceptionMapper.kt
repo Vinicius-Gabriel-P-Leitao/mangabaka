@@ -8,22 +8,55 @@
 
 package br.mangabaka.api.mapper.custom
 
+import br.mangabaka.api.mapper.response.MapperResponseResolver
+import br.mangabaka.api.mapper.response.InternalServerErrorResponse
+import br.mangabaka.exception.code.custom.InternalErrorCode
 import br.mangabaka.exception.throwable.base.InternalException
+import br.mangabaka.infrastructure.config.AppConfig
+import br.mangabaka.infrastructure.config.BackendMode
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.ws.rs.core.Context
 import jakarta.ws.rs.core.Response
 import jakarta.ws.rs.ext.ExceptionMapper
 import jakarta.ws.rs.ext.Provider
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 @Provider
 class InternalExceptionMapper : ExceptionMapper<InternalException> {
+    companion object {
+        private val logger: Logger = LoggerFactory.getLogger(InternalExceptionMapper::class.java)
+    }
+
+    @Context
+    private lateinit var request: HttpServletRequest
+
     override fun toResponse(exception: InternalException): Response {
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-            .entity(
-                mapOf(
-                    "error" to exception.message,
-                    "code" to exception.errorCode,
-                    "cause" to exception.cause?.message
-                )
-            )
-            .build()
+        val uri = request.requestURI
+        logger.error("Erro inesperado na InternalExceptionMapper: ${exception.message}", exception)
+
+        return when (AppConfig.backendMode) {
+            BackendMode.API -> {
+                Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(
+                        mapOf(
+                            "error" to exception.message,
+                            "code" to exception.errorCode,
+                            "cause" to exception.cause?.message
+                        )
+                    )
+                    .build()
+            }
+
+            BackendMode.ALL, BackendMode.CUSTOM -> {
+                when (exception.errorCode as InternalErrorCode) {
+                    InternalErrorCode.ERROR_INTERNAL_GENERIC -> {
+                        MapperResponseResolver(
+                            response = InternalServerErrorResponse(), uri = uri, message = exception.message
+                        ).resolve()
+                    }
+                }
+            }
+        }
     }
 }

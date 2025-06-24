@@ -13,6 +13,7 @@ import br.mangabaka.api.dto.MangaDataDto
 import br.mangabaka.exception.code.custom.AssetDownloadErrorCode
 import br.mangabaka.exception.code.custom.InternalErrorCode
 import br.mangabaka.exception.code.custom.InvalidParameterErrorCode
+import br.mangabaka.exception.code.custom.MetadataErrorCode
 import br.mangabaka.exception.throwable.base.AppException
 import br.mangabaka.exception.throwable.base.InternalException
 import br.mangabaka.exception.throwable.http.AssetDownloadException

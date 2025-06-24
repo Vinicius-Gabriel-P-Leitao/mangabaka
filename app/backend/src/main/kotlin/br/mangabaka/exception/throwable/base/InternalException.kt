@@ -13,4 +13,4 @@ import jakarta.ws.rs.core.Response
 
 // @formatter:off
 class InternalException(message: String, errorCode: ErrorCodeProvider, cause: Throwable? = null)
-    : AppException(message, errorCode, Response.Status.INTERNAL_SERVER_ERROR,cause)
+    : AppException(message, errorCode, Response.Status.INTERNAL_SERVER_ERROR, cause)

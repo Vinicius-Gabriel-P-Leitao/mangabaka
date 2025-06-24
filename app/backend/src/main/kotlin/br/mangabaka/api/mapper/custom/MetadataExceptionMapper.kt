@@ -7,13 +7,11 @@
  */
 package br.mangabaka.api.mapper.custom
 
-import br.mangabaka.api.mapper.response.MapperResponse
 import br.mangabaka.api.mapper.response.MapperResponseResolver
-import br.mangabaka.api.mapper.response.redirect.BadGatewayResponse
-import br.mangabaka.api.mapper.response.redirect.BadRequestResponse
-import br.mangabaka.api.mapper.response.redirect.InternalServerResponse
-import br.mangabaka.api.mapper.response.redirect.NotFoundResponse
-import br.mangabaka.exception.code.custom.InvalidParameterErrorCode
+import br.mangabaka.api.mapper.response.BadGatewayResponse
+import br.mangabaka.api.mapper.response.BadRequestResponse
+import br.mangabaka.api.mapper.response.InternalServerErrorResponse
+import br.mangabaka.api.mapper.response.NotFoundResponse
 import br.mangabaka.exception.code.custom.MetadataErrorCode
 import br.mangabaka.exception.throwable.http.MetadataException
 import br.mangabaka.infrastructure.config.AppConfig
@@ -24,14 +22,21 @@ import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import jakarta.ws.rs.ext.ExceptionMapper
 import jakarta.ws.rs.ext.Provider
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 @Provider
 class MetadataExceptionMapper : ExceptionMapper<MetadataException> {
+    companion object {
+        private val logger: Logger = LoggerFactory.getLogger(InternalExceptionMapper::class.java)
+    }
+
     @Context
     private lateinit var request: HttpServletRequest
 
     override fun toResponse(exception: MetadataException): Response {
         val uri = request.requestURI
+        logger.error("Erro inesperado na MetadataExceptionMapper: ${exception.message}", exception)
 
         return when (AppConfig.backendMode) {
             BackendMode.API -> {
@@ -70,7 +75,7 @@ class MetadataExceptionMapper : ExceptionMapper<MetadataException> {
 
                     else -> {
                         MapperResponseResolver(
-                            response = InternalServerResponse(),
+                            response = InternalServerErrorResponse(),
                             uri = uri,
                             message = exception.message
                         ).resolve()

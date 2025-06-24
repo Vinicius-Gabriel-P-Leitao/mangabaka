@@ -65,6 +65,7 @@ dependencies {
     implementation("org.fusesource.jansi:jansi:2.4.2")
     implementation("org.apache.logging.log4j:log4j-api:$log4jVersion")
     implementation("org.apache.logging.log4j:log4j-core:$log4jVersion")
+    implementation("org.apache.logging.log4j:log4j-slf4j2-impl:${log4jVersion}")
     // Kotlin testes
     testImplementation(kotlin("test"))
     // MOCKITO
