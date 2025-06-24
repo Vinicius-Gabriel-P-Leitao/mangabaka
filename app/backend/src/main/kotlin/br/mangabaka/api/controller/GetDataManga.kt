@@ -10,9 +10,9 @@ package br.mangabaka.api.controller
 
 import br.mangabaka.api.dto.AssetType
 import br.mangabaka.api.dto.MangaDataDto
-import br.mangabaka.exception.code.http.AssetDownloadErrorCode
-import br.mangabaka.exception.code.http.InternalErrorCode
-import br.mangabaka.exception.code.http.InvalidParameterErrorCode
+import br.mangabaka.exception.code.custom.AssetDownloadErrorCode
+import br.mangabaka.exception.code.custom.InternalErrorCode
+import br.mangabaka.exception.code.custom.InvalidParameterErrorCode
 import br.mangabaka.exception.throwable.base.AppException
 import br.mangabaka.exception.throwable.base.InternalException
 import br.mangabaka.exception.throwable.http.AssetDownloadException
@@ -28,8 +28,6 @@ import jakarta.ws.rs.Produces
 import jakarta.ws.rs.QueryParam
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
 
 @Path("/manga")
 class GetDataManga {

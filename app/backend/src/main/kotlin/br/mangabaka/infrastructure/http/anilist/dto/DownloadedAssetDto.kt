@@ -9,9 +9,6 @@
 package br.mangabaka.infrastructure.http.anilist.dto
 
 import br.mangabaka.api.dto.AssetType
-import br.mangabaka.exception.code.http.AssetDownloadErrorCode
-import br.mangabaka.exception.throwable.http.AssetDownloadException
-import jakarta.ws.rs.core.Response
 
 data class DownloadedAssetDto(
     val filename: String,

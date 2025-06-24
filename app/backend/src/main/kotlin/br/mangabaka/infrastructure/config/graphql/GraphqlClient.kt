@@ -8,9 +8,7 @@
 
 package br.mangabaka.infrastructure.config.graphql
 
-import br.mangabaka.exception.code.http.AssetDownloadErrorCode
-import br.mangabaka.exception.code.http.GraphqlErrorCode
-import br.mangabaka.exception.throwable.http.AssetDownloadException
+import br.mangabaka.exception.code.custom.GraphqlErrorCode
 import br.mangabaka.exception.throwable.http.GraphqlException
 import br.mangabaka.infrastructure.config.singleton.JsonConfig
 import jakarta.annotation.Nonnull

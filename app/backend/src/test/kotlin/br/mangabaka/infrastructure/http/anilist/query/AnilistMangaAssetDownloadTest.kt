@@ -9,7 +9,7 @@
 package br.mangabaka.infrastructure.http.anilist.query
 
 import br.mangabaka.api.dto.AssetType
-import br.mangabaka.exception.code.http.AssetDownloadErrorCode
+import br.mangabaka.exception.code.custom.AssetDownloadErrorCode
 import br.mangabaka.exception.throwable.http.AssetDownloadException
 import jakarta.ws.rs.ProcessingException
 import jakarta.ws.rs.client.Client
@@ -25,7 +25,6 @@ import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.reset
 import org.mockito.kotlin.whenever
-import java.io.IOException
 
 class AnilistMangaAssetDownloadTest {
     private val mockClient = mock<Client>()

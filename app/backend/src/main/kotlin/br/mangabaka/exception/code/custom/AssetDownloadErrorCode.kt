@@ -6,7 +6,7 @@
  * See LICENSE file in the project root for full license information.
  */
 
-package br.mangabaka.exception.code.http
+package br.mangabaka.exception.code.custom
 
 import br.mangabaka.exception.code.ErrorCodeProvider
 

@@ -11,8 +11,8 @@ package br.mangabaka.service.external.anilist
 import br.mangabaka.api.dto.AssetInfo
 import br.mangabaka.api.dto.AssetType
 import br.mangabaka.api.dto.MangaDataDto
-import br.mangabaka.exception.code.http.AssetDownloadErrorCode
-import br.mangabaka.exception.code.http.MetadataErrorCode
+import br.mangabaka.exception.code.custom.AssetDownloadErrorCode
+import br.mangabaka.exception.code.custom.MetadataErrorCode
 import br.mangabaka.exception.throwable.http.AssetDownloadException
 import br.mangabaka.exception.throwable.http.MetadataException
 import br.mangabaka.infrastructure.http.anilist.dto.MangaPaginatedAssetsDto
