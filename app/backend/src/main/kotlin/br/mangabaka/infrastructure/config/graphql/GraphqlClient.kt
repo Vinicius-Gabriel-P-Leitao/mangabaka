@@ -31,7 +31,6 @@ class GraphqlClient(
             .register(JacksonFeature::class.java)
     ).build()
 ) {
-
     @Nonnull
     inline fun <reified T> executeQuery(query: String, variables: Map<String, Any>): T {
         require(value = endpoint.startsWith(prefix = "http://") || endpoint.startsWith(prefix = "https://")) {

@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import ErrorFallbackLayout from "@/layout/ErrorFallbackLayout.vue";
-import frieren from "@asset/frieren-404.png";
+import frieren from "@asset/frieren.png";
 </script>
 
 <template>
@@ -24,7 +24,7 @@ import frieren from "@asset/frieren-404.png";
     <span class="place-self-center">
       <img
         :src="frieren"
-        alt="Frieren triste por erro 404"
+        alt="Frieren from sou sou no Frieren"
         class="w-24 sm:w-40 h-24 sm:h-40 object-cover rounded-full shadow-lg border-4 border-white"
       />
     </span>

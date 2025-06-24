@@ -22,13 +22,23 @@ const routes = [
   {
     path: "/api-bad-request",
     name: "ApiBadRequest",
-    component: () => import("@/view/BadRequest.vue"),
+    component: () => import("@/view/fallback/BadRequest.vue"),
+  },
+  {
+    path: "/api-bad-gateway",
+    name: "ApiBadGateway",
+    component: () => import("@/view/fallback/BadGateway.vue"),
+  },
+  {
+    path: "/api-internal-error",
+    name: "ApiInternalError",
+    component: () => import("@/view/fallback/InternalServerError.vue"),
   },
   // NOTE: Necessário estar em ultimo
   {
     path: "/:pathMatch(.*)*",
     name: "NotFound",
-    component: () => import("@/view/NotFound.vue"),
+    component: () => import("@/view/fallback/NotFound.vue"),
   },
 ];
 

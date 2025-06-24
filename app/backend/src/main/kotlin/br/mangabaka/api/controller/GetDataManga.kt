@@ -106,7 +106,7 @@ class GetDataManga {
                 AssetType.BANNER -> result.assets.find { asset: DownloadedAssetDto -> asset.assetType == AssetType.BANNER }
             } ?: throw InvalidParameterException(
                 message = InvalidParameterErrorCode.ERROR_PARAMETER_INVALID.handle(value = "Ativo do tipo $typeParam não encontrado."),
-                errorCode = InvalidParameterErrorCode.ERROR_PARAMETER_INVALID, httpError = Response.Status.NOT_FOUND
+                errorCode = InvalidParameterErrorCode.ERROR_PARAMETER_INVALID, httpError = Response.Status.BAD_REQUEST
             )
 
             return Response

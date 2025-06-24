@@ -7,6 +7,9 @@
  */
 package br.mangabaka.api.mapper.jersey;
 
+import br.mangabaka.api.mapper.response.MapperResponse
+import br.mangabaka.api.mapper.response.MapperResponseResolver
+import br.mangabaka.api.mapper.response.redirect.BadRequestResponse
 import br.mangabaka.infrastructure.config.AppConfig
 import br.mangabaka.infrastructure.config.BackendMode
 import jakarta.servlet.http.HttpServletRequest
@@ -16,10 +19,7 @@ import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import jakarta.ws.rs.ext.ExceptionMapper
 import jakarta.ws.rs.ext.Provider
-import java.net.URLEncoder
-import kotlin.text.Charsets.UTF_8
 
-// @formatter:off
 @Provider
 class BadRequestExceptionMapper : ExceptionMapper<BadRequestException> {
     @Context
@@ -38,34 +38,8 @@ class BadRequestExceptionMapper : ExceptionMapper<BadRequestException> {
             }
 
             BackendMode.ALL, BackendMode.CUSTOM -> {
-                if (uri.startsWith("/v1")) {
-                    val encodedUri = URLEncoder.encode(uri, UTF_8)
-                    val reason = URLEncoder.encode(exception.message, UTF_8)
-
-                    val redirectUrl = "/api-bad-request?original=$encodedUri&reason=$reason"
-
-                    val htmlRedirect = """
-                                    <!DOCTYPE html>
-                                    <html>
-                                      <head>
-                                        <meta charset="UTF-8">
-                                        <meta http-equiv="refresh" content="0;URL='$redirectUrl'" />
-                                        <script>
-                                            window.location.href = '$redirectUrl';
-                                        </script>
-                                      </head>
-                                      <body>
-                                        Redirecionando...
-                                      </body>
-                                    </html>
-                                       """.trimIndent()
-
-                    Response.status(Response.Status.OK).entity(htmlRedirect).type(MediaType.TEXT_HTML)
-                        .build()
-                } else {
-                    Response.status(Response.Status.BAD_REQUEST).entity(
-                        "Erro ao redirecionar para tela de bad request.").type(MediaType.APPLICATION_JSON).build()
-                }
+                val mapperResponse: MapperResponse = BadRequestResponse()
+                MapperResponseResolver(response = mapperResponse, uri = uri, message = exception.message).resolve()
             }
         }
     }

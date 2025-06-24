@@ -34,7 +34,7 @@ class FetchAnilistMangaAssetService(
             throw AssetDownloadException(
                 message = AssetDownloadErrorCode.ERROR_EMPTY_DATA.handle(value = "O nome do mangá não pode ser vázio."),
                 errorCode = AssetDownloadErrorCode.ERROR_EMPTY_DATA,
-                httpError = Response.Status.BAD_GATEWAY
+                httpError = Response.Status.BAD_REQUEST
             )
         }
 
@@ -94,19 +94,19 @@ class FetchAnilistMangaAssetService(
                 if (assetDownload.filename.isBlank() || assetDownload.filename.isEmpty()) throw AssetDownloadException(
                     message = AssetDownloadErrorCode.ERROR_EMPTY_DATA.handle(value = "Campo de nome ausente: ${assetDownload.filename}"),
                     errorCode = AssetDownloadErrorCode.ERROR_EMPTY_DATA,
-                    httpError = Response.Status.SERVICE_UNAVAILABLE
+                    httpError = Response.Status.BAD_GATEWAY
                 )
 
                 if (assetDownload.mediaType.isBlank() || assetDownload.mediaType.isEmpty()) throw AssetDownloadException(
                     message = AssetDownloadErrorCode.ERROR_EMPTY_DATA.handle(value = "Campo de nome mediaType ausente: ${assetDownload.filename}"),
                     errorCode = AssetDownloadErrorCode.ERROR_EMPTY_DATA,
-                    httpError = Response.Status.SERVICE_UNAVAILABLE
+                    httpError = Response.Status.BAD_GATEWAY
                 )
 
                 if (assetDownload.content.isEmpty()) throw AssetDownloadException(
                     message = AssetDownloadErrorCode.ERROR_EMPTY_DATA.handle(value = "Campo de nome content vázio: ${assetDownload.filename}"),
                     errorCode = AssetDownloadErrorCode.ERROR_EMPTY_DATA,
-                    httpError = Response.Status.SERVICE_UNAVAILABLE
+                    httpError = Response.Status.BAD_GATEWAY
                 )
 
                 assetDownload
@@ -117,7 +117,7 @@ class FetchAnilistMangaAssetService(
             throw MetadataException(
                 message = MetadataErrorCode.ERROR_JSON_MALFORMED.handle(value = "Nenhuma media foi encontrada para o manga: ${exception.message}"),
                 errorCode = MetadataErrorCode.ERROR_JSON_MALFORMED,
-                httpError = Response.Status.NOT_FOUND
+                httpError = Response.Status.BAD_REQUEST
             )
         } finally {
             anilistMangaAssetClientDownload.close();
