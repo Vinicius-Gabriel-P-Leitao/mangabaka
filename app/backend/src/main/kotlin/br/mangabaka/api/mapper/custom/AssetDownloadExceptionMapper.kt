@@ -6,22 +6,21 @@
  * See LICENSE file in the project root for full license information.
  */
 
-package br.mangabaka.api.mapper
+package br.mangabaka.api.mapper.custom
 
-import br.mangabaka.exception.throwable.http.GraphqlException
+import br.mangabaka.exception.throwable.http.AssetDownloadException
 import jakarta.ws.rs.core.Response
 import jakarta.ws.rs.ext.ExceptionMapper
 import jakarta.ws.rs.ext.Provider
 
 @Provider
-class GraphqlExceptionMapper : ExceptionMapper<GraphqlException> {
-    override fun toResponse(exception: GraphqlException): Response {
+class AssetDownloadExceptionMapper : ExceptionMapper<AssetDownloadException> {
+    override fun toResponse(exception: AssetDownloadException): Response {
         return Response.status(exception.httpError)
             .entity(
                 mapOf(
                     "error" to exception.message,
-                    "code" to exception.errorCode,
-                    "cause" to exception.cause?.message
+                    "code" to exception.errorCode
                 )
             )
             .build()

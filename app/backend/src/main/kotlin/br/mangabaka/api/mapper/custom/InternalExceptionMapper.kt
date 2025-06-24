@@ -6,7 +6,7 @@
  * See LICENSE file in the project root for full license information.
  */
 
-package br.mangabaka.api.mapper
+package br.mangabaka.api.mapper.custom
 
 import br.mangabaka.exception.throwable.base.InternalException
 import jakarta.ws.rs.core.Response

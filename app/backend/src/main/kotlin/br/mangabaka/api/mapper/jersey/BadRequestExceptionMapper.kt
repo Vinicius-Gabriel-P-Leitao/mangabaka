@@ -5,40 +5,36 @@
  * Licensed under the BSD 3-Clause License.
  * See LICENSE file in the project root for full license information.
  */
+package br.mangabaka.api.mapper.jersey;
 
-package br.mangabaka.api.mapper
-
-import br.mangabaka.exception.throwable.http.InvalidParameterException
 import br.mangabaka.infrastructure.config.AppConfig
 import br.mangabaka.infrastructure.config.BackendMode
 import jakarta.servlet.http.HttpServletRequest
+import jakarta.ws.rs.BadRequestException
 import jakarta.ws.rs.core.Context
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import jakarta.ws.rs.ext.ExceptionMapper
 import jakarta.ws.rs.ext.Provider
 import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 import kotlin.text.Charsets.UTF_8
 
 // @formatter:off
 @Provider
-class InvalidParameterExceptionMapper : ExceptionMapper<InvalidParameterException> {
+class BadRequestExceptionMapper : ExceptionMapper<BadRequestException> {
     @Context
     private lateinit var request: HttpServletRequest
 
-    override fun toResponse(exception: InvalidParameterException): Response {
+    override fun toResponse(exception: BadRequestException): Response {
         val uri = request.requestURI
 
         return when (AppConfig.backendMode) {
             BackendMode.API -> {
-                Response.status(exception.httpError).entity(
-                    mapOf(
-                        "error" to exception.message,
-                        "code" to exception.errorCode,
-                        "cause" to exception.cause?.message
-                    )
-                ).build()
+                val errorMap = mapOf("error" to (exception.message ?: "Bad Request"))
+
+                Response.status(Response.Status.BAD_REQUEST).entity(
+                    errorMap
+                ).type(MediaType.APPLICATION_JSON).build()
             }
 
             BackendMode.ALL, BackendMode.CUSTOM -> {
@@ -67,8 +63,8 @@ class InvalidParameterExceptionMapper : ExceptionMapper<InvalidParameterExceptio
                     Response.status(Response.Status.OK).entity(htmlRedirect).type(MediaType.TEXT_HTML)
                         .build()
                 } else {
-                    Response.status(Response.Status.NOT_FOUND).entity("404 Not Found").type(MediaType.TEXT_PLAIN)
-                        .build()
+                    Response.status(Response.Status.BAD_REQUEST).entity(
+                        "Erro ao redirecionar para tela de bad request.").type(MediaType.APPLICATION_JSON).build()
                 }
             }
         }

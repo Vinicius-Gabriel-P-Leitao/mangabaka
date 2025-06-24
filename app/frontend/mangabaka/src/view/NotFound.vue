@@ -5,18 +5,18 @@
 <!-- See LICENSE file in the project root for full license information. -->
 
 <script setup lang="ts">
-import FallbackErro from "@layout/ErrorFallbackLayout";
-import frieren from "@assets/frieren-404.png";
+import ErrorFallbackLayout from "@/layout/ErrorFallbackLayout.vue";
+import frieren from "@asset/frieren-404.png";
 </script>
 
 <template>
-  <FallbackErro
+  <ErrorFallbackLayout
     title="Página não encontrada 😢"
     message="Não foi possível encontrar:"
     cause="Motivo:"
   >
     <span
-      class="content-center text-end text-7xl sm:text-[190px]"
+      class="content-center text-end text-8xl sm:text-[190px]"
       aria-hidden="true"
     >
       4
@@ -29,10 +29,10 @@ import frieren from "@assets/frieren-404.png";
       />
     </span>
     <span
-      class="content-center text-start text-7xl sm:text-[190px]"
+      class="content-center text-start text-8xl sm:text-[190px]"
       aria-hidden="true"
     >
       4
     </span>
-  </FallbackErro>
+  </ErrorFallbackLayout>
 </template>

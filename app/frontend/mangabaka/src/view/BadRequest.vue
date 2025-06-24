@@ -5,16 +5,16 @@
 <!-- See LICENSE file in the project root for full license information. -->
 
 <script setup lang="ts">
-import FallbackErro from "@layout/ErrorFallbackLayout";
-import frieren from "@assets/frieren-404.png";
-import fern from "@assets/fern-400.png";
+import ErrorFallbackLayout from "@/layout/ErrorFallbackLayout.vue";
+import frieren from "@asset/frieren-404.png";
+import fern from "@asset/fern-400.png";
 </script>
 
 <template>
-  <FallbackErro
+  <ErrorFallbackLayout
     title="Request mal formado 🤨"
     message="Não foi possível encontrar:"
-    cause="Causa"
+    cause="Causa:"
   >
     <span
       class="content-center text-end text-8xl sm:text-[190px]"
@@ -36,5 +36,5 @@ import fern from "@assets/fern-400.png";
         class="w-24 sm:w-40 h-24 sm:h-40 object-cover rounded-full shadow-lg border-4 border-white"
       />
     </span>
-  </FallbackErro>
+  </ErrorFallbackLayout>
 </template>
