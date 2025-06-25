@@ -9,13 +9,14 @@
 package br.mangabaka.exception.code.custom
 
 import br.mangabaka.exception.code.ErrorCodeProvider
+import br.mangabaka.infrastructure.config.singleton.I18n
 
-enum class InvalidParameterErrorCode : ErrorCodeProvider {
+enum class ParameterErrorCode : ErrorCodeProvider {
     ERROR_PARAMETER_EMPTY {
-        override fun handle(value: String) = "Erro de parametro vazio: $value"
+        override fun handle(value: String) = I18n.get("error.code.empty.parameter", value)
     },
 
     ERROR_PARAMETER_INVALID {
-        override fun handle(value: String) = "O parametro é invalido: $value"
+        override fun handle(value: String) = I18n.get("error.code.invalid.parameter", value)
     },
 }

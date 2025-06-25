@@ -16,6 +16,7 @@ import br.mangabaka.exception.code.custom.MetadataErrorCode
 import br.mangabaka.exception.throwable.http.MetadataException
 import br.mangabaka.infrastructure.config.AppConfig
 import br.mangabaka.infrastructure.config.BackendMode
+import br.mangabaka.infrastructure.config.singleton.I18n
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.ws.rs.core.Context
 import jakarta.ws.rs.core.MediaType
@@ -36,7 +37,11 @@ class MetadataExceptionMapper : ExceptionMapper<MetadataException> {
 
     override fun toResponse(exception: MetadataException): Response {
         val uri = request.requestURI
-        logger.error("Erro inesperado na MetadataExceptionMapper: ${exception.message}", exception)
+        logger.error(
+            I18n.get("throw.unexpected.error", "MetadataExceptionMapper: ${exception.message}"),
+            exception
+        )
+
 
         return when (AppConfig.backendMode) {
             BackendMode.API -> {
@@ -49,7 +54,7 @@ class MetadataExceptionMapper : ExceptionMapper<MetadataException> {
 
             BackendMode.ALL -> {
                 when (exception.errorCode as MetadataErrorCode to exception.httpError) {
-                    MetadataErrorCode.ERROR_FIELD_EMPTY to Response.Status.BAD_GATEWAY -> {
+                    MetadataErrorCode.ERROR_EMPTY_FIELD to Response.Status.BAD_GATEWAY -> {
                         MapperResponseResolver(
                             response = BadGatewayResponse(),
                             uri = uri,
@@ -57,7 +62,7 @@ class MetadataExceptionMapper : ExceptionMapper<MetadataException> {
                         ).resolve()
                     }
 
-                    MetadataErrorCode.ERROR_FIELD_EMPTY to Response.Status.NOT_FOUND -> {
+                    MetadataErrorCode.ERROR_EMPTY_FIELD to Response.Status.NOT_FOUND -> {
                         MapperResponseResolver(
                             response = NotFoundResponse(),
                             uri = uri,

@@ -10,10 +10,11 @@ package br.mangabaka.api.mapper.custom
 
 import br.mangabaka.api.mapper.response.MapperResponseResolver
 import br.mangabaka.api.mapper.response.BadRequestResponse
-import br.mangabaka.exception.code.custom.InvalidParameterErrorCode
+import br.mangabaka.exception.code.custom.ParameterErrorCode
 import br.mangabaka.exception.throwable.http.InvalidParameterException
 import br.mangabaka.infrastructure.config.AppConfig
 import br.mangabaka.infrastructure.config.BackendMode
+import br.mangabaka.infrastructure.config.singleton.I18n
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.ws.rs.core.Context
 import jakarta.ws.rs.core.MediaType
@@ -35,7 +36,10 @@ class InvalidParameterExceptionMapper : ExceptionMapper<InvalidParameterExceptio
 
     override fun toResponse(exception: InvalidParameterException): Response {
         val uri = request.requestURI
-        logger.error("Erro inesperado na InvalidParameterExceptionMapper: ${exception.message}", exception)
+        logger.error(
+            I18n.get("throw.unexpected.error", "InvalidParameterExceptionMapper: ${exception.message}"),
+            exception
+        )
 
         return when (AppConfig.backendMode) {
             BackendMode.API -> {
@@ -47,8 +51,8 @@ class InvalidParameterExceptionMapper : ExceptionMapper<InvalidParameterExceptio
             }
 
             BackendMode.ALL -> {
-                when (exception.errorCode as InvalidParameterErrorCode) {
-                    InvalidParameterErrorCode.ERROR_PARAMETER_EMPTY, InvalidParameterErrorCode.ERROR_PARAMETER_INVALID -> {
+                when (exception.errorCode as ParameterErrorCode) {
+                    ParameterErrorCode.ERROR_PARAMETER_EMPTY, ParameterErrorCode.ERROR_PARAMETER_INVALID -> {
                         MapperResponseResolver(
                             response = BadRequestResponse(), uri = uri, message = exception.message
                         ).resolve()

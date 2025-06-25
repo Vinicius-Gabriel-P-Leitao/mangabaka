@@ -44,8 +44,8 @@ class FetchAnilistMangaAssetService(
 
             if (mangaAssetData.page.media.isEmpty()) {
                 throw MetadataException(
-                    message = MetadataErrorCode.ERROR_FIELD_EMPTY.handle(value = "Nenhuma media foi encontrada para o manga: $mangaName"),
-                    errorCode = MetadataErrorCode.ERROR_FIELD_EMPTY,
+                    message = MetadataErrorCode.ERROR_EMPTY_FIELD.handle(value = "Nenhuma media foi encontrada para o manga: $mangaName"),
+                    errorCode = MetadataErrorCode.ERROR_EMPTY_FIELD,
                     httpError = Response.Status.NOT_FOUND
                 )
             }
@@ -58,20 +58,20 @@ class FetchAnilistMangaAssetService(
                 val mangaName = listOf(
                     value.title.english, value.title.romaji, value.title.native
                 ).firstOrNull { !it.isNullOrBlank() } ?: throw MetadataException(
-                    message = MetadataErrorCode.ERROR_FIELD_EMPTY.handle(value = "Não foi encontrado nome de manga para buscar os assets."),
-                    errorCode = MetadataErrorCode.ERROR_FIELD_EMPTY,
+                    message = MetadataErrorCode.ERROR_EMPTY_FIELD.handle(value = "Não foi encontrado nome de manga para buscar os assets."),
+                    errorCode = MetadataErrorCode.ERROR_EMPTY_FIELD,
                     httpError = Response.Status.BAD_GATEWAY
                 )
 
                 val coverUrl = value.coverImage.large?.takeIf { it.isNotBlank() } ?: throw MetadataException(
-                    message = MetadataErrorCode.ERROR_FIELD_EMPTY.handle(value = "Não foi encontrado nenhum cover."),
-                    errorCode = MetadataErrorCode.ERROR_FIELD_EMPTY,
+                    message = MetadataErrorCode.ERROR_EMPTY_FIELD.handle(value = "Não foi encontrado nenhum cover."),
+                    errorCode = MetadataErrorCode.ERROR_EMPTY_FIELD,
                     httpError = Response.Status.BAD_GATEWAY
                 )
 
                 val bannerUrl = value.bannerImage?.takeIf { it.isNotBlank() } ?: throw MetadataException(
-                    message = MetadataErrorCode.ERROR_FIELD_EMPTY.handle(value = "Não foi encontrado nenhum banner."),
-                    errorCode = MetadataErrorCode.ERROR_FIELD_EMPTY,
+                    message = MetadataErrorCode.ERROR_EMPTY_FIELD.handle(value = "Não foi encontrado nenhum banner."),
+                    errorCode = MetadataErrorCode.ERROR_EMPTY_FIELD,
                     httpError = Response.Status.BAD_GATEWAY
                 )
 

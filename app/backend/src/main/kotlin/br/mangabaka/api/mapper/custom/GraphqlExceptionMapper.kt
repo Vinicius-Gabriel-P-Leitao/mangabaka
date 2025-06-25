@@ -13,6 +13,7 @@ import br.mangabaka.exception.code.custom.GraphqlErrorCode
 import br.mangabaka.exception.throwable.http.GraphqlException
 import br.mangabaka.infrastructure.config.AppConfig
 import br.mangabaka.infrastructure.config.BackendMode
+import br.mangabaka.infrastructure.config.singleton.I18n
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.ws.rs.core.Context
 import jakarta.ws.rs.core.MediaType
@@ -33,7 +34,10 @@ class GraphqlExceptionMapper : ExceptionMapper<GraphqlException> {
 
     override fun toResponse(exception: GraphqlException): Response {
         val uri = request.requestURI
-        logger.error("Erro inesperado na GraphQLException: ${exception.message}", exception)
+        logger.error(
+            I18n.get("throw.unexpected.error", "GraphqlExceptionMapper: ${exception.message}"),
+            exception
+        )
 
         return when (AppConfig.backendMode) {
             BackendMode.API -> {

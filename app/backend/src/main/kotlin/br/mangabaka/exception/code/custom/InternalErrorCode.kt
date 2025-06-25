@@ -9,13 +9,15 @@
 package br.mangabaka.exception.code.custom
 
 import br.mangabaka.exception.code.ErrorCodeProvider
+import br.mangabaka.infrastructure.config.singleton.I18n
 
 enum class InternalErrorCode : ErrorCodeProvider {
     ERROR_INTERNAL_GENERIC {
-        override fun handle(value: String) = ": $value"
+        override fun handle(value: String) = I18n.get("error.code.standard.internal", value)
     },
 
     ERROR_TRANSLATE {
-        override fun handle(value: String) = "Tradução faltando: $value"
+        // NOTE: Unico erro a ser lançado com string pura.
+        override fun handle(value: String) = "Missing translation/Tradução faltando: $value"
     }
 }

@@ -9,21 +9,22 @@
 package br.mangabaka.exception.code.custom
 
 import br.mangabaka.exception.code.ErrorCodeProvider
+import br.mangabaka.infrastructure.config.singleton.I18n
 
 enum class GraphqlErrorCode : ErrorCodeProvider {
     ERROR_CLIENT {
-        override fun handle(value: String) = "Erro no Graphql: $value"
+        override fun handle(value: String) = I18n.get("error.code.graphql.client", value)
     },
 
     ERROR_TIMEOUT {
-        override fun handle(value: String) = "Erro no Graphql, timeout tempo foi excedido na requisiçaõ: $value"
+        override fun handle(value: String) = I18n.get("error.code.graphql.client.timeout", value)
     },
 
     ERROR_EMPTY_RESPONSE {
-        override fun handle(value: String) = "Erro no Graphql, valor vázio: $value"
+        override fun handle(value: String) = I18n.get("error.code.graphql.empty.response", value)
     },
 
     ERROR_INVALID_URL {
-        override fun handle(value: String) = "Erro no Graphql, url é invalida: $value"
+        override fun handle(value: String) = I18n.get("error.code.graphql.invalid.url", value)
     }
 }
