@@ -1,10 +1,10 @@
 networks:
-  mangabaka-network:
+  mangabaka-network-dev:
     driver: bridge
 
 services:
-  postgresql:
-    container_name: mangabaka-postgresql
+  postgresql-dev:
+    container_name: mangabaka-postgresql-dev
     image: postgres:alpine3.16
     environment:
       POSTGRES_DB: ${PG_DB_NAME}
@@ -15,7 +15,7 @@ services:
     volumes:
       - ../../backend/src/main/resources/docker/sql:/docker-entrypoint-initdb.d
     networks:
-      - mangabaka-network
+      - mangabaka-network-dev
     restart: always
 
   # NOTE: Versão onde o Build é feito localmente e copiado para dentro do container
@@ -23,9 +23,9 @@ services:
     image: jetty:12.0.22-jdk17
     container_name: mangabaka-jetty
     depends_on:
-      - postgresql
+      - postgresql-dev
     ports:
-      - "8080:9090"
+      - "9089:9090"
     environment:
       BACKEND_MODE: ${BACKEND_MODE}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
@@ -33,7 +33,6 @@ services:
       POSTGRES_JDBC_URL: ${PG_JDBC_URL}
     volumes:
       - ../../backend/build/libs/backend.war:/var/lib/jetty/webapps/ROOT.war
-      - ../../backend/.env:/var/lib/jetty/.env
       - ~/docker:/app/data/mangabaka
     command: >
       --module=ee10-deploy,ee10-webapp,http,ee10-annotations,ee10-servlet
@@ -41,5 +40,5 @@ services:
       -Djetty.deploy.scanInterval=10
       -Dlog4j.debug=true
     networks:
-      - mangabaka-network
+      - mangabaka-network-dev
     restart: always

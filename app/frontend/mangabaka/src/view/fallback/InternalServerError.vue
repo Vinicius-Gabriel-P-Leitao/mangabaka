@@ -29,7 +29,7 @@ import serie from "@asset/serie.png";
         class="w-24 sm:w-40 h-24 sm:h-40 object-cover rounded-full shadow-lg border-4 border-orange-500"
       />
     </span>
-    <span class="place-self-center">
+    <span class="flex items-center justify-start">
       <img
         :src="serie"
         alt="Serie from sou sou no Frieren"

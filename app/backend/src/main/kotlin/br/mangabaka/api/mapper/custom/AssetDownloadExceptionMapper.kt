@@ -26,13 +26,13 @@ import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import jakarta.ws.rs.ext.ExceptionMapper
 import jakarta.ws.rs.ext.Provider
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 @Provider
 class AssetDownloadExceptionMapper : ExceptionMapper<AssetDownloadException> {
     companion object {
-        private val logger: Logger = LoggerFactory.getLogger(AssetDownloadExceptionMapper::class.java)
+        private val logger: Logger = LogManager.getLogger(InternalExceptionMapper::class.java)
     }
 
     @Context
@@ -40,7 +40,7 @@ class AssetDownloadExceptionMapper : ExceptionMapper<AssetDownloadException> {
 
     override fun toResponse(exception: AssetDownloadException): Response {
         val uri = request.requestURI
-        logger.error("Erro inesperado na GraphQLException: ${exception.message}", exception)
+        logger.error("Erro inesperado na AssetDownloadExceptionMapper: ${exception.message}", exception)
 
         return when (AppConfig.backendMode) {
             BackendMode.API -> {
@@ -51,7 +51,7 @@ class AssetDownloadExceptionMapper : ExceptionMapper<AssetDownloadException> {
                 ).type(MediaType.APPLICATION_JSON).build()
             }
 
-            BackendMode.ALL, BackendMode.CUSTOM -> {
+            BackendMode.ALL -> {
                 when (exception.errorCode as AssetDownloadErrorCode to exception.httpError) {
                     AssetDownloadErrorCode.ERROR_CLIENT_STATUS to Response.Status.BAD_GATEWAY,
                     AssetDownloadErrorCode.ERROR_INVALID_URL to Response.Status.BAD_GATEWAY,

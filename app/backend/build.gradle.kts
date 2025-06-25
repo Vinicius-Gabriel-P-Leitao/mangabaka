@@ -5,6 +5,8 @@
  * Licensed under the BSD 3-Clause License.
  * See LICENSE file in the project root for full license information.
  */
+group = "br.mangabaka"
+version = "1.0-SNAPSHOT"
 
 plugins {
     kotlin("plugin.serialization") version "2.0.0"
@@ -13,17 +15,14 @@ plugins {
     id("war")
 }
 
+repositories {
+    mavenCentral()
+}
+
 allOpen {
     annotation("jakarta.persistence.Entity")
     annotation("jakarta.persistence.MappedSuperclass")
     annotation("jakarta.persistence.Embeddable")
-}
-
-group = "br.mangabaka"
-version = "1.0-SNAPSHOT"
-
-repositories {
-    mavenCentral()
 }
 
 dependencies {
@@ -84,16 +83,18 @@ java {
 }
 
 tasks.named<War>("war") {
-    archiveFileName.set("backend.war")
-    manifest {
-        attributes(
-            "Implementation-Title" to "MangaBaka",
-            "Implementation-Version" to "1.0.0",
-            "Created-By" to "Gradle"
-        )
+    if (gradle.startParameter.taskNames.contains("dev")) {
+        dependsOn(":frontend:copyFrontendDist")
     }
 
+    archiveFileName.set("backend.war")
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    manifest {
+        attributes(
+            "Implementation-Title" to "MangaBaka", "Implementation-Version" to "1.0.0", "Created-By" to "Gradle"
+        )
+    }
     from("src/main/webapp") {
         include("**/*")
         into("")

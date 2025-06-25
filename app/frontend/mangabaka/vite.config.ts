@@ -16,7 +16,7 @@ export default defineConfig({
     // NOTE: Redirecionamento para backend quando em dev mode
     proxy: {
       "/v1": {
-        target: "http://localhost:8080",
+        target: "http://localhost:9089",
         changeOrigin: true,
         secure: false,
       },

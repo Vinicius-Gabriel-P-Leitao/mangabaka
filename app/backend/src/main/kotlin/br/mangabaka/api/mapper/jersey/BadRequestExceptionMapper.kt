@@ -7,6 +7,7 @@
  */
 package br.mangabaka.api.mapper.jersey;
 
+import br.mangabaka.api.mapper.custom.InternalExceptionMapper
 import br.mangabaka.api.mapper.response.MapperResponse
 import br.mangabaka.api.mapper.response.MapperResponseResolver
 import br.mangabaka.api.mapper.response.BadRequestResponse
@@ -19,14 +20,21 @@ import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import jakarta.ws.rs.ext.ExceptionMapper
 import jakarta.ws.rs.ext.Provider
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 @Provider
 class BadRequestExceptionMapper : ExceptionMapper<BadRequestException> {
+    companion object {
+        private val logger: Logger = LogManager.getLogger(BadRequestExceptionMapper::class.java)
+    }
+
     @Context
     private lateinit var request: HttpServletRequest
 
     override fun toResponse(exception: BadRequestException): Response {
         val uri = request.requestURI
+        logger.error("Erro inesperado na BadRequestExceptionMapper: ${exception.message}", exception)
 
         return when (AppConfig.backendMode) {
             BackendMode.API -> {
@@ -37,7 +45,7 @@ class BadRequestExceptionMapper : ExceptionMapper<BadRequestException> {
                 ).type(MediaType.APPLICATION_JSON).build()
             }
 
-            BackendMode.ALL, BackendMode.CUSTOM -> {
+            BackendMode.ALL -> {
                 val mapperResponse: MapperResponse = BadRequestResponse()
                 MapperResponseResolver(response = mapperResponse, uri = uri, message = exception.message).resolve()
             }

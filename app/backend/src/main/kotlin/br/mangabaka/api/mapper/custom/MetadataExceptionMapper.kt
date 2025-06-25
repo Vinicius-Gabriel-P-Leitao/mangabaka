@@ -22,13 +22,13 @@ import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import jakarta.ws.rs.ext.ExceptionMapper
 import jakarta.ws.rs.ext.Provider
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 @Provider
 class MetadataExceptionMapper : ExceptionMapper<MetadataException> {
     companion object {
-        private val logger: Logger = LoggerFactory.getLogger(InternalExceptionMapper::class.java)
+        private val logger: Logger = LogManager.getLogger(InternalExceptionMapper::class.java)
     }
 
     @Context
@@ -47,7 +47,7 @@ class MetadataExceptionMapper : ExceptionMapper<MetadataException> {
                 ).type(MediaType.APPLICATION_JSON).build()
             }
 
-            BackendMode.ALL, BackendMode.CUSTOM -> {
+            BackendMode.ALL -> {
                 when (exception.errorCode as MetadataErrorCode to exception.httpError) {
                     MetadataErrorCode.ERROR_FIELD_EMPTY to Response.Status.BAD_GATEWAY -> {
                         MapperResponseResolver(
