@@ -7,6 +7,7 @@
  */
 package br.mangabaka.api.mapper.response;
 
+import br.mangabaka.infrastructure.config.singleton.I18n
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import java.net.URLEncoder
@@ -29,7 +30,7 @@ class MapperResponseResolver(
 
     private fun invalidUriResponse(): Response {
         return Response.status(Response.Status.NOT_FOUND)
-            .entity("""{"error":"Erro ao redirecionar para o frontend."}""")
+            .entity("""{"error":${I18n.get("throw.error.redirect.frontend")}}""")
             .type(MediaType.APPLICATION_JSON)
             .build()
     }

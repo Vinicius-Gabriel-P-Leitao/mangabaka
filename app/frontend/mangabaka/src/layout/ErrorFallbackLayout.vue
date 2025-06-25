@@ -36,8 +36,13 @@ onMounted(() => {
     <section
       class="not-found text-center sm:text-left grid gap-5 grid-rows-2 sm:grid-rows-2 sm:grid-cols-1"
     >
-      <div class="grid grid-rows-1 grid-cols-3 gap-3">
-        <slot />
+      <div class="w-full flex justify-center">
+        <div
+          class="grid grid-cols-3 gap-3"
+          style="min-width: 300px; max-width: 800px"
+        >
+          <slot />
+        </div>
       </div>
 
       <section class="place-self-center w-full max-w-full px-4">
@@ -49,9 +54,9 @@ onMounted(() => {
           class="text-xs sm:text-2xl break-words w-full max-w-full text-center"
         >
           {{ message }}
-          <strong class="break-all w-full inline-block">{{
-            originalPath.original
-          }}</strong>
+          <strong class="break-all w-full inline-block">
+            {{ originalPath.original }}
+          </strong>
         </p>
 
         <p

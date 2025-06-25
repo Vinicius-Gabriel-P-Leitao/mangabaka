@@ -111,7 +111,11 @@ class FetchAnilistMangaAssetServiceTest {
         )
 
         whenever(
-            methodCall = anilistMangaAssetDownloadMock.fetchAsset(endpoint = any(), mangaName = any(), assetType = any())
+            methodCall = anilistMangaAssetDownloadMock.fetchAsset(
+                endpoint = any(),
+                mangaName = any(),
+                assetType = any()
+            )
         ).thenReturn(mangaValidDownloadedAsset)
 
         val result = service.fetchMangaData(mangaName)
@@ -127,7 +131,7 @@ class FetchAnilistMangaAssetServiceTest {
             service.fetchMangaData("")
         }
 
-        assertTrue(exception.message!!.contains("não pode ser vázio"))
+        assertEquals(expected = AssetDownloadErrorCode.ERROR_EMPTY_DATA, actual = exception.errorCode)
     }
 
     @Test
@@ -137,14 +141,17 @@ class FetchAnilistMangaAssetServiceTest {
         ).thenReturn(mangaInvalidMetadataMedia)
 
         whenever(
-            methodCall = anilistMangaAssetDownloadMock.fetchAsset(endpoint = any(), mangaName = any(), assetType = any())
+            methodCall = anilistMangaAssetDownloadMock.fetchAsset(
+                endpoint = any(),
+                mangaName = any(),
+                assetType = any()
+            )
         ).thenReturn(mangaValidDownloadedAsset)
 
         val exception = assertThrows<MetadataException> {
             service.fetchMangaData(mangaName)
         }
 
-        assertTrue(exception.message?.contains(other = "Nenhuma media foi encontrada") == true)
         assertEquals(expected = MetadataErrorCode.ERROR_EMPTY_FIELD, actual = exception.errorCode)
     }
 
@@ -155,14 +162,17 @@ class FetchAnilistMangaAssetServiceTest {
         ).thenThrow(SerializationException(message = "Dados malformados"))
 
         whenever(
-            methodCall = anilistMangaAssetDownloadMock.fetchAsset(endpoint = any(), mangaName = any(), assetType = any())
+            methodCall = anilistMangaAssetDownloadMock.fetchAsset(
+                endpoint = any(),
+                mangaName = any(),
+                assetType = any()
+            )
         ).thenReturn(mangaValidDownloadedAsset)
 
         val exception = assertThrows<MetadataException> {
             service.fetchMangaData(mangaName)
         }
 
-        assertTrue(exception.message?.contains(other = "Dados malformados") == true)
         assertEquals(expected = MetadataErrorCode.ERROR_JSON_MALFORMED, actual = exception.errorCode)
     }
 
@@ -173,14 +183,17 @@ class FetchAnilistMangaAssetServiceTest {
         ).thenReturn(mangaInvalidMetadataFieldMediaAsset)
 
         whenever(
-            methodCall = anilistMangaAssetDownloadMock.fetchAsset(endpoint = any(), mangaName = any(), assetType = any())
+            methodCall = anilistMangaAssetDownloadMock.fetchAsset(
+                endpoint = any(),
+                mangaName = any(),
+                assetType = any()
+            )
         ).thenReturn(mangaValidDownloadedAsset)
 
         val exception = assertThrows<MetadataException> {
             service.fetchMangaData(mangaName)
         }
 
-        assertTrue(exception.message?.contains(other = "Não foi encontrado") == true)
         assertEquals(expected = MetadataErrorCode.ERROR_EMPTY_FIELD, actual = exception.errorCode)
     }
 
@@ -191,14 +204,17 @@ class FetchAnilistMangaAssetServiceTest {
         ).thenReturn(mangaValidMetadata)
 
         whenever(
-            methodCall = anilistMangaAssetDownloadMock.fetchAsset(endpoint = any(), mangaName = any(), assetType = any())
+            methodCall = anilistMangaAssetDownloadMock.fetchAsset(
+                endpoint = any(),
+                mangaName = any(),
+                assetType = any()
+            )
         ).thenReturn(mangaInvalidDownloadedAssetData)
 
         val exception = assertThrows<AssetDownloadException> {
             service.fetchMangaData(mangaName)
         }
 
-        assertTrue(exception.message?.contains(other = "Campo de nome") == true)
         assertEquals(expected = AssetDownloadErrorCode.ERROR_EMPTY_DATA, actual = exception.errorCode)
     }
 }
