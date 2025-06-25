@@ -117,8 +117,8 @@ class FetchAnilistMangaAssetServiceTest {
         val result = service.fetchMangaData(mangaName)
 
         assertNotNull(result)
-        assertNotNull(result.assets)
-        assertTrue(result.assets.isNotEmpty())
+        assertNotNull(result.asset)
+        assertTrue(result.asset.isNotEmpty())
     }
 
     @Test
@@ -145,7 +145,7 @@ class FetchAnilistMangaAssetServiceTest {
         }
 
         assertTrue(exception.message?.contains(other = "Nenhuma media foi encontrada") == true)
-        assertEquals(expected = MetadataErrorCode.ERROR_FIELD_EMPTY, actual = exception.errorCode)
+        assertEquals(expected = MetadataErrorCode.ERROR_EMPTY_FIELD, actual = exception.errorCode)
     }
 
     @Test
@@ -181,7 +181,7 @@ class FetchAnilistMangaAssetServiceTest {
         }
 
         assertTrue(exception.message?.contains(other = "Não foi encontrado") == true)
-        assertEquals(expected = MetadataErrorCode.ERROR_FIELD_EMPTY, actual = exception.errorCode)
+        assertEquals(expected = MetadataErrorCode.ERROR_EMPTY_FIELD, actual = exception.errorCode)
     }
 
     @Test

@@ -13,6 +13,7 @@ import br.mangabaka.api.mapper.response.MapperResponseResolver
 import br.mangabaka.api.mapper.response.NotFoundResponse
 import br.mangabaka.infrastructure.config.AppConfig
 import br.mangabaka.infrastructure.config.BackendMode
+import br.mangabaka.infrastructure.config.singleton.I18n
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.ws.rs.NotFoundException
 import jakarta.ws.rs.core.Context
@@ -34,8 +35,10 @@ class NotFoundExceptionMapper : ExceptionMapper<NotFoundException> {
 
     override fun toResponse(exception: NotFoundException): Response {
         val uri = request.requestURI
-        logger.error("Erro inesperado na NotFoundExceptionMapper: ${exception.message}", exception)
-
+        logger.error(
+            I18n.get("throw.unexpected.error", "NotFoundExceptionMapper: ${exception.message}"),
+            exception
+        )
 
         return when (AppConfig.backendMode) {
             BackendMode.API -> {

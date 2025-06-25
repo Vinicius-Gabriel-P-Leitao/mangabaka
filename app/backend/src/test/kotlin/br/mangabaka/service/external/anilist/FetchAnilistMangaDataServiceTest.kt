@@ -107,7 +107,7 @@ class FetchAnilistMangaDataServiceTest {
             service.fetchMangaData(mangaName)
         }
 
-        assertEquals(expected = MetadataErrorCode.ERROR_FIELD_EMPTY, actual = exception.errorCode)
+        assertEquals(expected = MetadataErrorCode.ERROR_EMPTY_FIELD, actual = exception.errorCode)
     }
 
     @Test

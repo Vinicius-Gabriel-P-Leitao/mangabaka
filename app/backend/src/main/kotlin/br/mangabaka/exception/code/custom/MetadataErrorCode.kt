@@ -8,13 +8,14 @@
 package br.mangabaka.exception.code.custom;
 
 import br.mangabaka.exception.code.ErrorCodeProvider
+import br.mangabaka.infrastructure.config.singleton.I18n
 
 enum class MetadataErrorCode : ErrorCodeProvider {
-    ERROR_FIELD_EMPTY {
-        override fun handle(value: String) = "Erro de campo vazio: $value"
+    ERROR_EMPTY_FIELD {
+        override fun handle(value: String) = I18n.get("error.code.empty.field", value)
     },
 
     ERROR_JSON_MALFORMED {
-        override fun handle(value: String) = "Erro de campo vazio: $value"
+        override fun handle(value: String) = I18n.get("error.code.malformed.json", value)
     },
 }

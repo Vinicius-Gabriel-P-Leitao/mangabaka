@@ -29,13 +29,13 @@ class FetchAnilistMangaDataService(
 
                 if (mangaMetadata.page.media.isEmpty()) {
                     throw MetadataException(
-                        message = MetadataErrorCode.ERROR_FIELD_EMPTY.handle(value = "Nenhuma media foi encontrada para o manga: $mangaName"),
-                        errorCode = MetadataErrorCode.ERROR_FIELD_EMPTY,
+                        message = MetadataErrorCode.ERROR_EMPTY_FIELD.handle(value = "Nenhuma media foi encontrada para o manga: $mangaName"),
+                        errorCode = MetadataErrorCode.ERROR_EMPTY_FIELD,
                         httpError = Response.Status.NOT_FOUND
                     )
                 }
 
-                return MangaDataDto(paginationInfo = mangaMetadata, assets = null)
+                return MangaDataDto(paginationInfo = mangaMetadata, asset = null)
             } catch (exception: SerializationException) {
                 throw MetadataException(
                     message = MetadataErrorCode.ERROR_JSON_MALFORMED.handle(value = "Nenhuma media foi encontrada para o manga: ${exception.message}"),

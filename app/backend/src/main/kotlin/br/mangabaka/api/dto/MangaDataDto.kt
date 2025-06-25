@@ -13,5 +13,5 @@ import br.mangabaka.infrastructure.http.anilist.dto.MangaPaginatedMetadataDto
 
 data class MangaDataDto(
     val paginationInfo: MangaPaginatedMetadataDto?,
-    val assets: List<DownloadedAssetDto>?
+    val asset: List<DownloadedAssetDto>?
 )

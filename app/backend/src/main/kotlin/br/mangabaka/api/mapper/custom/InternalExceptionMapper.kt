@@ -14,6 +14,7 @@ import br.mangabaka.exception.code.custom.InternalErrorCode
 import br.mangabaka.exception.throwable.base.InternalException
 import br.mangabaka.infrastructure.config.AppConfig
 import br.mangabaka.infrastructure.config.BackendMode
+import br.mangabaka.infrastructure.config.singleton.I18n
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.ws.rs.core.Context
 import jakarta.ws.rs.core.Response
@@ -33,7 +34,10 @@ class InternalExceptionMapper : ExceptionMapper<InternalException> {
 
     override fun toResponse(exception: InternalException): Response {
         val uri = request.requestURI
-        logger.error("Erro inesperado na InternalExceptionMapper: ${exception.message}", exception)
+        logger.error(
+            I18n.get("throw.unexpected.error", "InternalExceptionMapper: ${exception.message}"),
+            exception
+        )
 
         return when (AppConfig.backendMode) {
             BackendMode.API -> {
@@ -50,7 +54,7 @@ class InternalExceptionMapper : ExceptionMapper<InternalException> {
 
             BackendMode.ALL -> {
                 when (exception.errorCode as InternalErrorCode) {
-                    InternalErrorCode.ERROR_INTERNAL_GENERIC -> {
+                    InternalErrorCode.ERROR_INTERNAL_GENERIC, InternalErrorCode.ERROR_TRANSLATE -> {
                         MapperResponseResolver(
                             response = InternalServerErrorResponse(), uri = uri, message = exception.message
                         ).resolve()

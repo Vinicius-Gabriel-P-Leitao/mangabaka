@@ -11,8 +11,7 @@ import br.mangabaka.api.dto.AssetType
 import br.mangabaka.api.dto.MangaDataDto
 import br.mangabaka.exception.code.custom.AssetDownloadErrorCode
 import br.mangabaka.exception.code.custom.InternalErrorCode
-import br.mangabaka.exception.code.custom.InvalidParameterErrorCode
-import br.mangabaka.exception.code.custom.MetadataErrorCode
+import br.mangabaka.exception.code.custom.ParameterErrorCode
 import br.mangabaka.exception.throwable.base.AppException
 import br.mangabaka.exception.throwable.base.InternalException
 import br.mangabaka.exception.throwable.http.AssetDownloadException
@@ -27,6 +26,7 @@ import jakarta.ws.rs.GET
 import jakarta.ws.rs.Path
 import jakarta.ws.rs.Produces
 import jakarta.ws.rs.QueryParam
+import jakarta.ws.rs.core.HttpHeaders
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 
@@ -35,12 +35,12 @@ class GetDataManga {
     @GET
     @Path("/metadata")
     @Produces(MediaType.APPLICATION_JSON)
-    fun getMetadataManga(@QueryParam("name") nameManga: String?): Response {
-        try {
+    fun getAnilistMetadataManga(@QueryParam("name") nameManga: String?): Response {
+        return try {
             if (nameManga == null) {
                 throw InvalidParameterException(
-                    message = InvalidParameterErrorCode.ERROR_PARAMETER_EMPTY.handle(value = "O parâmetro de consulta 'nome' é obrigatório."),
-                    errorCode = InvalidParameterErrorCode.ERROR_PARAMETER_EMPTY, httpError = Response.Status.BAD_REQUEST
+                    message = ParameterErrorCode.ERROR_PARAMETER_EMPTY.handle(value = I18n.get("throw.name.parameter.require")),
+                    errorCode = ParameterErrorCode.ERROR_PARAMETER_EMPTY, httpError = Response.Status.BAD_REQUEST
                 )
             }
 
@@ -50,19 +50,22 @@ class GetDataManga {
             val result: MangaDataDto = resolverService.mangaResolver(mangaName = nameManga)
             if (result.paginationInfo == null) {
                 throw MetadataException(
-                    message = AssetDownloadErrorCode.ERROR_EMPTY_DATA.handle(value = "Os metádados estão vázios."),
+                    message = AssetDownloadErrorCode.ERROR_EMPTY_DATA.handle(value = I18n.get("throw.metadata.empty")),
                     errorCode = AssetDownloadErrorCode.ERROR_EMPTY_DATA, httpError = Response.Status.NOT_FOUND
                 )
             }
 
-            return Response
-                .ok(result.paginationInfo.page)
-                .build()
+            Response.ok(result.paginationInfo.page).build()
         } catch (exception: Exception) {
             when (exception) {
                 is AppException -> throw exception
                 else -> throw InternalException(
-                    message = InternalErrorCode.ERROR_INTERNAL_GENERIC.handle(value = "Erro ao buscar métadados: ${exception.message}"),
+                    message = InternalErrorCode.ERROR_INTERNAL_GENERIC.handle(
+                        value = I18n.get(
+                            "throw.error.fetch.metadata",
+                            exception.message ?: I18n.get("throw.unknown.error")
+                        )
+                    ),
                     errorCode = InternalErrorCode.ERROR_INTERNAL_GENERIC
                 )
             }
@@ -70,24 +73,23 @@ class GetDataManga {
     }
 
     @GET
-    @Path("/assets")
+    @Path("/asset")
     @Produces(MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON)
-    fun getAssetsManga(@QueryParam("name") nameManga: String?, @QueryParam("type") typeParam: String?): Response {
-        try {
+    fun getAnilistAssetManga(@QueryParam("name") nameManga: String?, @QueryParam("type") typeParam: String?): Response {
+        return try {
             if (nameManga == null || typeParam == null) {
                 throw InvalidParameterException(
-                    message = InvalidParameterErrorCode.ERROR_PARAMETER_EMPTY.handle(value = "Os parâmetros de consulta 'name' e 'type' são obrigatórios."),
-                    errorCode = InvalidParameterErrorCode.ERROR_PARAMETER_EMPTY, httpError = Response.Status.BAD_REQUEST
+                    message = ParameterErrorCode.ERROR_PARAMETER_EMPTY.handle(value = I18n.get("throw.name.type.parameter.require")),
+                    errorCode = ParameterErrorCode.ERROR_PARAMETER_EMPTY, httpError = Response.Status.BAD_REQUEST
                 )
             }
 
             val assetType = try {
                 AssetType.valueOf(typeParam.uppercase())
             } catch (exception: Exception) {
-                val msg = I18n.get("greeting", "Vinícius")
                 throw InvalidParameterException(
-                    message = InvalidParameterErrorCode.ERROR_PARAMETER_INVALID.handle(value = "Tipo inválido, Valores permitidos: cover, banner"),
-                    errorCode = InvalidParameterErrorCode.ERROR_PARAMETER_INVALID,
+                    message = ParameterErrorCode.ERROR_PARAMETER_INVALID.handle(value = I18n.get("anilist.asset.invalid.type")),
+                    errorCode = ParameterErrorCode.ERROR_PARAMETER_INVALID,
                     httpError = Response.Status.BAD_REQUEST
                 )
             }
@@ -96,30 +98,38 @@ class GetDataManga {
             val resolverService = MangaResolverService(services = fetchAnilistMangaAssetService)
 
             val result: MangaDataDto = resolverService.mangaResolver(mangaName = nameManga)
-            if (result.assets == null) {
+            if (result.asset == null) {
                 throw AssetDownloadException(
-                    message = AssetDownloadErrorCode.ERROR_EMPTY_DATA.handle(value = "Os dados de assets estão vázios."),
+                    message = AssetDownloadErrorCode.ERROR_EMPTY_DATA.handle(value = I18n.get("throw.empty.asset.data")),
                     errorCode = AssetDownloadErrorCode.ERROR_EMPTY_DATA, httpError = Response.Status.NOT_FOUND
                 )
             }
 
             val asset = when (assetType) {
-                AssetType.COVER -> result.assets.find { asset: DownloadedAssetDto -> asset.assetType == AssetType.COVER }
-                AssetType.BANNER -> result.assets.find { asset: DownloadedAssetDto -> asset.assetType == AssetType.BANNER }
+                AssetType.COVER -> result.asset.find { asset: DownloadedAssetDto -> asset.assetType == AssetType.COVER }
+                AssetType.BANNER -> result.asset.find { asset: DownloadedAssetDto -> asset.assetType == AssetType.BANNER }
             } ?: throw InvalidParameterException(
-                message = InvalidParameterErrorCode.ERROR_PARAMETER_INVALID.handle(value = "Ativo do tipo $typeParam não encontrado."),
-                errorCode = InvalidParameterErrorCode.ERROR_PARAMETER_INVALID, httpError = Response.Status.BAD_REQUEST
+                message = ParameterErrorCode.ERROR_PARAMETER_INVALID.handle(
+                    value = I18n.get(
+                        "throw.not.found.asset.type",
+                        typeParam
+                    )
+                ),
+                errorCode = ParameterErrorCode.ERROR_PARAMETER_INVALID, httpError = Response.Status.BAD_REQUEST
             )
 
-            return Response
-                .ok(asset.content)
-                .header("Content-Disposition", "attachment; filename=\"${asset.filename}\"")
-                .build()
+            Response.ok(asset.content)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"${asset.filename}\"").build()
         } catch (exception: Exception) {
             when (exception) {
                 is AppException -> throw exception
                 else -> throw InternalException(
-                    message = InternalErrorCode.ERROR_INTERNAL_GENERIC.handle(value = "Erro ao buscar assets: ${exception.message}"),
+                    message = InternalErrorCode.ERROR_INTERNAL_GENERIC.handle(
+                        value = I18n.get(
+                            "throw.error.fetch.asset",
+                            exception.message ?: I18n.get("throw.unknown.error")
+                        )
+                    ),
                     errorCode = InternalErrorCode.ERROR_INTERNAL_GENERIC
                 )
             }

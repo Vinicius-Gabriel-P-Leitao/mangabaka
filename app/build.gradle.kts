@@ -18,23 +18,32 @@ subprojects {
     }
 }
 
+tasks.withType<ProcessResources> {
+    filteringCharset = "UTF-8"
+}
+
 val props = Properties()
 val localPropsFile = file("local.properties")
 
 if (!localPropsFile.exists()) {
-    error("Arquivo local.properties n?o encontrado na raiz do projeto!")
+    error("Arquivo local.properties não encontrado na raiz do projeto!")
 }
 
-localPropsFile.inputStream().use { props.load(it) }
+localPropsFile.inputStream().use {
+    props.load(it)
+}
 
-fun generateEnvContent(prefix: String): String = """
-    APP_LOCALE=${props.getProperty("${prefix}_APP_LOCALE") ?: error("Propriedade ${prefix}_APP_LOCALE não encontrada em local.properties")}
-    BACKEND_MODE=${props.getProperty("${prefix}_BACKEND_MODE") ?: error("Propriedade ${prefix}_BACKEND_MODE não encontrada em local.properties")}
-    PG_DB_NAME=${props.getProperty("${prefix}_DB_NAME") ?: error("Propriedade ${prefix}_DB_NAME não encontrada em local.properties")}
-    PG_PASSWORD=${props.getProperty("${prefix}_PASSWORD") ?: error("Propriedade ${prefix}_PASSWORD não encontrada em local.properties")}
-    PG_USERNAME=${props.getProperty("${prefix}_USERNAME") ?: error("Propriedade ${prefix}_USERNAME não encontrada em local.properties")}
-    PG_JDBC_URL=${props.getProperty("${prefix}_JDBC_URL") ?: error("Propriedade ${prefix}_JDBC_URL não encontrada em local.properties")}
-""".trimIndent()
+fun generateEnvContent(prefix: String): String {
+    val environment = """
+                      APP_LOCALE=${props.getProperty("${prefix}_APP_LOCALE") ?: error("Propriedade ${prefix}_APP_LOCALE não encontrada em local.properties")}
+                      BACKEND_MODE=${props.getProperty("${prefix}_BACKEND_MODE") ?: error("Propriedade ${prefix}_BACKEND_MODE não encontrada em local.properties")}
+                      PG_DB_NAME=${props.getProperty("${prefix}_DB_NAME") ?: error("Propriedade ${prefix}_DB_NAME não encontrada em local.properties")}
+                      PG_PASSWORD=${props.getProperty("${prefix}_PASSWORD") ?: error("Propriedade ${prefix}_PASSWORD não encontrada em local.properties")}
+                      PG_USERNAME=${props.getProperty("${prefix}_USERNAME") ?: error("Propriedade ${prefix}_USERNAME não encontrada em local.properties")}
+                      PG_JDBC_URL=${props.getProperty("${prefix}_JDBC_URL") ?: error("Propriedade ${prefix}_JDBC_URL não encontrada em local.properties")}
+                      """
+    return environment.trimIndent()
+}
 
 val generateEnvProd = tasks.register("generateEnvProd") {
     doLast {

@@ -10,14 +10,18 @@ package br.mangabaka.infrastructure.config.singleton
 
 import br.mangabaka.exception.code.custom.InternalErrorCode
 import br.mangabaka.exception.throwable.base.InternalException
-import kotlinx.serialization.MissingFieldException
 import java.text.MessageFormat
 import java.util.*
 
 object I18n {
     private val locale: Locale = run {
         val env = System.getenv("APP_LOCALE") ?: "pt-BR"
-        Locale.forLanguageTag(env.replace('_', '-'))
+
+        when (env) {
+            "en", "en-Us" -> Locale("en", "US")
+            "pt", "pt-Br" -> Locale("pt", "BR")
+            else -> Locale("pt", "BR")
+        }
     }
 
     private val bundle: ResourceBundle = ResourceBundle.getBundle("messages", locale)
@@ -28,7 +32,7 @@ object I18n {
             MessageFormat(pattern).format(args)
         } catch (exception: MissingResourceException) {
             throw InternalException(
-                message = InternalErrorCode.ERROR_TRANSLATE.handle("Erro ao encontrar chave de tradução: $key"),
+                message = InternalErrorCode.ERROR_TRANSLATE.handle("Error finding translation key/Erro ao encontrar tradução: $key"),
                 errorCode = InternalErrorCode.ERROR_TRANSLATE
             )
         }
