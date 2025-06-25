@@ -14,4 +14,8 @@ enum class InternalErrorCode : ErrorCodeProvider {
     ERROR_INTERNAL_GENERIC {
         override fun handle(value: String) = ": $value"
     },
+
+    ERROR_TRANSLATE {
+        override fun handle(value: String) = "Tradução faltando: $value"
+    }
 }
