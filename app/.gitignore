@@ -90,5 +90,5 @@ coverage/
 *.temp
 
 # Application enviroments
-*local.properties
+buildSrc/local.properties
 *.env

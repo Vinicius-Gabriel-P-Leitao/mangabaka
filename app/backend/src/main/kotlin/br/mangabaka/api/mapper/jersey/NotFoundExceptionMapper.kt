@@ -20,14 +20,22 @@ import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import jakarta.ws.rs.ext.ExceptionMapper
 import jakarta.ws.rs.ext.Provider
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 @Provider
 class NotFoundExceptionMapper : ExceptionMapper<NotFoundException> {
+    companion object {
+        private val logger: Logger = LogManager.getLogger(NotFoundException::class.java)
+    }
+
     @Context
     private lateinit var request: HttpServletRequest
 
     override fun toResponse(exception: NotFoundException): Response {
         val uri = request.requestURI
+        logger.error("Erro inesperado na NotFoundExceptionMapper: ${exception.message}", exception)
+
 
         return when (AppConfig.backendMode) {
             BackendMode.API -> {
@@ -38,7 +46,7 @@ class NotFoundExceptionMapper : ExceptionMapper<NotFoundException> {
                 ).type(MediaType.APPLICATION_JSON).build()
             }
 
-            BackendMode.ALL, BackendMode.CUSTOM -> {
+            BackendMode.ALL -> {
                 val mapperResponse: MapperResponse = NotFoundResponse()
                 MapperResponseResolver(response = mapperResponse, uri = uri, message = exception.message).resolve()
             }

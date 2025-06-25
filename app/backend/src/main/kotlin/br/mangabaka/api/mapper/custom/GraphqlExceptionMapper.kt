@@ -19,13 +19,13 @@ import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import jakarta.ws.rs.ext.ExceptionMapper
 import jakarta.ws.rs.ext.Provider
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 @Provider
 class GraphqlExceptionMapper : ExceptionMapper<GraphqlException> {
     companion object {
-        private val logger: Logger = LoggerFactory.getLogger(GraphqlExceptionMapper::class.java)
+        private val logger: Logger = LogManager.getLogger(InternalExceptionMapper::class.java)
     }
 
     @Context
@@ -44,7 +44,7 @@ class GraphqlExceptionMapper : ExceptionMapper<GraphqlException> {
                 ).type(MediaType.APPLICATION_JSON).build()
             }
 
-            BackendMode.ALL, BackendMode.CUSTOM -> {
+            BackendMode.ALL -> {
                 when (exception.errorCode as GraphqlErrorCode to exception.httpError) {
                     GraphqlErrorCode.ERROR_CLIENT to Response.Status.BAD_GATEWAY,
                     GraphqlErrorCode.ERROR_EMPTY_RESPONSE to Response.Status.BAD_GATEWAY -> {

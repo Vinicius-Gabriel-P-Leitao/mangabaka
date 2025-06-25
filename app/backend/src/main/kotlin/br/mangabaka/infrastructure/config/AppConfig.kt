@@ -8,13 +8,12 @@
 package br.mangabaka.infrastructure.config;
 
 enum class BackendMode {
-    ALL, API, CUSTOM;
+    ALL, API;
 
     companion object {
         fun fromEnv(envValue: String?): BackendMode = when (envValue?.uppercase()) {
             "ALL" -> ALL
             "API" -> API
-            "CUSTOM" -> CUSTOM
             else -> ALL
         }
     }

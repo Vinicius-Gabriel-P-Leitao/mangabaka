@@ -29,7 +29,7 @@ import fern from "@asset/fern.png";
         class="w-24 sm:w-40 h-24 sm:h-40 object-cover rounded-full shadow-lg border-4 border-white"
       />
     </span>
-    <span class="place-self-center">
+    <span class="flex items-center justify-start">
       <img
         :src="fern"
         alt="Fern from sou sou no Frieren"
