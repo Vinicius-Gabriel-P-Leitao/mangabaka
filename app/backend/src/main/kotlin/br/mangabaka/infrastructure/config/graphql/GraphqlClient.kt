@@ -5,11 +5,11 @@
  * Licensed under the BSD 3-Clause License.
  * See LICENSE file in the project root for full license information.
  */
-
 package br.mangabaka.infrastructure.config.graphql
 
 import br.mangabaka.exception.code.custom.GraphqlErrorCode
 import br.mangabaka.exception.throwable.http.GraphqlException
+import br.mangabaka.infrastructure.config.singleton.I18n
 import br.mangabaka.infrastructure.config.singleton.JsonConfig
 import jakarta.annotation.Nonnull
 import jakarta.ws.rs.ProcessingException
@@ -35,7 +35,12 @@ class GraphqlClient(
     inline fun <reified T> executeQuery(query: String, variables: Map<String, Any>): T {
         require(value = endpoint.startsWith(prefix = "http://") || endpoint.startsWith(prefix = "https://")) {
             throw GraphqlException(
-                message = GraphqlErrorCode.ERROR_INVALID_URL.handle(value = "URL inválida ou não suportada: $endpoint"),
+                message = GraphqlErrorCode.ERROR_INVALID_URL.handle(
+                    value = I18n.get(
+                        "throw.invalid.unsupported.url",
+                        endpoint
+                    )
+                ),
                 errorCode = GraphqlErrorCode.ERROR_INVALID_URL, httpError = Response.Status.BAD_REQUEST
             )
         }
@@ -53,7 +58,12 @@ class GraphqlClient(
 
             if (response.status != 200) {
                 throw GraphqlException(
-                    message = GraphqlErrorCode.ERROR_CLIENT.handle(value = "Erro na requisição GraphQL: $response.status"),
+                    message = GraphqlErrorCode.ERROR_CLIENT.handle(
+                        value = I18n.get(
+                            "throw.graphql.request.error",
+                            response.status
+                        )
+                    ),
                     errorCode = GraphqlErrorCode.ERROR_CLIENT,
                     httpError = Response.Status.BAD_GATEWAY
                 )
@@ -63,20 +73,30 @@ class GraphqlClient(
             val graphQLResponse = JsonConfig.jsonParser.decodeFromString<GraphqlResponse<T>>(responseString)
             graphQLResponse.errors?.let { errors ->
                 throw GraphqlException(
-                    message = GraphqlErrorCode.ERROR_CLIENT.handle(value = "Erros na resposta GraphQL: $errors"),
+                    message = GraphqlErrorCode.ERROR_CLIENT.handle(
+                        value = I18n.get(
+                            "throw.graphql.response.error",
+                            errors
+                        )
+                    ),
                     errorCode = GraphqlErrorCode.ERROR_CLIENT,
                     httpError = Response.Status.BAD_GATEWAY
                 )
             }
 
             graphQLResponse.data ?: throw GraphqlException(
-                message = GraphqlErrorCode.ERROR_EMPTY_RESPONSE.handle(value = "Resposta sem dados."),
+                message = GraphqlErrorCode.ERROR_EMPTY_RESPONSE.handle(value = I18n.get("throw.graphql.empty.response")),
                 errorCode = GraphqlErrorCode.ERROR_EMPTY_RESPONSE,
                 httpError = Response.Status.BAD_GATEWAY
             )
         } catch (processingException: ProcessingException) {
             throw GraphqlException(
-                message = GraphqlErrorCode.ERROR_TIMEOUT.handle(value = "Tempo de espera para download dos métadados excedido: ${processingException.message}"),
+                message = GraphqlErrorCode.ERROR_TIMEOUT.handle(
+                    value = I18n.get(
+                        "throw.fetch.metadata.timeout.exceeded",
+                        processingException.message ?: I18n.get("throw.unknown.error")
+                    )
+                ),
                 errorCode = GraphqlErrorCode.ERROR_TIMEOUT, httpError = Response.Status.GATEWAY_TIMEOUT
             )
         }

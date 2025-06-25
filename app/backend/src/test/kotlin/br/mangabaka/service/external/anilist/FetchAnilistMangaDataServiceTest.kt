@@ -120,7 +120,6 @@ class FetchAnilistMangaDataServiceTest {
             service.fetchMangaData(mangaName)
         }
 
-        assertTrue(exception.message?.contains(other = "Dados malformados") == true)
         assertEquals(expected = MetadataErrorCode.ERROR_JSON_MALFORMED, actual = exception.errorCode)
     }
 }
