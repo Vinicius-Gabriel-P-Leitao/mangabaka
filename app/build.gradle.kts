@@ -28,7 +28,8 @@ if (!localPropsFile.exists()) {
 localPropsFile.inputStream().use { props.load(it) }
 
 fun generateEnvContent(prefix: String): String = """
-    BACKEND_MODE=${props.getProperty("${prefix}_BACKEND_MODE") ?: error("Propriedade ${prefix}BACKEND_MODE não encontrada em local.properties")}
+    APP_LOCALE=${props.getProperty("${prefix}_APP_LOCALE") ?: error("Propriedade ${prefix}_APP_LOCALE não encontrada em local.properties")}
+    BACKEND_MODE=${props.getProperty("${prefix}_BACKEND_MODE") ?: error("Propriedade ${prefix}_BACKEND_MODE não encontrada em local.properties")}
     PG_DB_NAME=${props.getProperty("${prefix}_DB_NAME") ?: error("Propriedade ${prefix}_DB_NAME não encontrada em local.properties")}
     PG_PASSWORD=${props.getProperty("${prefix}_PASSWORD") ?: error("Propriedade ${prefix}_PASSWORD não encontrada em local.properties")}
     PG_USERNAME=${props.getProperty("${prefix}_USERNAME") ?: error("Propriedade ${prefix}_USERNAME não encontrada em local.properties")}

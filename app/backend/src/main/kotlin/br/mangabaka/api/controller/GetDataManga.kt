@@ -19,6 +19,7 @@ import br.mangabaka.exception.throwable.base.InternalException
 import br.mangabaka.exception.throwable.http.AssetDownloadException
 import br.mangabaka.exception.throwable.http.InvalidParameterException
 import br.mangabaka.exception.throwable.http.MetadataException
+import br.mangabaka.infrastructure.config.singleton.I18n
 import br.mangabaka.infrastructure.http.anilist.dto.DownloadedAssetDto
 import br.mangabaka.service.external.anilist.FetchAnilistMangaAssetService
 import br.mangabaka.service.external.anilist.FetchAnilistMangaDataService
@@ -84,6 +85,7 @@ class GetDataManga {
             val assetType = try {
                 AssetType.valueOf(typeParam.uppercase())
             } catch (exception: Exception) {
+                val msg = I18n.get("greeting", "Vinícius")
                 throw InvalidParameterException(
                     message = InvalidParameterErrorCode.ERROR_PARAMETER_INVALID.handle(value = "Tipo inválido, Valores permitidos: cover, banner"),
                     errorCode = InvalidParameterErrorCode.ERROR_PARAMETER_INVALID,
