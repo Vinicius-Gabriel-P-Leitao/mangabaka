@@ -5,44 +5,52 @@
 // See LICENSE file in the project root for full license information.
 
 import { createRouter, createWebHistory } from "vue-router";
+import { About, Home } from "@/application/export/Interface";
+import {
+  BadGateway,
+  BadRequest,
+  GatewayTimeout,
+  InternalServerError,
+  NotFound,
+} from "@/application/export/Fallback";
 
 const routes = [
   {
     path: "/",
     name: "Home",
-    component: () => import("@/view/Home.vue"),
+    component: Home,
   },
   {
     path: "/about",
     name: "About",
-    component: () => import("@/view/About.vue"),
+    component: About,
   },
   // NOTE: Rotas de erros HTTP
   {
     path: "/api-bad-request",
     name: "ApiBadRequest",
-    component: () => import("@/view/fallback/BadRequest.vue"),
+    component: BadRequest,
   },
   {
     path: "/api-bad-gateway",
     name: "ApiBadGateway",
-    component: () => import("@/view/fallback/BadGateway.vue"),
+    component: BadGateway,
   },
   {
     path: "/api-gateway-timeout",
     name: "ApiGatewayTimeout",
-    component: () => import("@/view/fallback/GatewayTimeout.vue"),
+    component: GatewayTimeout,
   },
   {
     path: "/api-internal-error",
     name: "ApiInternalError",
-    component: () => import("@/view/fallback/InternalServerError.vue"),
+    component: InternalServerError,
   },
   // NOTE: Necessário estar em ultimo
   {
     path: "/:pathMatch(.*)*",
     name: "NotFound",
-    component: () => import("@/view/fallback/NotFound.vue"),
+    component: NotFound,
   },
 ];
 
