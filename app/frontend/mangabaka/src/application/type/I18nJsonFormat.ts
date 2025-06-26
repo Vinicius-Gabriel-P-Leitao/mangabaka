@@ -1,6 +1,8 @@
 export type I18nJsonFormat = {
-  login: {
+  home: {
     title: string;
-    test: string;
   };
+  not_found: {
+    title: string
+  }
 };
