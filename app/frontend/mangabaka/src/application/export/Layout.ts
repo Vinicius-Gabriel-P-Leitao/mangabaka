@@ -1,3 +1,3 @@
-import ErrorFallbackLayout from "@/view/presentation/layout/ErrorFallbackLayout.vue";
+import ErrorFallbackLayout from "@/view/layout/ErrorFallbackLayout.vue";
 
 export { ErrorFallbackLayout };

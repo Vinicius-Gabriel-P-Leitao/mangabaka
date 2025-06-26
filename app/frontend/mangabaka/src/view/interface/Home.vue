@@ -4,7 +4,7 @@
 <!-- Licensed under the BSD 3-Clause License. -->
 <!-- See LICENSE file in the project root for full license information. -->
 <script setup lang="ts">
-import { PluginTranslation } from "@/application/export/Component";
+import { BaseButton, PluginTranslation } from "@/application/export/Component";
 import { onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -21,9 +21,19 @@ onMounted(() => {
 <template>
   <nav>
     <PluginTranslation />
-    <h1 class="text-teal-50">{{ t("home.title") }}</h1>
+    <h1 class="text-5xl text-zinc-800 dark:text-teal-50">
+      {{ t("home.title") }}
+    </h1>
+
     <router-link to="/about" custom v-slot="{ navigate }">
-      <button @click="navigate" class="back-home-button">About</button>
+      <BaseButton
+        variant="primary"
+        :disabled="false"
+        @click="navigate"
+        class="back-home-button"
+      >
+        About
+      </BaseButton>
     </router-link>
   </nav>
 </template>
