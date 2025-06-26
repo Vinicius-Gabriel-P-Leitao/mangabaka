@@ -1,6 +1,8 @@
 {
-  "login": {
-    "title": "Login",
-    "test": "4"
+  "home": {
+    "title": "Home page"
+  },
+  "not_found": {
+    "title": "Page not found 😢"
   }
 }

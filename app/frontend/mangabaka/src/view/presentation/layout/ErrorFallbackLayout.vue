@@ -75,7 +75,7 @@ onMounted(() => {
 
     <nav>
       <router-link to="/" custom v-slot="{ navigate }">
-        <button @click="navigate" class="meu-botao">Voltar pra Home</button>
+        <button @click="navigate" class="back-home-button">Voltar pra Home</button>
       </router-link>
     </nav>
   </main>

@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Vinícius Gabriel Pereira Leitão
 // Licensed under the BSD 3-Clause License.
 // See LICENSE file in the project root for full license information.
-import { createI18n } from "vue-i18n";
-import ptBR from "@/application/locale/pt-BR.json";
 import enUS from "@/application/locale/en-US.json";
+import ptBR from "@/application/locale/pt-BR.json";
+import { createI18n } from "vue-i18n";
 
 type MessageSchema = typeof ptBR;
 

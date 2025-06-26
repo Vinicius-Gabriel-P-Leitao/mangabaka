@@ -5,14 +5,25 @@
 <!-- See LICENSE file in the project root for full license information. -->
 <script setup lang="ts">
 import { PluginTranslation } from "@/application/export/Component";
+import { onMounted } from "vue";
+import { useI18n } from "vue-i18n";
+
+const { t, locale } = useI18n();
+
+onMounted(() => {
+  const saved = localStorage.getItem("locale");
+  if (saved && saved !== locale.value) {
+    locale.value = saved;
+  }
+});
 </script>
 
 <template>
   <nav>
     <PluginTranslation />
+    <h1 class="text-teal-50">{{ t("home.title") }}</h1>
+    <router-link to="/about" custom v-slot="{ navigate }">
+      <button @click="navigate" class="back-home-button">About</button>
+    </router-link>
   </nav>
-  <div>
-    <h1 class="text-teal-50">Home Page</h1>
-    <router-link to="/about">About</router-link>
-  </div>
 </template>
