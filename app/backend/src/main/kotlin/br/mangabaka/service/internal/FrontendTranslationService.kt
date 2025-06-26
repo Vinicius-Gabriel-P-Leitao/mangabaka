@@ -5,13 +5,7 @@
  * Licensed under the BSD 3-Clause License.
  * See LICENSE file in the project root for full license information.
  */
+package br.mangabaka.service.internal;
 
-package br.mangabaka.api.dto
-
-enum class AssetType(val code: String) {
-    COVER("cover"), BANNER("banner");
+class FrontendTranslationService {
 }
-
-data class AssetInfo(
-    val url: String, val mangaName: String, val type: AssetType
-)

@@ -1,8 +1,8 @@
-import BadGateway from "@/view/presentation/fallback/BadGateway.vue";
-import BadRequest from "@/view/presentation/fallback/BadRequest.vue";
-import GatewayTimeout from "@/view/presentation/fallback/GatewayTimeout.vue";
-import InternalServerError from "@/view/presentation/fallback/InternalServerError.vue";
-import NotFound from "@/view/presentation/fallback/NotFound.vue";
+import BadGateway from "@/view/fallback/BadGateway.vue";
+import BadRequest from "@/view/fallback/BadRequest.vue";
+import GatewayTimeout from "@/view/fallback/GatewayTimeout.vue";
+import InternalServerError from "@/view/fallback/InternalServerError.vue";
+import NotFound from "@/view/fallback/NotFound.vue";
 
 export {
   BadGateway,

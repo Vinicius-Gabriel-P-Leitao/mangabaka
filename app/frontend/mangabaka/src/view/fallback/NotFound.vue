@@ -10,6 +10,7 @@ import { onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 
 const { t, locale } = useI18n();
+// TODO: Transformar toda essa parafernália em uma forma global de atualizar as paginas
 const channel = new BroadcastChannel("locale-change");
 
 channel.onmessage = (event) => {
