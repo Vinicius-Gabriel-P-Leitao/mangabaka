@@ -5,14 +5,14 @@
 <!-- See LICENSE file in the project root for full license information. -->
 
 <script setup lang="ts">
-import ErrorFallbackLayout from "@/layout/ErrorFallbackLayout.vue";
-import flame from "@asset/flame.png";
+import { ErrorFallbackLayout } from "@/application/export/Layout";
+import frieren from "@asset/frieren.png";
 </script>
 
 <template>
   <ErrorFallbackLayout
-    title="Erro de Gateway 🧐"
-    message="Não foi possível em:"
+    title="Página não encontrada 😢"
+    message="Não foi possível encontrar:"
     cause="Motivo:"
   >
     <span
@@ -23,16 +23,16 @@ import flame from "@asset/flame.png";
     </span>
     <span class="place-self-center">
       <img
-        :src="flame"
-        alt="Flame from sou sou no Frieren"
-        class="w-24 sm:w-40 h-24 sm:h-40 object-cover rounded-full shadow-lg border-4 border-orange-500"
+        :src="frieren"
+        alt="Frieren from sou sou no Frieren"
+        class="w-24 sm:w-40 h-24 sm:h-40 object-cover rounded-full shadow-lg border-4 border-white"
       />
     </span>
     <span
       class="content-center text-start text-8xl sm:text-[190px]"
       aria-hidden="true"
     >
-      2
+      4
     </span>
   </ErrorFallbackLayout>
 </template>
