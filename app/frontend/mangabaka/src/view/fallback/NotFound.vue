@@ -7,6 +7,12 @@
 <script setup lang="ts">
 import ErrorFallbackLayout from "@/layout/ErrorFallbackLayout.vue";
 import frieren from "@asset/frieren.png";
+import { useI18n } from "vue-i18n";
+
+const { t, locale } = useI18n();
+function switchLang(lang: "pt-BR" | "en-US") {
+  locale.value = lang;
+}
 </script>
 
 <template>
@@ -35,4 +41,7 @@ import frieren from "@asset/frieren.png";
       4
     </span>
   </ErrorFallbackLayout>
+  <button @click="switchLang('en-US')">Mudar para inglês</button>
+  <button @click="switchLang('pt-BR')">Voltar para Português</button>
+  {{ t("login.title") }}
 </template>
