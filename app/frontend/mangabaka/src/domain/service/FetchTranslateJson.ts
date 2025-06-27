@@ -4,6 +4,7 @@
 // Licensed under the BSD 3-Clause License.
 import { Exceptions, Handlers, Types } from "@/export";
 import { ArrowPathRoundedSquareIcon } from "@heroicons/vue/24/solid";
+import axios from "axios";
 
 /**
  * Faz uma requisição para buscar a tradução JSON.
@@ -16,9 +17,9 @@ export async function FetchTranslateJson<T>(
   url: string
 ): Promise<Types.ApiResponse<T>> {
   try {
-    const response: Response = await fetch(url);
+    const response: Types.ApiResponse<T> = await axios.get(url);
 
-    if (!response.ok) {
+    if (!response.status) {
       throw new Exceptions.ApiException(
         Handlers.ApiErrorMessageHandler.NOT_FOUND,
         {
@@ -29,7 +30,7 @@ export async function FetchTranslateJson<T>(
       );
     }
 
-    const json: T = await response.json();
+    const json: T = await response.data;
 
     return {
       data: json,
@@ -37,14 +38,14 @@ export async function FetchTranslateJson<T>(
       statusText: response.statusText,
     };
   } catch (error) {
-    if (error instanceof TypeError) {
+    if (axios.isAxiosError(error)) {
       throw new Exceptions.ApiException(
         Handlers.ApiErrorMessageHandler.BAD_GATEWAY,
         {
           variant: "alert",
           icon: ArrowPathRoundedSquareIcon,
         },
-        error
+        error.status
       );
     }
 
