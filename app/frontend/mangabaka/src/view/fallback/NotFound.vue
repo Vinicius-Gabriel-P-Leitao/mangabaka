@@ -33,7 +33,7 @@ onUnmounted(() => {
 
 <template>
   <Layouts.ErrorFallbackLayout
-    :title="t('not_found.title')"
+    :title="t('page.not_found.title')"
     message="Não foi possível encontrar:"
     cause="Motivo:"
   >

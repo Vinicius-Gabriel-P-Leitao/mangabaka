@@ -1,0 +1,8 @@
+{
+  "handler": {
+    "not_found": {
+      "resource": "Requested feature",
+      "could_not_find": "Could not find:"
+    }
+  }
+}

@@ -4,9 +4,9 @@
 <!-- Licensed under the BSD 3-Clause License. -->
 <!-- See LICENSE file in the project root for full license information. -->
 <script setup lang="ts">
+import { AvailableTranslation } from "@/domain/composable/AvailableTranslation";
 import i18n from "@/domain/config/I18n";
-import { Exceptions, Handlers, Services, Types, Components } from "@/export";
-import { AppException } from "@/export/imports/Exception";
+import { Components, Exceptions, Handlers, Services, Types } from "@/export";
 import { ExclamationCircleIcon } from "@heroicons/vue/24/solid";
 import { ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
@@ -15,11 +15,7 @@ const { locale, availableLocales } = useI18n();
 const channel = new BroadcastChannel("locale-change");
 
 const loading = ref(false);
-const languages = ref([
-  { code: "pt-BR", label: "Português (Brasil)" },
-  { code: "en-US", label: "English (US)" },
-  { code: "en-RS", label: "English (RS)" },
-]);
+const languages = AvailableTranslation;
 
 watch(locale, (newTranslate: string) => {
   runToastSafe(() => switchLang(newTranslate));
@@ -54,8 +50,14 @@ async function switchLang(newTranslate: string) {
           `/v1/translate/${newTranslate}` // TODO: Criar rota no backend para essa busca
         );
 
-      if (result.data || result.status != 200) {
+      if (result.data || result.status === 200) {
         i18n.global.setLocaleMessage(newTranslate, result.data);
+
+        Services.AddLanguageService(
+          newTranslate,
+          result.data?.meta?.language ?? newTranslate,
+          result.data
+        );
       } else {
         throw new Exceptions.ToastException(
           Handlers.ApiErrorMessageHandler.NOT_FOUND,
@@ -67,7 +69,7 @@ async function switchLang(newTranslate: string) {
         );
       }
     } catch (exception) {
-      if (exception instanceof AppException) {
+      if (exception instanceof Exceptions.AppException) {
         throw new Exceptions.ToastException(
           exception.code,
           {

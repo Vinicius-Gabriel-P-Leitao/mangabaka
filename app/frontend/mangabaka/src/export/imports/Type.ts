@@ -8,11 +8,13 @@ import type { I18nJsonFormat } from "@/application/type/I18nJsonFormat";
 import type { ButtonVariant } from "@/application/type/ButtonVariant";
 import type { ToastVariant } from "@/application/type/ToastVariant";
 import type { GlobalToastErrorPayload } from "@/application/type/GlobalToastErrorPayload";
+import type { AvailableLocales } from "@/application/type/AvailableLocales";
 
 export type {
   ApiResponse,
   I18nJsonFormat,
   ButtonVariant,
   ToastVariant,
-  GlobalToastErrorPayload as GlobalErrorPayload,
+  GlobalToastErrorPayload,
+  AvailableLocales,
 };
