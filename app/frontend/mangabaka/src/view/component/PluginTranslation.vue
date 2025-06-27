@@ -17,19 +17,19 @@ const channel = new BroadcastChannel("locale-change");
 const loading = ref(false);
 const languages = AvailableTranslation;
 
-watch(locale, (newTranslate: string) => {
-  runToastSafe(() => switchLang(newTranslate));
-  channel.postMessage(newTranslate);
-  localStorage.setItem("locale", newTranslate);
+watch(locale, (translate: string) => {
+  runToastSafe(() => switchLang(translate));
+  channel.postMessage(translate);
+  localStorage.setItem("locale", translate);
 });
 
 function runToastSafe(fn: () => Promise<void>) {
   fn().catch((error) => {
-    if (!(error instanceof Exceptions.ToastException)) {
+    if (!(error instanceof Exceptions.AppException)) {
       error = new Exceptions.ToastException(
         Handlers.ApiErrorMessageHandler.NOT_FOUND,
         {
-          variant: "error",
+          variant: "alert",
           icon: ExclamationCircleIcon,
         },
         { status: 404 }
@@ -40,23 +40,22 @@ function runToastSafe(fn: () => Promise<void>) {
   });
 }
 
-
-async function switchLang(newTranslate: string) {
-  if (!availableLocales.includes(newTranslate)) {
+async function switchLang(translate: string) {
+  if (!availableLocales.includes(translate)) {
     loading.value = true;
 
     try {
       const result: Types.ApiResponse<Types.I18nJsonFormat> =
-        await Services.FetchTranslateJson<Types.I18nJsonFormat>(
-          `/v1/translate/${newTranslate}` // TODO: Criar rota no backend para essa busca
+        await Services.FetchDataService<Types.I18nJsonFormat>(
+          `/v1/translate/${translate}` // TODO: Criar rota no backend para essa busca
         );
 
       if (result.data || result.status === 200) {
-        i18n.global.setLocaleMessage(newTranslate, result.data);
+        i18n.global.setLocaleMessage(translate, result.data);
 
-        Services.AddLanguageService(
-          newTranslate,
-          result.data?.meta?.language ?? newTranslate,
+        Services.AddLanguageInterfaceService(
+          translate,
+          result.data?.meta?.language ?? translate,
           result.data
         );
       } else {
@@ -66,7 +65,7 @@ async function switchLang(newTranslate: string) {
             variant: "alert",
             icon: ExclamationCircleIcon,
           },
-          { status: 404 }
+          { status: result.status }
         );
       }
     } catch (exception) {

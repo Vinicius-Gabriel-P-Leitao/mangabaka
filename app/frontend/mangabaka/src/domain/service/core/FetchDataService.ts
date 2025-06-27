@@ -13,11 +13,11 @@ import axios from "axios";
  * @returns Os dados da tradução e status HTTP
  * @throws {ApiException} Se a requisição falhar ou a resposta for inválida
  */
-export async function FetchTranslateJson<T>(
+export async function FetchDataService<T>(
   url: string
 ): Promise<Types.ApiResponse<T>> {
   try {
-    const response: Types.ApiResponse<T> = await axios.get(url);
+    const response: Types.ApiResponse<T> = await axios.get<T>(url);
 
     if (!response.status) {
       throw new Exceptions.ApiException(
@@ -30,10 +30,8 @@ export async function FetchTranslateJson<T>(
       );
     }
 
-    const json: T = await response.data;
-
     return {
-      data: json,
+      data: response.data,
       status: response.status,
       statusText: response.statusText,
     };

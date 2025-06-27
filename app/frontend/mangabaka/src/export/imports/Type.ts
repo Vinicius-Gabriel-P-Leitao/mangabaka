@@ -9,6 +9,7 @@ import type { ButtonVariant } from "@/application/type/ButtonVariant";
 import type { ToastVariant } from "@/application/type/ToastVariant";
 import type { GlobalToastErrorPayload } from "@/application/type/GlobalToastErrorPayload";
 import type { AvailableLocales } from "@/application/type/AvailableLocales";
+import type { AvailableTranslation } from "@/application/type/AvailableTranslation";
 
 export type {
   ApiResponse,
@@ -17,4 +18,5 @@ export type {
   ToastVariant,
   GlobalToastErrorPayload,
   AvailableLocales,
+  AvailableTranslation,
 };

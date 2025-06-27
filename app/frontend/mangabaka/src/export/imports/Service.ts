@@ -3,10 +3,12 @@
 // Copyright (c) 2025 Vinícius Gabriel Pereira Leitão
 // Licensed under the BSD 3-Clause License.
 // See LICENSE file in the project root for full license information.
-import { FetchTranslateJson } from "@/domain/service/FetchTranslateJson";
-import { AddLanguageInterfaceService } from "@/domain/service/AddLanguageInterfaceService";
+import { FetchDataService } from "@/domain/service/core/FetchDataService";
+import { AddLanguageInterfaceService } from "@/domain/service/interface/AddLanguageInterfaceService";
+import { FetchCustomTranslations } from "@/domain/service/api/FetchCustomTranslations";
 
 export {
-  FetchTranslateJson,
-  AddLanguageInterfaceService as AddLanguageService,
+  FetchDataService,
+  AddLanguageInterfaceService,
+  FetchCustomTranslations,
 };

@@ -48,4 +48,12 @@ export const ApiErrorMessageHandler: Record<
     handle: (_param: any): string =>
       t("handler.gateway_timeout.try_again_later"),
   },
+  INVALID_DATA: {
+    code: "INVALID_DATA",
+    handle: (param: any): string => {
+      return `${t("handler.invalid_data.obtained_invalid", {
+        param: param?.message,
+      })} ${param?.status ?? t("handler.unknown.unknown")}`;
+    },
+  },
 };

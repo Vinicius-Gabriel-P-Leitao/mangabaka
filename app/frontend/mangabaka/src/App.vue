@@ -5,7 +5,7 @@
 <!-- See LICENSE file in the project root for full license information. -->
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
-import { Layouts, Utils } from "@/export";
+import { Layouts, Utils, Services } from "@/export";
 
 const toastContainer = ref<InstanceType<typeof Layouts.ToastErrorContainer>>();
 
@@ -16,6 +16,7 @@ function handleGlobalPromiseRejection(event: PromiseRejectionEvent) {
 }
 
 onMounted(() => {
+  Services.FetchCustomTranslations();
   window.addEventListener("unhandledrejection", handleGlobalPromiseRejection);
 });
 
