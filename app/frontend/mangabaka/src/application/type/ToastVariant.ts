@@ -2,11 +2,4 @@
 //
 // Copyright (c) 2025 Vinícius Gabriel Pereira Leitão
 // Licensed under the BSD 3-Clause License.
-export type I18nJsonFormat = {
-  home: {
-    title: string;
-  };
-  not_found: {
-    title: string;
-  };
-};
+export type ToastVariant = "error" | "success" | "alert";

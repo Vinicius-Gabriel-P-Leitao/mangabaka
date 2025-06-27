@@ -3,16 +3,15 @@
 // Copyright (c) 2025 Vinícius Gabriel Pereira Leitão
 // Licensed under the BSD 3-Clause License.
 // See LICENSE file in the project root for full license information.
-
 import { createRouter, createWebHistory } from "vue-router";
-import { About, Home } from "@/application/export/Interface";
+import { About, Home } from "@/export/Interface";
 import {
   BadGateway,
   BadRequest,
   GatewayTimeout,
   InternalServerError,
   NotFound,
-} from "@/application/export/Fallback";
+} from "@/export/Fallback";
 
 const routes = [
   {

@@ -3,9 +3,8 @@
 <!-- Copyright (c) 2025 Vinícius Gabriel Pereira Leitão -->
 <!-- Licensed under the BSD 3-Clause License. -->
 <!-- See LICENSE file in the project root for full license information. -->
-
 <script setup lang="ts">
-import { ErrorFallbackLayout } from "@/application/export/Layout";
+import { ErrorFallbackLayout } from "@/export/Layout";
 import flame from "@asset/flame.png";
 import serie from "@asset/serie.png";
 </script>
