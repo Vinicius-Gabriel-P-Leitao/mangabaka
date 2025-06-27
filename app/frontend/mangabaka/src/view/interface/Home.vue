@@ -22,9 +22,9 @@ onMounted(() => {
   <nav>
     <Components.PluginTranslation />
     <h1 class="text-5xl text-zinc-800 dark:text-teal-50">
-      {{ t("home.title") }}
+      {{ t("page.home.title") }}
     </h1>
-    
+
     <router-link to="/about" custom v-slot="{ navigate }">
       <Components.BaseButton
         variant="primary"

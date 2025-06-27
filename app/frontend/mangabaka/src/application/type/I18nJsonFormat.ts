@@ -3,10 +3,21 @@
 // Copyright (c) 2025 Vinícius Gabriel Pereira Leitão
 // Licensed under the BSD 3-Clause License.
 export type I18nJsonFormat = {
-  home: {
-    title: string;
+  meta: {
+    language: string;
   };
-  not_found: {
-    title: string;
+  page: {
+    home: {
+      title: string;
+    };
+    not_found: {
+      title: string;
+    };
+  };
+  handler: {
+    not_found: {
+      resource: string;
+      could_not_find: string;
+    };
   };
 };

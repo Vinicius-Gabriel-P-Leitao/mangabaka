@@ -5,14 +5,17 @@
 // See LICENSE file in the project root for full license information.
 import type { ApiErrorCode } from "../code/base/ApiErrorCode";
 import type { ErrorCodeProvider } from "../code/ErrorCodeProvider";
+import i18n from "@/domain/config/I18n";
+
+const t = i18n.global.t;
 
 // prettier-ignore
 export const ApiErrorMessageHandler: Record<ApiErrorCode, ErrorCodeProvider> = {
   NOT_FOUND: {
     code: "NOT_FOUND",
     handle: (param: any): string => {
-      const recurso = param?.resource ?? "recurso solicitado";
-      return `Não foi possível encontrar ${recurso}.`;
+      const recurso = param?.resource ?? t("handler.not_found.resource");
+      return `${t("handler.not_found.could_not_find")} ${recurso}.`;
     },
   },
   BAD_REQUEST: {

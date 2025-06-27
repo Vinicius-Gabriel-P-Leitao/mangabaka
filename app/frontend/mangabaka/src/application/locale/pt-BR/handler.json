@@ -1,0 +1,8 @@
+{
+  "handler": {
+    "not_found": {
+      "resource": "Recurso solicitado",
+      "could_not_find": "Não foi possível encontrar: "
+    }
+  }
+}
