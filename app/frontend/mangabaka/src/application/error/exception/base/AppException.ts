@@ -12,6 +12,7 @@ export class AppException extends Error {
 
   constructor(code: ErrorCodeProvider, param?: any, cause?: unknown) {
     super(code.handle(param));
+    this.param = param;
     this.code = code;
     this.cause = cause;
   }

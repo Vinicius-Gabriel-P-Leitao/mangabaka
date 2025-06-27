@@ -74,7 +74,7 @@ async function switchLang(newTranslate: string) {
             variant: "alert",
             icon: ExclamationCircleIcon,
           },
-          { status: 500 }
+          { status: exception.param ?? 500 }
         );
       }
 

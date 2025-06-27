@@ -5,5 +5,5 @@
 // See LICENSE file in the project root for full license information.
 export interface ErrorCodeProvider {
   code: string;
-  handle(param: string): string;
+  handle(param: any): string;
 }

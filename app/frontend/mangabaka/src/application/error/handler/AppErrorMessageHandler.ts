@@ -9,6 +9,20 @@ import type { ErrorCodeProvider } from "../code/ErrorCodeProvider";
 export const AppErrorMessageHandler: Record<AppErrorCode, ErrorCodeProvider> = {
   UNKNOWN: {
     code: "UNKNOWN",
-    handle: (param) => `Erro desconhecido: ${JSON.stringify(param)}.`,
+    handle: (param: any): string => {
+      if (param instanceof Error) {
+        return `Ocorreu um erro inesperado: ${param.message}`;
+      }
+
+      if (typeof param === "string") {
+        return `Erro desconhecido: ${param}`;
+      }
+
+      if (typeof param === "object" && param?.status) {
+        return `Erro inesperado (código ${param.status}).`;
+      }
+
+      return "Algo deu errado, mas não conseguimos identificar o erro.";
+    },
   },
 };

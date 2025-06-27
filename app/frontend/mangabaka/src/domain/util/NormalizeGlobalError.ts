@@ -4,29 +4,48 @@
 // Licensed under the BSD 3-Clause License.
 // See LICENSE file in the project root for full license information.
 import { ExclamationCircleIcon } from "@heroicons/vue/24/solid";
-import type { Types } from "@/export";
+import { Types, Exceptions } from "@/export";
 
+// prettier-ignore
 export function NormalizeGlobalError(error: unknown): {
   message: string;
   error: Types.GlobalErrorPayload;
+  param?: any
 } {
-  if (error && typeof error === "object") {
-    if (
-      "message" in error &&
-      "error" in error &&
-      typeof error.error === "object"
-    ) {
+  if (error instanceof Exceptions.ApiException || error instanceof Exceptions.ToastException) {
+    return {
+      message: error.message,
+      error: error.error, 
+      param: error.param,
+    };
+  }
+
+  if (error instanceof Exceptions.AppException) {
+    return {
+      message: error.message,
+      error: {
+        variant: "alert",
+        icon: ExclamationCircleIcon,
+      },
+      param: error.param
+    };
+  }
+
+  if (error !== null && typeof error === "object") {
+    const errorObj = error as Record<string, unknown>;
+
+    if ("message" in errorObj && isGlobalErrorPayload(errorObj.error)) {
       return {
-        message: String((error as any).message),
-        error: (error as any).error as Types.GlobalErrorPayload,
+        message: String(errorObj.message),
+        error: errorObj.error as Types.GlobalErrorPayload,
       };
     }
 
-    if ("message" in error) {
+    if ("message" in errorObj) {
       return {
-        message: String((error as any).message),
+        message: String(errorObj.message),
         error: {
-          variant: "error",
+          variant: "alert",
           icon: ExclamationCircleIcon,
         },
       };
@@ -36,8 +55,14 @@ export function NormalizeGlobalError(error: unknown): {
   return {
     message: "Erro desconhecido.",
     error: {
-      variant: "error",
+      variant: "alert",
       icon: ExclamationCircleIcon,
     },
   };
+}
+
+function isGlobalErrorPayload(obj: unknown): obj is Types.GlobalErrorPayload {
+  return (
+    typeof obj === "object" && obj !== null && "variant" in obj && "icon" in obj
+  );
 }
