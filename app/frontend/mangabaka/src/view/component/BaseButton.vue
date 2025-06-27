@@ -4,12 +4,12 @@
 <!-- Licensed under the BSD 3-Clause License. -->
 <!-- See LICENSE file in the project root for full license information. -->
 <script setup lang="ts">
-import type { ButtonVariant } from "@/export/Type";
+import type { Types } from "@/export";
 import { computed } from "vue";
 
 const props = defineProps<{
   type?: "button" | "submit" | "reset";
-  variant?: ButtonVariant;
+  variant?: Types.ButtonVariant;
   disabled?: boolean;
 }>();
 

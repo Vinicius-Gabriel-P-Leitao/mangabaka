@@ -6,7 +6,6 @@ import type { Component } from "vue";
 import type { ToastVariant } from "./ToastVariant";
 
 export type GlobalToastErrorPayload = {
-  message: string;
   variant: ToastVariant;
   icon?: Component;
 };

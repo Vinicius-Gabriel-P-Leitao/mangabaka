@@ -4,13 +4,13 @@
 <!-- Licensed under the BSD 3-Clause License. -->
 <!-- See LICENSE file in the project root for full license information. -->
 <script setup lang="ts">
-import { ErrorFallbackLayout } from "@/export/Layout";
+import { Layouts } from "@/export";
 import flame from "@asset/flame.png";
 import serie from "@asset/serie.png";
 </script>
 
 <template>
-  <ErrorFallbackLayout
+  <Layouts.ErrorFallbackLayout
     title="Erro interno 💀"
     message="Não foi possível em:"
     cause="Motivo:"
@@ -35,5 +35,5 @@ import serie from "@asset/serie.png";
         class="w-24 sm:w-40 h-24 sm:h-40 object-cover rounded-full shadow-lg border-4 border-orange-200"
       />
     </span>
-  </ErrorFallbackLayout>
+  </Layouts.ErrorFallbackLayout>
 </template>

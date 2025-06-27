@@ -4,14 +4,14 @@
 // Licensed under the BSD 3-Clause License.
 // See LICENSE file in the project root for full license information.
 import { createRouter, createWebHistory } from "vue-router";
-import { About, Home } from "@/export/Interface";
+import { About, Home } from "@/export/imports/Interface";
 import {
   BadGateway,
   BadRequest,
   GatewayTimeout,
   InternalServerError,
   NotFound,
-} from "@/export/Fallback";
+} from "@/export/imports/Fallback";
 
 const routes = [
   {

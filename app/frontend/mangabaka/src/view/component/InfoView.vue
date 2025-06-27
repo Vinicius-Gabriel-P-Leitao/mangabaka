@@ -55,6 +55,7 @@ onUnmounted(() => {
 });
 </script>
 
+<!-- prettier-ignore -->
 <template>
   <div
     @mouseenter="onMouseEnter"
@@ -68,11 +69,13 @@ onUnmounted(() => {
       <div
         v-if="show"
         :class="[
-          'absolute text-xs rounded px-3 py-1 select-none whitespace-nowrap shadow-lg z-50 text-[#1a1a1a] dark:text-white bg-[#f4f4f5] dark:bg-[#1a1a1a]',
-          positionAbscissa === 'top' ? 'bottom-full mb-2' : 'top-full mt-2',
-          positionOrdinate == 'right'
-            ? 'left-full top-1/2 -translate-y-1/2'
-            : 'right-full top-1/2 -translate-y-1/2',
+          'absolute z-50 inline-block text-xs rounded w-fit h-fit p-1 select-none whitespace-nowrap shadow-lg text-[#1a1a1a] dark:text-white bg-[#f4f4f5] dark:bg-[#1a1a1a]',
+          positionAbscissa === 'top' 
+            ? 'bottom-full mb-2' 
+            : 'top-full mt-2',
+          positionOrdinate === 'right'
+            ? 'right-full top-1/2 -translate-y-1/2'
+            : 'left-full top-1/2 -translate-y-1/2',
         ]"
       >
         {{ infoText }}

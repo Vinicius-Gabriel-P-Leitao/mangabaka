@@ -4,12 +4,12 @@
 <!-- Licensed under the BSD 3-Clause License. -->
 <!-- See LICENSE file in the project root for full license information. -->
 <script setup lang="ts">
-import { ErrorFallbackLayout } from "@/export/Layout";
+import { Layouts } from "@/export";
 import flame from "@asset/flame.png";
 </script>
 
 <template>
-  <ErrorFallbackLayout
+  <Layouts.ErrorFallbackLayout
     title="Erro de Gateway 🧐"
     message="Não foi possível em:"
     cause="Motivo:"
@@ -33,5 +33,5 @@ import flame from "@asset/flame.png";
     >
       2
     </span>
-  </ErrorFallbackLayout>
+  </Layouts.ErrorFallbackLayout>
 </template>
