@@ -1,8 +1,25 @@
 {
   "handler": {
+    "unknown": {
+      "unknown": "Unknown error.",
+      "unexpected_error": "An unexpected error occurred:",
+      "unidentified_error": "Something went wrong, but we can't identify the error."
+    },
     "not_found": {
       "resource": "Recurso solicitado",
       "could_not_find": "Não foi possível encontrar: "
+    },
+    "bad_request": {
+      "invalid_fiel": "Campo inválido:",
+      "malformed_request": "A requisição está mal formada. Verifique os dados enviados."
+    },
+    "bad_gateway": {
+      "invalid_gateway": "Bad gateway: Intermediate server failed.",
+      "gateway_timeout": "Origin server timeout.",
+      "intermediary_server": "Error accessing the intermediary server. Code:"
+    },
+    "gateway_timeout": {
+      "try_again_later": "The server took too long to respond. Please try again later."
     }
   }
 }
