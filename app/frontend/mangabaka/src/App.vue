@@ -5,14 +5,13 @@
 <!-- See LICENSE file in the project root for full license information. -->
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
-import { ToastErrorContainer } from "./export/Layout";
+import { Layouts, Utils } from "@/export";
 
-const toastContainer = ref<InstanceType<typeof ToastErrorContainer>>();
+const toastContainer = ref<InstanceType<typeof Layouts.ToastErrorContainer>>();
 
 function handleGlobalPromiseRejection(event: PromiseRejectionEvent) {
-  const error = event.reason;
-  toastContainer.value?.addToast(error.error);
-
+  const normalized = Utils.NormalizeGlobalError(event.reason);
+  toastContainer.value?.addToast(normalized);
   event.preventDefault();
 }
 
@@ -28,7 +27,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div>
-    <ToastErrorContainer ref="toastContainer" />
+    <Layouts.ToastErrorContainer ref="toastContainer" />
     <router-view />
   </div>
 </template>

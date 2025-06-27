@@ -4,7 +4,7 @@
 <!-- Licensed under the BSD 3-Clause License. -->
 <!-- See LICENSE file in the project root for full license information. -->
 <script setup lang="ts">
-import { BaseButton } from "@/export/Component";
+import { Components } from "@/export";
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 
@@ -75,14 +75,14 @@ onMounted(() => {
 
     <nav>
       <router-link to="/" custom v-slot="{ navigate }">
-        <BaseButton
+        <Components.BaseButton
           variant="primary"
           :disabled="false"
           @click="navigate"
           class="back-home-button"
         >
           Voltar pra Home
-        </BaseButton>
+        </Components.BaseButton>
       </router-link>
     </nav>
   </main>

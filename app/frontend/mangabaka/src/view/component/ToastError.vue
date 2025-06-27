@@ -4,19 +4,19 @@
 <!-- Licensed under the BSD 3-Clause License. -->
 <!-- See LICENSE file in the project root for full license information. -->
 <script setup lang="ts">
-import type { GlobalErrorPayload, ToastVariant } from "@/export/Type";
+import { Types } from "@/export";
 import { XMarkIcon } from "@heroicons/vue/24/solid";
 import { computed, ref, watch } from "vue";
 
 const props = defineProps<{
-  error: GlobalErrorPayload | null;
-  variant?: ToastVariant | "error";
+  error: { message: string; error: Types.GlobalErrorPayload } | null;
+  variant?: Types.ToastVariant | "error";
   descriptionIcon: string;
   duration?: number;
 }>();
 
 const localMessage = ref("");
-const localVariant = ref<ToastVariant>("error");
+const localVariant = ref<Types.ToastVariant>("error");
 const emit = defineEmits(["close"]);
 
 watch(
@@ -24,7 +24,7 @@ watch(
   (error) => {
     if (error) {
       localMessage.value = error.message;
-      localVariant.value = error.variant;
+      localVariant.value = error.error.variant;
 
       if (props.duration) {
         setTimeout(() => {
@@ -41,7 +41,7 @@ watch(
 
 // prettier-ignore
 const classes = {
-  base: "notification bottom-4 right-4 z-50 w-full rounded-[8px] max-w-xs p-4 mb-4 text-base font-medium transition-colors border flex inline-flex items-center justify-center focus:outline-none focus:ring focus:ring-offset-0 text-[#1a1a1a] dark:text-white",
+  base: "notification bottom-4 right-4 z-50 w-full rounded-[8px] max-w-xs p-4 mb-4 gap-4 text-base font-medium transition-colors border flex inline-flex items-center justify-center focus:outline-none focus:ring focus:ring-offset-0 text-[#1a1a1a] dark:text-white",
   variants: {
     error:
       "bg-[#f4f4f5] dark:bg-[#1a1a1a] border-[#1a1a1a] dark:border-white hover:bg-[#1a1a1a]/20 dark:hover:bg-white/10 focus:ring-white",
@@ -69,9 +69,7 @@ const computedClasses = computed(() => {
     </header>
 
     <p class="flex-1 min-w-0">
-      <span
-        class="block text-sm font-normal whitespace-nowrap overflow-hidden text-ellipsis"
-      >
+      <span class="block text-sm font-normal overflow-hidden text-ellipsis">
         {{ localMessage }}
       </span>
     </p>

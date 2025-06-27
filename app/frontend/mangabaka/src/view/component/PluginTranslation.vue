@@ -4,11 +4,9 @@
 <!-- Licensed under the BSD 3-Clause License. -->
 <!-- See LICENSE file in the project root for full license information. -->
 <script setup lang="ts">
-import { ToastException } from "@/application/error/ToastException";
 import i18n from "@/domain/config/I18n";
-import { DropdownTranslation, InfoView } from "@/export/Component";
-import { FetchTranslateJson } from "@/export/Service";
-import type { ApiResponse, I18nJsonFormat } from "@/export/Type";
+import { Exceptions, Handlers, Services, Types, Components } from "@/export";
+import { AppException } from "@/export/imports/Exception";
 import { ExclamationCircleIcon } from "@heroicons/vue/24/solid";
 import { ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
@@ -31,12 +29,15 @@ watch(locale, (newTranslate: string) => {
 
 function runToastSafe(fn: () => Promise<void>) {
   fn().catch((error) => {
-    if (!(error instanceof ToastException)) {
-      error = new ToastException(error.message || "Erro inesperado", {
-        message: error.message || "Erro inesperado",
-        variant: "error",
-        icon: ExclamationCircleIcon,
-      });
+    if (!(error instanceof Exceptions.ToastException)) {
+      error = new Exceptions.ToastException(
+        Handlers.ApiErrorMessageHandler.NOT_FOUND,
+        {
+          variant: "error",
+          icon: ExclamationCircleIcon,
+        },
+        { status: 404 }
+      );
     }
 
     throw error;
@@ -48,35 +49,43 @@ async function switchLang(newTranslate: string) {
     loading.value = true;
 
     try {
-      const result: ApiResponse<I18nJsonFormat> =
-        await FetchTranslateJson<I18nJsonFormat>(
+      const result: Types.ApiResponse<Types.I18nJsonFormat> =
+        await Services.FetchTranslateJson<Types.I18nJsonFormat>(
           `/v1/translate/${newTranslate}` // TODO: Criar rota no backend para essa busca
         );
-      console.log("asdkokas");
 
       if (result.data || result.status != 200) {
         i18n.global.setLocaleMessage(newTranslate, result.data);
       } else {
-        throw new ToastException("Tradução não encontrada", {
-          message: "Tradução não encontrada",
-          variant: "alert",
-          icon: ExclamationCircleIcon,
-        });
+        throw new Exceptions.ToastException(
+          Handlers.ApiErrorMessageHandler.NOT_FOUND,
+          {
+            variant: "alert",
+            icon: ExclamationCircleIcon,
+          },
+          { status: 404 }
+        );
       }
     } catch (exception) {
-      if (exception instanceof Error) {
-        throw new ToastException("Falha ao salvar", {
-          message: exception.message,
-          variant: "error",
-          icon: ExclamationCircleIcon,
-        });
-      } else {
-        throw new ToastException("Falha ao salvar", {
-          message: "Erro desconhecido.",
-          variant: "error",
-          icon: ExclamationCircleIcon,
-        });
+      if (exception instanceof AppException) {
+        throw new Exceptions.ToastException(
+          exception.code,
+          {
+            variant: "alert",
+            icon: ExclamationCircleIcon,
+          },
+          { status: 500 }
+        );
       }
+
+      throw new Exceptions.ToastException(
+        Handlers.AppErrorMessageHandler.UNKNOWN,
+        {
+          variant: "alert",
+          icon: ExclamationCircleIcon,
+        },
+        { status: 500 }
+      );
     } finally {
       loading.value = false;
     }
@@ -86,7 +95,11 @@ async function switchLang(newTranslate: string) {
 
 <template>
   <section class="flex items-center gap-3">
-    <DropdownTranslation label="Idioma:" v-model="locale" :disabled="loading">
+    <Components.DropdownTranslation
+      label="Idioma:"
+      v-model="locale"
+      :disabled="loading"
+    >
       <option
         v-for="lang in languages"
         :key="lang.code"
@@ -95,9 +108,9 @@ async function switchLang(newTranslate: string) {
       >
         {{ lang.label }}
       </option>
-    </DropdownTranslation>
+    </Components.DropdownTranslation>
 
-    <InfoView infoText="Campo para trocar idioma da interface." />
+    <Components.InfoView infoText="Campo para trocar idioma da interface." />
   </section>
 </template>
 
