@@ -4,7 +4,7 @@
 <!-- Licensed under the BSD 3-Clause License. -->
 <!-- See LICENSE file in the project root for full license information. -->
 <script setup lang="ts">
-import { ErrorFallbackLayout } from "@/application/export/Layout";
+import { ErrorFallbackLayout } from "@/export/Layout";
 import frieren from "@asset/frieren.png";
 import { onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";

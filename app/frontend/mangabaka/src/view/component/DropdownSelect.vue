@@ -29,7 +29,7 @@ function handleChange(event: Event) {
     <div class="rounded-[8px] border border-[#1a1a1a] dark:border-white">
       <label
         :for="id"
-        class="text-base font-medium rounded-l-[8px] px-5 py-[0.6em] mb-2 bg-[#f4f4f5] dark:bg-[#1a1a1a] text-[#1a1a1a] dark:text-white hover:bg-[#1a1a1a]/20 dark:hover:bg-white/10"
+        class="text-base font-medium rounded-l-[8px] px-5 py-[0.6em] mb-2 bg-[#f4f4f5] dark:bg-[#1a1a1a] text-[#1a1a1a] dark:text-white"
       >
         {{ label }}
       </label>
