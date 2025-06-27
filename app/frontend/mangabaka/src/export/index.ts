@@ -1,4 +1,5 @@
 import * as Components from "./imports/Component";
+import * as ErrorCodes from "./imports/ErrorCode";
 import * as Exceptions from "./imports/Exception";
 import * as Fallbacks from "./imports/Fallback";
 import * as Handlers from "./imports/Handler";
@@ -10,6 +11,7 @@ import * as Utils from "./imports/Util";
 
 export {
   Components,
+  ErrorCodes,
   Exceptions,
   Fallbacks,
   Handlers,

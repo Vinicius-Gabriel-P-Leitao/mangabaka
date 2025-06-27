@@ -40,6 +40,7 @@ function runToastSafe(fn: () => Promise<void>) {
   });
 }
 
+
 async function switchLang(newTranslate: string) {
   if (!availableLocales.includes(newTranslate)) {
     loading.value = true;

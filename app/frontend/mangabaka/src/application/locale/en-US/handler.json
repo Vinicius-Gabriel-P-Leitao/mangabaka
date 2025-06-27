@@ -1,8 +1,25 @@
 {
   "handler": {
+    "unknown": {
+      "unknown": "Erro desconhecido.",
+      "unexpected_error": "Ocorreu um erro inesperado:",
+      "unidentified_error": "Algo deu errado, mas não conseguimos identificar o erro."
+    },
     "not_found": {
       "resource": "Requested feature",
       "could_not_find": "Could not find:"
+    },
+    "bad_request": {
+      "invalid_field": "Invalid field:",
+      "malformed_request": "The request is malformed. Please check the data sent."
+    },
+    "bad_gateway": {
+      "invalid_gateway": "Gateway inválido: servidor intermediário falhou.",
+      "gateway_timeout": "Timeout do servidor de origem.",
+      "intermediary_server": "Erro ao acessar o servidor intermediário. Código:"
+    },
+    "gateway_timeout": {
+      "try_again_later": "O servidor demorou demais para responder. Tente novamente mais tarde."
     }
   }
 }
