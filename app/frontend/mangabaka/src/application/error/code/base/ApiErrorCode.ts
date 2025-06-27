@@ -8,6 +8,7 @@ export const ApiErrorCode = {
   BAD_REQUEST: "BAD_REQUEST",
   BAD_GATEWAY: "BAD_GATEWAY",
   GATEWAY_TIMEOUT: "GATEWAY_TIMEOUT",
+  INVALID_DATA: "INVALID_DATA",
 } as const;
 
 export type ApiErrorCode = keyof typeof ApiErrorCode;

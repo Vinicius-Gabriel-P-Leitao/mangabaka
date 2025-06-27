@@ -8,11 +8,11 @@ import type { Types } from "@/export";
 import { AppException } from "../base/AppException";
 
 export class ApiException extends AppException {
-  public readonly error: Types.GlobalErrorPayload;
+  public readonly error: Types.GlobalToastErrorPayload;
 
   constructor(
     code: ErrorCodeProvider,
-    error: Types.GlobalErrorPayload,
+    error: Types.GlobalToastErrorPayload,
     param?: any,
     cause?: unknown
   ) {

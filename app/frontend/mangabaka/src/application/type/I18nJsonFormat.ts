@@ -1,10 +1,6 @@
 // SPDX-License-Identifier: BSD-3-Clause
 //
 // Copyright (c) 2025 Vinícius Gabriel Pereira Leitão
-
-import type { server } from "typescript";
-import serie from "@asset/serie.png";
-
 // Licensed under the BSD 3-Clause License.
 export type I18nJsonFormat = {
   meta: {
@@ -39,6 +35,9 @@ export type I18nJsonFormat = {
     };
     gateway_timeout: {
       try_again_later: string;
+    };
+    invalid_data: {
+      obtained_invalid: string;
     };
   };
 };

@@ -1,12 +1,12 @@
 {
   "handler": {
     "unknown": {
-      "unknown": "Erro desconhecido.",
-      "unexpected_error": "Ocorreu um erro inesperado:",
-      "unidentified_error": "Algo deu errado, mas não conseguimos identificar o erro."
+      "unknown": "Unknown error.",
+      "unexpected_error": "An unexpected error occurred:",
+      "unidentified_error": "Something went wrong, but we can't identify the error."
     },
     "not_found": {
-      "resource": "Requested feature",
+      "resource": "Requested resource",
       "could_not_find": "Could not find:"
     },
     "bad_request": {
@@ -14,12 +14,15 @@
       "malformed_request": "The request is malformed. Please check the data sent."
     },
     "bad_gateway": {
-      "invalid_gateway": "Gateway inválido: servidor intermediário falhou.",
-      "gateway_timeout": "Timeout do servidor de origem.",
-      "intermediary_server": "Erro ao acessar o servidor intermediário. Código:"
+      "invalid_gateway": "Bad gateway: Intermediate server failed.",
+      "gateway_timeout": "Origin server timeout.",
+      "intermediary_server": "Error accessing the intermediary server. Code:"
     },
     "gateway_timeout": {
-      "try_again_later": "O servidor demorou demais para responder. Tente novamente mais tarde."
+      "try_again_later": "The server took too long to respond. Please try again later."
+    },
+    "invalid_data": {
+      "obtained_invalid": "When fetching data in {param} is invalid."
     }
   }
 }
