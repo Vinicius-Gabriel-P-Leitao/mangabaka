@@ -1,10 +1,37 @@
 {
   "page": {
+    "not_found": {
+      "title": "Page not found 😢",
+      "message": "Could not find:",
+      "cause": "Reason:",
+      "image_alt": "Frieren character from the anime Frieren: Beyond Journey's."
+    },
+    "internal_server_error": {
+      "title": "Internal error 💀",
+      "message": "Unable to:",
+      "cause": "Reason:",
+      "image_alt": "From Frieren: Beyond Journey's: {param}"
+    },
+    "gateway_timeout": {
+      "title": "Gateway Timeout 🧐",
+      "message": "Unable to:",
+      "cause": "Reason:",
+      "image_alt": "Himmel character from the anime Frieren: Beyond Journey's."
+    },
+    "bad_request": {
+      "title": "Malformed request 🤨",
+      "message": "Unable to:",
+      "cause": "Reason:",
+      "image_alt": "From Frieren: Beyond Journey's: {param}"
+    },
+    "bad_gateway": {
+      "title": "Gateway Error 🧐",
+      "message": "Unable to:",
+      "cause": "Reason:",
+      "image_alt": "Flame character from the anime Frieren: Beyond Journey's."
+    },
     "home": {
       "title": "Home page"
-    },
-    "not_found": {
-      "title": "Page not found 😢"
     }
   }
 }

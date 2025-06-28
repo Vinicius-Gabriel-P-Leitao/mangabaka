@@ -4,15 +4,19 @@
 <!-- Licensed under the BSD 3-Clause License. -->
 <!-- See LICENSE file in the project root for full license information. -->
 <script setup lang="ts">
-import { Layouts } from "@/export";
+import { Composables, Layouts } from "@/export";
 import himmel from "@asset/himmel.png";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
+Composables.UseLocaleSync();
 </script>
 
 <template>
   <Layouts.ErrorFallbackLayout
-    title="Timeout do Gateway 🧐"
-    message="Não foi possível em:"
-    cause="Motivo:"
+    :title="t('page.gateway_timeout.title')"
+    :message="t('page.gateway_timeout.message')"
+    :cause="t('page.gateway_timeout.cause')"
   >
     <span
       class="content-center text-end text-8xl sm:text-[190px]"
@@ -23,7 +27,7 @@ import himmel from "@asset/himmel.png";
     <span class="place-self-center">
       <img
         :src="himmel"
-        alt="Flame from sou sou no Frieren"
+        :alt="t('page.gateway_timeout.image_alt')"
         class="w-24 sm:w-40 h-24 sm:h-40 object-cover rounded-full shadow-lg border-4 border-blue-200"
       />
     </span>

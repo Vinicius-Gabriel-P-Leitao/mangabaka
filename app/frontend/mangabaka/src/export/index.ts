@@ -4,6 +4,7 @@
 // Licensed under the BSD 3-Clause License.
 // See LICENSE file in the project root for full license information.
 import * as Components from "./imports/Component";
+import * as Composables from "./imports/Composable";
 import * as ErrorCodes from "./imports/ErrorCode";
 import * as Exceptions from "./imports/Exception";
 import * as Fallbacks from "./imports/Fallback";
@@ -16,6 +17,7 @@ import * as Utils from "./imports/Util";
 
 export {
   Components,
+  Composables,
   ErrorCodes,
   Exceptions,
   Fallbacks,
