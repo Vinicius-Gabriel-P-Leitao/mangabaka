@@ -15,6 +15,7 @@ import br.mangabaka.api.mapper.jersey.NotFoundExceptionMapper
 import br.mangabaka.infrastructure.config.AppConfig
 import br.mangabaka.infrastructure.config.BackendMode
 import br.mangabaka.infrastructure.config.database.PostgresqlConfig
+import frontend.translation.controller.PostFrontendTranslation
 import jakarta.ws.rs.ApplicationPath
 import jakarta.ws.rs.core.Application
 
@@ -24,6 +25,7 @@ class Application : Application() {
         val classes: MutableSet<Class<*>?> = mutableSetOf(
             // NOTE: Classes de controller
             GetDataManga::class.java,
+            PostFrontendTranslation::class.java,
             // NOTE: Mappers do jersey
             NotFoundExceptionMapper::class.java,
             BadRequestExceptionMapper::class.java,

@@ -8,29 +8,42 @@
 
 package frontend.translation.model
 
-import io.ebean.annotation.DbJsonB
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
+import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 @Entity
 @Table(
-    name = "tb_frontend_translation",
-    schema = "mangabaka"
+    name = "tb_frontend_translation", schema = "mangabaka"
 )
-open class FrontendTranslation(metaLanguage: String, translation: MutableMap<String, Any>) {
+class FrontendTranslation(
+    metaLanguage: String,
+    translationKey: String,
+    translationValue: String
+) {
+    companion object {
+        const val ID_TRANSLATION = "id_translation"
+        const val META_LANGUAGE = "meta_language"
+        const val TRANSLATION_KEY = "translation_key"
+        const val TRANSLATION_VALUE = "translation_value"
+        const val UPDATE_AT = "updated_at"
+    }
+
     @Id
-    @Column(name = "id_translation")
+    @Column(name = ID_TRANSLATION)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    open val id: Long? = null
+    var id: Long? = null
 
-    @Column(name = "meta_language", length = 100, nullable = false)
-    open val metaLanguage: String = metaLanguage
+    @Column(name = META_LANGUAGE, length = 100, nullable = false)
+    var metaLanguage: String = metaLanguage
 
-    @DbJsonB
-    @Column(name = "json_translation", columnDefinition = "JSONB")
-    open val translations: MutableMap<String, Any> = translation
+    @Column(name = TRANSLATION_KEY, length = 255, nullable = false)
+    var translationKey: String = translationKey
+
+    @Column(name = TRANSLATION_VALUE, columnDefinition = "TEXT", nullable = false)
+    var translationValue: String = translationValue
+
+    @Column(name = UPDATE_AT, columnDefinition = "TIMESTAMPTZ", nullable = false)
+    var updatedAt: ZonedDateTime = ZonedDateTime.now(ZoneId.systemDefault())
 }
