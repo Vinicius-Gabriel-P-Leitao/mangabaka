@@ -1,7 +1,7 @@
 # Gradle build outputs
 .gradle/
 *build/
-!gradle/wrapper/gradle-wrapper.jar
+!backend/gradle/wrapper/gradle-wrapper.jar
 # Keep build folders inside source sets to allow IDE to recognize compiled outputs
 !**/src/main/**/build/
 !**/src/test/**/build/
