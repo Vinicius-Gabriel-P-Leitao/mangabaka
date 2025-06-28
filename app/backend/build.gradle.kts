@@ -11,6 +11,7 @@ version = "1.0-SNAPSHOT"
 plugins {
     kotlin("plugin.serialization") version "2.0.0"
     kotlin("plugin.allopen") version "2.0.0"
+    id("io.ebean") version "15.11.0"
     kotlin("jvm") version "2.0.0"
     id("war")
 }
@@ -36,14 +37,14 @@ dependencies {
     runtimeOnly("io.ebean:ebean-agent:$ebeanVersion")
     implementation("io.ebean:ebean-api:$ebeanVersion")
     implementation("io.ebean:ebean-core:$ebeanVersion")
+    testImplementation("io.ebean:ebean-test:$ebeanVersion")
     implementation("io.ebean:ebean-querybean:$ebeanVersion")
     implementation("io.ebean:ebean-ddl-generator:$ebeanVersion")
     // JAKARTA
-    val jakartaVersion = "6.1.0"
     implementation("jakarta.ws.rs:jakarta.ws.rs-api:4.0.0")
     implementation("jakarta.validation:jakarta.validation-api:3.1.1")
     implementation("jakarta.annotation:jakarta.annotation-api:3.0.0")
-    compileOnly("jakarta.servlet:jakarta.servlet-api:$jakartaVersion")
+    compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
     implementation("jakarta.persistence:jakarta.persistence-api:3.2.0")
     // HK2
     val hk2Version = "3.1.1"

@@ -14,6 +14,7 @@ import br.mangabaka.api.mapper.jersey.BadRequestExceptionMapper
 import br.mangabaka.api.mapper.jersey.NotFoundExceptionMapper
 import br.mangabaka.infrastructure.config.AppConfig
 import br.mangabaka.infrastructure.config.BackendMode
+import br.mangabaka.infrastructure.config.database.PostgresqlConfig
 import jakarta.ws.rs.ApplicationPath
 import jakarta.ws.rs.core.Application
 
@@ -33,6 +34,8 @@ class Application : Application() {
             InternalExceptionMapper::class.java,
             AssetDownloadExceptionMapper::class.java,
         )
+
+        PostgresqlConfig().configure();
 
         return when (AppConfig.backendMode) {
             BackendMode.ALL -> {
