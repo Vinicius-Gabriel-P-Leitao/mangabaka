@@ -1,5 +1,3 @@
-import GatewayTimeout from "@/view/fallback/GatewayTimeout.vue";
-import BadGateway from "@/view/fallback/BadGateway.vue";
 // SPDX-License-Identifier: BSD-3-Clause
 //
 // Copyright (c) 2025 Vinícius Gabriel Pereira Leitão
@@ -44,7 +42,7 @@ export type I18nJsonFormat = {
     };
   };
   component: {
-    plugin_translation: {
+    translation: {
       info_view: string;
     };
   };
