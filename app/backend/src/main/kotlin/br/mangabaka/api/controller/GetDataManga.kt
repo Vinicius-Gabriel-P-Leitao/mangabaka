@@ -30,28 +30,31 @@ import jakarta.ws.rs.core.HttpHeaders
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 
-@Path("/manga")
-class GetDataManga {
+@Path(value = "/manga")
+class GetDataManga(
+    private val fetchAnilistMangaDataService: FetchAnilistMangaDataService = FetchAnilistMangaDataService(),
+    private val fetchAnilistMangaAssetService: FetchAnilistMangaAssetService = FetchAnilistMangaAssetService()
+) {
     @GET
-    @Path("/metadata")
+    @Path(value = "/metadata")
     @Produces(MediaType.APPLICATION_JSON)
     fun getAnilistMetadataManga(@QueryParam("name") nameManga: String?): Response {
         return try {
             if (nameManga == null) {
                 throw InvalidParameterException(
                     message = ParameterErrorCode.ERROR_PARAMETER_EMPTY.handle(value = I18n.get("throw.name.parameter.require")),
-                    errorCode = ParameterErrorCode.ERROR_PARAMETER_EMPTY, httpError = Response.Status.BAD_REQUEST
+                    errorCode = ParameterErrorCode.ERROR_PARAMETER_EMPTY,
+                    httpError = Response.Status.BAD_REQUEST
                 )
             }
 
-            val fetchAnilistMangaDataService = FetchAnilistMangaDataService()
             val resolverService = MangaResolverService(services = fetchAnilistMangaDataService)
-
             val result: MangaDataDto = resolverService.mangaResolver(mangaName = nameManga)
             if (result.paginationInfo == null) {
                 throw MetadataException(
                     message = AssetDownloadErrorCode.ERROR_EMPTY_DATA.handle(value = I18n.get("throw.metadata.empty")),
-                    errorCode = AssetDownloadErrorCode.ERROR_EMPTY_DATA, httpError = Response.Status.NOT_FOUND
+                    errorCode = AssetDownloadErrorCode.ERROR_EMPTY_DATA,
+                    httpError = Response.Status.NOT_FOUND
                 )
             }
 
@@ -62,25 +65,24 @@ class GetDataManga {
                 else -> throw InternalException(
                     message = InternalErrorCode.ERROR_INTERNAL_GENERIC.handle(
                         value = I18n.get(
-                            "throw.error.fetch.metadata",
-                            exception.message ?: I18n.get("throw.unknown.error")
+                            "throw.error.fetch.metadata", exception.message ?: I18n.get("throw.unknown.error")
                         )
-                    ),
-                    errorCode = InternalErrorCode.ERROR_INTERNAL_GENERIC
+                    ), errorCode = InternalErrorCode.ERROR_INTERNAL_GENERIC
                 )
             }
         }
     }
 
     @GET
-    @Path("/asset")
+    @Path(value = "/asset")
     @Produces(MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON)
     fun getAnilistAssetManga(@QueryParam("name") nameManga: String?, @QueryParam("type") typeParam: String?): Response {
         return try {
             if (nameManga == null || typeParam == null) {
                 throw InvalidParameterException(
                     message = ParameterErrorCode.ERROR_PARAMETER_EMPTY.handle(value = I18n.get("throw.name.type.parameter.require")),
-                    errorCode = ParameterErrorCode.ERROR_PARAMETER_EMPTY, httpError = Response.Status.BAD_REQUEST
+                    errorCode = ParameterErrorCode.ERROR_PARAMETER_EMPTY,
+                    httpError = Response.Status.BAD_REQUEST
                 )
             }
 
@@ -94,14 +96,13 @@ class GetDataManga {
                 )
             }
 
-            val fetchAnilistMangaAssetService = FetchAnilistMangaAssetService()
             val resolverService = MangaResolverService(services = fetchAnilistMangaAssetService)
-
             val result: MangaDataDto = resolverService.mangaResolver(mangaName = nameManga)
             if (result.asset == null) {
                 throw AssetDownloadException(
                     message = AssetDownloadErrorCode.ERROR_EMPTY_DATA.handle(value = I18n.get("throw.empty.asset.data")),
-                    errorCode = AssetDownloadErrorCode.ERROR_EMPTY_DATA, httpError = Response.Status.NOT_FOUND
+                    errorCode = AssetDownloadErrorCode.ERROR_EMPTY_DATA,
+                    httpError = Response.Status.NOT_FOUND
                 )
             }
 
@@ -111,11 +112,9 @@ class GetDataManga {
             } ?: throw InvalidParameterException(
                 message = ParameterErrorCode.ERROR_PARAMETER_INVALID.handle(
                     value = I18n.get(
-                        "throw.not.found.asset.type",
-                        typeParam
+                        "throw.not.found.asset.type", typeParam
                     )
-                ),
-                errorCode = ParameterErrorCode.ERROR_PARAMETER_INVALID, httpError = Response.Status.BAD_REQUEST
+                ), errorCode = ParameterErrorCode.ERROR_PARAMETER_INVALID, httpError = Response.Status.BAD_REQUEST
             )
 
             Response.ok(asset.content)
@@ -126,11 +125,9 @@ class GetDataManga {
                 else -> throw InternalException(
                     message = InternalErrorCode.ERROR_INTERNAL_GENERIC.handle(
                         value = I18n.get(
-                            "throw.error.fetch.asset",
-                            exception.message ?: I18n.get("throw.unknown.error")
+                            "throw.error.fetch.asset", exception.message ?: I18n.get("throw.unknown.error")
                         )
-                    ),
-                    errorCode = InternalErrorCode.ERROR_INTERNAL_GENERIC
+                    ), errorCode = InternalErrorCode.ERROR_INTERNAL_GENERIC
                 )
             }
         }
