@@ -5,14 +5,14 @@ import { ref } from "vue";
 const toasts = ref<
   Array<{
     id: number;
-    error: { message: string; error: Types.GlobalErrorPayload };
+    error: { message: string; error: Types.GlobalToastErrorPayload };
   }>
 >([]);
 let toastId = 0;
 
 function addToast(payload: {
   message: string;
-  error: Types.GlobalErrorPayload;
+  error: Types.GlobalToastErrorPayload;
 }) {
   const id = ++toastId;
   toasts.value.unshift({ id, error: payload });

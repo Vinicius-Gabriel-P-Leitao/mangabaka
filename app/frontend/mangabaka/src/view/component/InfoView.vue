@@ -5,19 +5,15 @@
 <!-- See LICENSE file in the project root for full license information. -->
 <script setup lang="ts">
 import { QuestionMarkCircleIcon } from "@heroicons/vue/24/solid";
-import { onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 
-defineProps({
-  infoText: String,
-});
+defineProps<{ infoText: String }>();
 
 const show = ref(false);
 const iconRef = ref<HTMLElement | null>(null);
 let timer: ReturnType<typeof setTimeout> | null = null;
 
 const positionAbscissa = ref<"top" | "bottom">("top");
-const positionOrdinate = ref<"right" | "left">("right");
-const MIN_MARGIN = 80;
 
 function checkPosition() {
   if (!iconRef.value) return;
@@ -26,18 +22,10 @@ function checkPosition() {
   const spaceAbove = rect.top;
   const spaceBelow = window.innerHeight - rect.bottom;
 
-  positionAbscissa.value =
-    spaceAbove < MIN_MARGIN && spaceBelow > MIN_MARGIN ? "bottom" : "top";
-
-  const spaceLeft = rect.left;
-  const spaceRight = window.innerWidth - rect.right;
-
-  positionOrdinate.value =
-    spaceLeft < MIN_MARGIN && spaceRight > MIN_MARGIN ? "left" : "right";
+  positionAbscissa.value = spaceBelow > spaceAbove ? "bottom" : "top";
 }
 
 function onMouseEnter() {
-  checkPosition();
   timer = setTimeout(() => (show.value = true), 300);
 }
 
@@ -50,12 +38,15 @@ function onMouseLeave() {
   show.value = false;
 }
 
+onMounted(() => {
+  checkPosition();
+});
+
 onUnmounted(() => {
   if (timer) clearTimeout(timer);
 });
 </script>
 
-<!-- prettier-ignore -->
 <template>
   <div
     @mouseenter="onMouseEnter"
@@ -69,13 +60,8 @@ onUnmounted(() => {
       <div
         v-if="show"
         :class="[
-          'absolute z-50 inline-block text-xs rounded w-fit h-fit p-1 select-none whitespace-nowrap shadow-lg text-[#1a1a1a] dark:text-white bg-[#f4f4f5] dark:bg-[#1a1a1a]',
-          positionAbscissa === 'top' 
-            ? 'bottom-full mb-2' 
-            : 'top-full mt-2',
-          positionOrdinate === 'right'
-            ? 'right-full top-1/2 -translate-y-1/2'
-            : 'left-full top-1/2 -translate-y-1/2',
+          'absolute -translate-x-1/2 left-1/2 z-50 inline-block text-xs rounded w-fit h-fit p-1 select-none whitespace-nowrap shadow-lg text-[#1a1a1a] dark:text-white bg-[#f4f4f5] dark:bg-[#1a1a1a] transform',
+          positionAbscissa === 'top' ? 'bottom-full mb-2' : 'top-full mt-2',
         ]"
       >
         {{ infoText }}

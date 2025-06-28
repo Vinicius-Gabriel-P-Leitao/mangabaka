@@ -14,11 +14,11 @@ export const AppErrorMessageHandler: Record<AppErrorCode, ErrorCodeProvider> = {
     code: "UNKNOWN",
     handle: (param: any): string => {
       if (param instanceof Error) {
-        return `${t("handler.unknown.unexpected_error")} ${param.message}`;
+        return t("handler.unknown.unexpected_error", { param: param.message });
       }
 
       if (typeof param === "string") {
-        return `${t("handler.unknown.unknown")} ${param}`;
+        return t("handler.unknown.unknown", { param: param });
       }
 
       return t("handler.unknown.unidentified_error");

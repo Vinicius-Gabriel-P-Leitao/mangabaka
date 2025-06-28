@@ -9,7 +9,7 @@ import { XMarkIcon } from "@heroicons/vue/24/solid";
 import { computed, ref, watch } from "vue";
 
 const props = defineProps<{
-  error: { message: string; error: Types.GlobalErrorPayload } | null;
+  error: { message: string; error: Types.GlobalToastErrorPayload } | null;
   variant?: Types.ToastVariant | "error";
   descriptionIcon: string;
   duration?: number;
@@ -43,11 +43,11 @@ watch(
 const classes = {
   base: "notification bottom-4 right-4 z-50 w-full rounded-[8px] max-w-xs p-4 mb-4 gap-4 text-base font-medium transition-colors border flex inline-flex items-center justify-center focus:outline-none focus:ring focus:ring-offset-0 text-[#1a1a1a] dark:text-white",
   variants: {
-    error:
+    alert:
       "bg-[#f4f4f5] dark:bg-[#1a1a1a] border-[#1a1a1a] dark:border-white hover:bg-[#1a1a1a]/20 dark:hover:bg-white/10 focus:ring-white",
     success:
-      "bg-blue-400/10 border-blue-400 hover:bg-blue-600/40 focus:ring-blue-600",
-    alert:
+      "bg-green-400/10 border-green-400 hover:bg-green-600/40 focus:ring-green-600",
+    error:
       "bg-red-400/10 border-red-400 hover:bg-red-600/40 focus:ring-red-600",
   },
   disabled: "opacity-50 cursor-not-allowed",

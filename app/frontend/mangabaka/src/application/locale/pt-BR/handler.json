@@ -1,28 +1,28 @@
 {
   "handler": {
     "unknown": {
-      "unknown": "Erro desconhecido.",
-      "unexpected_error": "Ocorreu um erro inesperado:",
+      "unknown": "Erro desconhecido. {param}",
+      "unexpected_error": "Ocorreu um erro inesperado: {param}",
       "unidentified_error": "Algo deu errado, mas não conseguimos identificar o erro."
     },
     "not_found": {
       "resource": "Recurso solicitado",
-      "could_not_find": "Não foi possível encontrar:"
+      "could_not_find": "Não foi possível encontrar: {param}"
     },
     "bad_request": {
-      "invalid_field": "Campo inválido:",
+      "invalid_field": "Campo inválido: {param}",
       "malformed_request": "A requisição está mal formada. Verifique os dados enviados."
     },
     "bad_gateway": {
-      "invalid_gateway": "Gateway inválido: servidor intermediário falhou.",
-      "gateway_timeout": "Timeout do servidor de origem.",
-      "intermediary_server": "Erro ao acessar o servidor intermediário. Código:"
+      "invalid_gateway": "Gateway inválido: o servidor intermediário falhou.",
+      "gateway_timeout": "Tempo de resposta excedido do servidor de origem.",
+      "intermediary_server": "Erro ao acessar o servidor intermediário. Código: {param}"
     },
     "gateway_timeout": {
       "try_again_later": "O servidor demorou demais para responder. Tente novamente mais tarde."
     },
     "invalid_data": {
-      "obtained_invalid": "Ao buscar dados em {param} estão inválidos."
+      "obtained_invalid": "Ao buscar dados em {url}, foram considerados inválidos. {param}"
     }
   }
 }

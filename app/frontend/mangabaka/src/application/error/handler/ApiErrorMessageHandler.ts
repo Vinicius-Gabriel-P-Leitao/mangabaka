@@ -9,7 +9,6 @@ import type { ErrorCodeProvider } from "../code/ErrorCodeProvider";
 
 const t = i18n.global.t;
 
-// prettier-ignore
 export const ApiErrorMessageHandler: Record<
   ErrorCodes.ApiErrorCode,
   ErrorCodeProvider
@@ -17,15 +16,16 @@ export const ApiErrorMessageHandler: Record<
   NOT_FOUND: {
     code: "NOT_FOUND",
     handle: (param: any): string => {
-      const recurso = param?.resource ?? t("handler.not_found.resource");
-      return `${t("handler.not_found.could_not_find")} ${recurso}.`;
+      const resource = param?.resource ?? t("handler.not_found.resource");
+      return t("handler.not_found.could_not_find", { param: resource });
     },
   },
   BAD_REQUEST: {
     code: "BAD_REQUEST",
     handle: (param: any): string => {
       if (param?.field)
-        return `${t("handler.bad_request.invalid_fiel")} ${param.field}.`;
+        return t("handler.bad_request.invalid_fiel", { param: param.field });
+
       return t("handler.bad_request.malformed_request");
     },
   },
@@ -38,9 +38,8 @@ export const ApiErrorMessageHandler: Record<
       if (param?.status === 504)
         return t("handler.bad_gateway.gateway_timeout");
 
-      return `${t("handler.bad_gateway.intermediary_server")} ${
-        param?.status ?? t("handler.unknown.unknown")
-      }`;
+      const status = param?.status ?? t("handler.unknown.unknown");
+      return t("handler.bad_gateway.intermediary_server", { param: status });
     },
   },
   GATEWAY_TIMEOUT: {
@@ -51,9 +50,13 @@ export const ApiErrorMessageHandler: Record<
   INVALID_DATA: {
     code: "INVALID_DATA",
     handle: (param: any): string => {
-      return `${t("handler.invalid_data.obtained_invalid", {
-        param: param?.message,
-      })} ${param?.status ?? t("handler.unknown.unknown")}`;
+      const status = param?.status ?? t("handler.unknown.unknown");
+      const url = param?.message ?? t("handler.unknown.unknown");
+
+      return t("handler.invalid_data.obtained_invalid", {
+        url: url,
+        param: status,
+      });
     },
   },
 };

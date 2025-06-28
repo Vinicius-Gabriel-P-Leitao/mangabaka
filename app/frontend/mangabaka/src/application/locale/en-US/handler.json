@@ -1,28 +1,28 @@
 {
   "handler": {
     "unknown": {
-      "unknown": "Unknown error.",
-      "unexpected_error": "An unexpected error occurred:",
+      "unknown": "Unknown error. {param}",
+      "unexpected_error": "An unexpected error occurred: {param}",
       "unidentified_error": "Something went wrong, but we can't identify the error."
     },
     "not_found": {
       "resource": "Requested resource",
-      "could_not_find": "Could not find:"
+      "could_not_find": "Could not find: {param}"
     },
     "bad_request": {
-      "invalid_field": "Invalid field:",
+      "invalid_field": "Invalid field: {param}",
       "malformed_request": "The request is malformed. Please check the data sent."
     },
     "bad_gateway": {
       "invalid_gateway": "Bad gateway: Intermediate server failed.",
       "gateway_timeout": "Origin server timeout.",
-      "intermediary_server": "Error accessing the intermediary server. Code:"
+      "intermediary_server": "Error accessing the intermediary server. Code: {param}"
     },
     "gateway_timeout": {
       "try_again_later": "The server took too long to respond. Please try again later."
     },
     "invalid_data": {
-      "obtained_invalid": "When fetching data in {param} is invalid."
+      "obtained_invalid": "When fetching data in {url} is invalid. {param}"
     }
   }
 }

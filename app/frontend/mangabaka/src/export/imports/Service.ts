@@ -6,9 +6,11 @@
 import { FetchDataService } from "@/domain/service/core/FetchDataService";
 import { AddLanguageInterfaceService } from "@/domain/service/interface/AddLanguageInterfaceService";
 import { FetchCustomTranslations } from "@/domain/service/api/FetchCustomTranslations";
+import { SwitchLanguageInterfaceService } from "@/domain/service/interface/SwitchLanguageInterfaceService";
 
 export {
   FetchDataService,
   AddLanguageInterfaceService,
   FetchCustomTranslations,
+  SwitchLanguageInterfaceService,
 };
