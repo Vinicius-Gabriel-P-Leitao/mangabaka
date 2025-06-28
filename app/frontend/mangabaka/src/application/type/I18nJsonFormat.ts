@@ -1,3 +1,5 @@
+import GatewayTimeout from "@/view/fallback/GatewayTimeout.vue";
+import BadGateway from "@/view/fallback/BadGateway.vue";
 // SPDX-License-Identifier: BSD-3-Clause
 //
 // Copyright (c) 2025 Vinícius Gabriel Pereira Leitão
@@ -7,10 +9,37 @@ export type I18nJsonFormat = {
     language: string;
   };
   page: {
-    home: {
-      title: string;
-    };
     not_found: {
+      title: string;
+      message: string;
+      cause: string;
+      image_alt: string;
+    };
+    internal_server_error: {
+      title: string;
+      message: string;
+      cause: string;
+      image_alt: string;
+    };
+    gateway_timeout: {
+      title: string;
+      message: string;
+      cause: string;
+      image_alt: string;
+    };
+    bad_request: {
+      title: string;
+      message: string;
+      cause: string;
+      image_alt: string;
+    };
+    bad_gateway: {
+      title: string;
+      message: string;
+      cause: string;
+      image_alt: string;
+    };
+    home: {
       title: string;
     };
   };

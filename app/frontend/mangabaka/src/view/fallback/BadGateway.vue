@@ -4,15 +4,19 @@
 <!-- Licensed under the BSD 3-Clause License. -->
 <!-- See LICENSE file in the project root for full license information. -->
 <script setup lang="ts">
-import { Layouts } from "@/export";
+import { Composables, Layouts } from "@/export";
 import flame from "@asset/flame.png";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
+Composables.UseLocaleSync();
 </script>
 
 <template>
   <Layouts.ErrorFallbackLayout
-    title="Erro de Gateway 🧐"
-    message="Não foi possível em:"
-    cause="Motivo:"
+    :title="t('page.bad_gateway.title')"
+    :message="t('page.bad_gateway.message')"
+    :cause="t('page.bad_gateway.cause')"
   >
     <span
       class="content-center text-end text-8xl sm:text-[190px]"
@@ -23,7 +27,7 @@ import flame from "@asset/flame.png";
     <span class="place-self-center">
       <img
         :src="flame"
-        alt="Flame from sou sou no Frieren"
+        :alt="t('page.bad_gateway.image_alt')"
         class="w-24 sm:w-40 h-24 sm:h-40 object-cover rounded-full shadow-lg border-4 border-orange-500"
       />
     </span>
