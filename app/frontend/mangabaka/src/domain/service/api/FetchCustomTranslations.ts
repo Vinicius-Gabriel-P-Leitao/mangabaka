@@ -17,7 +17,7 @@ export async function FetchCustomTranslations() {
       throw new Exceptions.ToastException(
         Handlers.ApiErrorMessageHandler.INVALID_DATA,
         {
-          variant: "error",
+          variant: "alert",
           icon: ExclamationCircleIcon,
         },
         {

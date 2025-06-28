@@ -14,6 +14,11 @@ export type I18nJsonFormat = {
       title: string;
     };
   };
+  component: {
+    plugin_translation: {
+      info_view: string;
+    };
+  };
   handler: {
     unknown: {
       unknown: string;

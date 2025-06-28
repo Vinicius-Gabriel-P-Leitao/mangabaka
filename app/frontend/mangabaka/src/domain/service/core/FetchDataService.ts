@@ -40,7 +40,7 @@ export async function FetchDataService<T>(
       throw new Exceptions.ApiException(
         Handlers.ApiErrorMessageHandler.BAD_GATEWAY,
         {
-          variant: "alert",
+          variant: "error",
           icon: ArrowPathRoundedSquareIcon,
         },
         error.status
