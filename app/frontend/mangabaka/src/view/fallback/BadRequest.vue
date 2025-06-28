@@ -15,9 +15,9 @@ Composables.UseLocaleSync();
 
 <template>
   <Layouts.ErrorFallbackLayout
-    :title="t('page.bad_request.title')"
-    :message="t('page.bad_request.message')"
-    :cause="t('page.bad_request.cause')"
+    :title="t('page.badRequest.title')"
+    :message="t('page.badRequest.message')"
+    :cause="t('page.badRequest.cause')"
   >
     <span
       class="content-center text-end text-8xl sm:text-[190px]"
@@ -28,14 +28,14 @@ Composables.UseLocaleSync();
     <span class="place-self-center">
       <img
         :src="frieren"
-        :alt="t('page.bad_request.image_alt', { param: 'Frieren' })"
+        :alt="t('page.badRequest.imageAlt', { param: 'Frieren' })"
         class="w-24 sm:w-40 h-24 sm:h-40 object-cover rounded-full shadow-lg border-4 border-white"
       />
     </span>
     <span class="flex items-center justify-start">
       <img
         :src="fern"
-        :alt="t('page.bad_request.image_alt', { param: 'Fern' })"
+        :alt="t('page.badRequest.imageAlt', { param: 'Fern' })"
         class="w-24 sm:w-40 h-24 sm:h-40 object-cover rounded-full shadow-lg border-4 border-purple-900"
       />
     </span>

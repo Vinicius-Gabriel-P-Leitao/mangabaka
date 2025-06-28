@@ -14,9 +14,9 @@ Composables.UseLocaleSync();
 
 <template>
   <Layouts.ErrorFallbackLayout
-    :title="t('page.gateway_timeout.title')"
-    :message="t('page.gateway_timeout.message')"
-    :cause="t('page.gateway_timeout.cause')"
+    :title="t('page.gatewayTimeout.title')"
+    :message="t('page.gatewayTimeout.message')"
+    :cause="t('page.gatewayTimeout.cause')"
   >
     <span
       class="content-center text-end text-8xl sm:text-[190px]"
@@ -27,7 +27,7 @@ Composables.UseLocaleSync();
     <span class="place-self-center">
       <img
         :src="himmel"
-        :alt="t('page.gateway_timeout.image_alt')"
+        :alt="t('page.gatewayTimeout.imageAlt')"
         class="w-24 sm:w-40 h-24 sm:h-40 object-cover rounded-full shadow-lg border-4 border-blue-200"
       />
     </span>

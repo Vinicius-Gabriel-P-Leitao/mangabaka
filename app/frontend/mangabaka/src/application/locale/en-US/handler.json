@@ -2,27 +2,27 @@
   "handler": {
     "unknown": {
       "unknown": "Unknown error. {param}",
-      "unexpected_error": "An unexpected error occurred: {param}",
-      "unidentified_error": "Something went wrong, but we can't identify the error."
+      "unexpectedError": "An unexpected error occurred: {param}",
+      "unidentifiedError": "Something went wrong, but we can't identify the error."
     },
-    "not_found": {
+    "notFound": {
       "resource": "Requested resource",
-      "could_not_find": "Could not find: {param}"
+      "couldNotFind": "Could not find: {param}"
     },
-    "bad_request": {
-      "invalid_field": "Invalid field: {param}",
-      "malformed_request": "The request is malformed. Please check the data sent."
+    "badRequest": {
+      "invalidField": "Invalid field: {param}",
+      "malformedRequest": "The request is malformed. Please check the data sent."
     },
-    "bad_gateway": {
-      "invalid_gateway": "Bad gateway: Intermediate server failed.",
-      "gateway_timeout": "Origin server timeout.",
-      "intermediary_server": "Error accessing the intermediary server. Code: {param}"
+    "badGateway": {
+      "invalidGateway": "Bad gateway: Intermediate server failed.",
+      "gatewayTimeout": "Origin server timeout.",
+      "intermediaryServer": "Error accessing the intermediary server. Code: {param}"
     },
-    "gateway_timeout": {
-      "try_again_later": "The server took too long to respond. Please try again later."
+    "gatewayTimeout": {
+      "tryAgainLater": "The server took too long to respond. Please try again later."
     },
-    "invalid_data": {
-      "obtained_invalid": "When fetching data in {url} is invalid. {param}"
+    "invalidData": {
+      "obtainedInvalid": "When fetching data in {url} is invalid. {param}"
     }
   }
 }

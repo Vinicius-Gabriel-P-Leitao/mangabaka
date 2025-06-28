@@ -40,7 +40,7 @@ function runToastSafe(fn: () => Promise<void>) {
 
 <template>
   <section class="flex items-center gap-3">
-    <Components.Select label="Idioma:" v-model="locale">
+    <Components.Select :label="t('component.select.label')" v-model="locale">
       <option
         v-for="lang in languages"
         :key="lang.code"
@@ -51,9 +51,7 @@ function runToastSafe(fn: () => Promise<void>) {
       </option>
     </Components.Select>
 
-    <Components.InfoView
-      :infoText="t('component.plugin_translation.info_view')"
-    />
+    <Components.InfoView :infoText="t('component.translation.infoView')" />
   </section>
 </template>
 

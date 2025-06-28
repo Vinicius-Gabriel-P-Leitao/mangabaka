@@ -2,27 +2,27 @@
   "handler": {
     "unknown": {
       "unknown": "Erro desconhecido. {param}",
-      "unexpected_error": "Ocorreu um erro inesperado: {param}",
-      "unidentified_error": "Algo deu errado, mas não conseguimos identificar o erro."
+      "unexpectedError": "Ocorreu um erro inesperado: {param}",
+      "unidentifiedError": "Algo deu errado, mas não conseguimos identificar o erro."
     },
-    "not_found": {
+    "notFound": {
       "resource": "Recurso solicitado",
-      "could_not_find": "Não foi possível encontrar: {param}"
+      "couldNotFind": "Não foi possível encontrar: {param}"
     },
-    "bad_request": {
-      "invalid_field": "Campo inválido: {param}",
-      "malformed_request": "A requisição está mal formada. Verifique os dados enviados."
+    "badRequest": {
+      "invalidField": "Campo inválido: {param}",
+      "malformedRequest": "A requisição está mal formada. Verifique os dados enviados."
     },
-    "bad_gateway": {
-      "invalid_gateway": "Gateway inválido: o servidor intermediário falhou.",
-      "gateway_timeout": "Tempo de resposta excedido do servidor de origem.",
-      "intermediary_server": "Erro ao acessar o servidor intermediário. Código: {param}"
+    "badGateway": {
+      "invalidGateway": "Gateway inválido: o servidor intermediário falhou.",
+      "gatewayTimeout": "Tempo de resposta excedido do servidor de origem.",
+      "intermediaryServer": "Erro ao acessar o servidor intermediário. Código: {param}"
     },
-    "gateway_timeout": {
-      "try_again_later": "O servidor demorou demais para responder. Tente novamente mais tarde."
+    "gatewayTimeout": {
+      "tryAgainLater": "O servidor demorou demais para responder. Tente novamente mais tarde."
     },
-    "invalid_data": {
-      "obtained_invalid": "Ao buscar dados em {url}, foram considerados inválidos. {param}"
+    "invalidData": {
+      "obtainedInvalid": "Ao buscar dados em {url}, foram considerados inválidos. {param}"
     }
   }
 }

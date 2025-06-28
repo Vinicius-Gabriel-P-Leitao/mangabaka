@@ -21,16 +21,16 @@ import jakarta.persistence.Table
     name = "tb_frontend_translation",
     schema = "mangabaka"
 )
-open class FrontendTranslation {
+open class FrontendTranslation(metaLanguage: String, translation: MutableMap<String, Any>) {
     @Id
     @Column(name = "id_translation")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     open val id: Long? = null
 
     @Column(name = "meta_language", length = 100, nullable = false)
-    open val metaLanguage: String? = null
+    open val metaLanguage: String = metaLanguage
 
     @DbJsonB
     @Column(name = "json_translation", columnDefinition = "JSONB")
-    open val translations: MutableMap<String, Any> = mutableMapOf()
+    open val translations: MutableMap<String, Any> = translation
 }
