@@ -27,6 +27,7 @@ class PostgresqlConfig {
         val databaseConfig = DatabaseConfig()
         databaseConfig.setDataSourceConfig(dataSourceConfig)
         databaseConfig.setDdlGenerate(true)
+        databaseConfig.setDdlExtra(true);
         databaseConfig.setDdlRun(true)
         databaseConfig.setDbSchema("mangabaka")
 
