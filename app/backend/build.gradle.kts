@@ -38,8 +38,8 @@ dependencies {
     implementation("io.ebean:ebean-api:$ebeanVersion")
     implementation("io.ebean:ebean-core:$ebeanVersion")
     testImplementation("io.ebean:ebean-test:$ebeanVersion")
-    implementation("io.ebean:ebean-querybean:$ebeanVersion")
     implementation("io.ebean:ebean-ddl-generator:$ebeanVersion")
+    implementation("io.ebean:kotlin-querybean-generator:$ebeanVersion")
     // JAKARTA
     implementation("jakarta.ws.rs:jakarta.ws.rs-api:4.0.0")
     implementation("jakarta.validation:jakarta.validation-api:3.1.1")
