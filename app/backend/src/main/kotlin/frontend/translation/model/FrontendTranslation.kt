@@ -5,7 +5,8 @@
  * Licensed under the BSD 3-Clause License.
  * See LICENSE file in the project root for full license information.
  */
-package br.mangabaka.domain.model;
+
+package frontend.translation.model
 
 import io.ebean.annotation.DbJsonB
 import jakarta.persistence.Column

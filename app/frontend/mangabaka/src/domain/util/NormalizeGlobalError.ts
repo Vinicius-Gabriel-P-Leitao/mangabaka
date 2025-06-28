@@ -9,13 +9,16 @@ import { Types, Exceptions } from "@/export";
 // prettier-ignore
 export function NormalizeGlobalError(error: unknown): {
   message: string;
-  error: Types.GlobalErrorPayload;
-  param?: any
+  error: Types.GlobalToastErrorPayload;
+  param?: any;
 } {
-  if (error instanceof Exceptions.ApiException || error instanceof Exceptions.ToastException) {
+  if (
+    error instanceof Exceptions.ApiException ||
+    error instanceof Exceptions.ToastException
+  ) {
     return {
       message: error.message,
-      error: error.error, 
+      error: error.error,
       param: error.param,
     };
   }
@@ -27,7 +30,7 @@ export function NormalizeGlobalError(error: unknown): {
         variant: "alert",
         icon: ExclamationCircleIcon,
       },
-      param: error.param
+      param: error.param,
     };
   }
 
@@ -37,7 +40,7 @@ export function NormalizeGlobalError(error: unknown): {
     if ("message" in errorObj && isGlobalErrorPayload(errorObj.error)) {
       return {
         message: String(errorObj.message),
-        error: errorObj.error as Types.GlobalErrorPayload,
+        error: errorObj.error as Types.GlobalToastErrorPayload,
       };
     }
 
@@ -61,7 +64,9 @@ export function NormalizeGlobalError(error: unknown): {
   };
 }
 
-function isGlobalErrorPayload(obj: unknown): obj is Types.GlobalErrorPayload {
+function isGlobalErrorPayload(
+  obj: unknown
+): obj is Types.GlobalToastErrorPayload {
   return (
     typeof obj === "object" && obj !== null && "variant" in obj && "icon" in obj
   );
