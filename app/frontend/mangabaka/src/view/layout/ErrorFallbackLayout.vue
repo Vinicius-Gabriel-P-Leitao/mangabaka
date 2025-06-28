@@ -75,14 +75,14 @@ onMounted(() => {
 
     <nav>
       <router-link to="/" custom v-slot="{ navigate }">
-        <Components.BaseButton
+        <Components.Button
           variant="primary"
           :disabled="false"
           @click="navigate"
           class="back-home-button"
         >
           Voltar pra Home
-        </Components.BaseButton>
+        </Components.Button>
       </router-link>
     </nav>
   </main>

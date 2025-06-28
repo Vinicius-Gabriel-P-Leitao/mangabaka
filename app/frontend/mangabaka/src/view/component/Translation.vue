@@ -7,15 +7,11 @@
 import { AvailableTranslation } from "@/domain/composable/AvailableTranslation";
 import { Components, Exceptions, Handlers, Services } from "@/export";
 import { ExclamationCircleIcon } from "@heroicons/vue/24/solid";
-import { ref, watch } from "vue";
+import { watch } from "vue";
 import { useI18n } from "vue-i18n";
-import DropdownSelect from "./Select.vue";
 
 const { t, locale } = useI18n();
 const channel = new BroadcastChannel("locale-change");
-
-const tooltipInfo = ref<InstanceType<typeof DropdownSelect> | null>(null);
-const anchorEl = ref<HTMLElement | null>(null);
 const languages = AvailableTranslation;
 
 watch(locale, (translate: string) => {
@@ -44,16 +40,7 @@ function runToastSafe(fn: () => Promise<void>) {
 
 <template>
   <section class="flex items-center gap-3">
-    <Components.InfoView
-      :anchor="anchorEl"
-      :infoText="t('component.plugin_translation.info_view')"
-    />
-
-    <Components.DropdownTranslation
-      label="Idioma:"
-      v-model="locale"
-      ref="tooltipInfo"
-    >
+    <Components.Select label="Idioma:" v-model="locale">
       <option
         v-for="lang in languages"
         :key="lang.code"
@@ -62,7 +49,11 @@ function runToastSafe(fn: () => Promise<void>) {
       >
         {{ lang.label }}
       </option>
-    </Components.DropdownTranslation>
+    </Components.Select>
+
+    <Components.InfoView
+      :infoText="t('component.plugin_translation.info_view')"
+    />
   </section>
 </template>
 

@@ -1,3 +1,8 @@
+<!-- SPDX-License-Identifier: BSD-3-Clause -->
+<!---->
+<!-- Copyright (c) 2025 Vinícius Gabriel Pereira Leitão -->
+<!-- Licensed under the BSD 3-Clause License. -->
+<!-- See LICENSE file in the project root for full license information. -->
 <script setup lang="ts">
 import { Types, Components } from "@/export";
 import { ref } from "vue";
@@ -33,7 +38,7 @@ defineExpose({ addToast });
     tag="div"
     class="fixed bottom-4 right-4 z-50 flex flex-col-reverse gap-2"
   >
-    <Components.ToastError
+    <Components.Toast
       v-for="toast in toasts"
       :key="toast.id"
       :error="toast.error"
@@ -41,6 +46,6 @@ defineExpose({ addToast });
       @close="removeToast(toast.id)"
     >
       <component :is="toast.error.error.icon" class="h-6 w-6" />
-    </Components.ToastError>
+    </Components.Toast>
   </TransitionGroup>
 </template>

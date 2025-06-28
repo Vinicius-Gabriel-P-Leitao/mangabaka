@@ -20,20 +20,20 @@ onMounted(() => {
 
 <template>
   <nav>
-    <Components.PluginTranslation />
+    <Components.Translation />
     <h1 class="text-5xl text-zinc-800 dark:text-teal-50">
       {{ t("page.home.title") }}
     </h1>
 
     <router-link to="/about" custom v-slot="{ navigate }">
-      <Components.BaseButton
+      <Components.Button
         variant="primary"
         :disabled="false"
         @click="navigate"
         class="back-home-button"
       >
         About
-      </Components.BaseButton>
+      </Components.Button>
     </router-link>
   </nav>
 </template>
