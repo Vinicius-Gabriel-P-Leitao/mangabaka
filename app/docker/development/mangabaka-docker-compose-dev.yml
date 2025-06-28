@@ -7,12 +7,14 @@ services:
     container_name: mangabaka-postgresql-dev
     image: postgres:alpine3.16
     environment:
+      TZ: America/Sao_Paulo
       POSTGRES_DB: ${PG_DB_NAME}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_USER: ${PG_USERNAME}
     ports:
       - "4321:5432"
     volumes:
+      - ../../backend/src/main/resources/docker/postgresql.conf:/etc/postgresql/postgresql.conf
       - ../../backend/src/main/resources/docker/sql:/docker-entrypoint-initdb.d
     networks:
       - mangabaka-network-dev
@@ -26,6 +28,7 @@ services:
     ports:
       - "9089:9090"
     environment:
+      TZ: America/Sao_Paulo
       BACKEND_MODE: ${BACKEND_MODE}
       APP_LOCALE: ${APP_LOCALE}
       PG_PASSWORD: ${PG_PASSWORD}

@@ -5,7 +5,7 @@
  * Licensed under the BSD 3-Clause License.
  * See LICENSE file in the project root for full license information.
  */
- package frontend.translation.controller;
+ package br.mangabaka.domain;
 
-class PostFrontendTranslation {
+interface EbeanRepository {
 }
