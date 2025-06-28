@@ -16,36 +16,33 @@ export const ApiErrorMessageHandler: Record<
   NOT_FOUND: {
     code: "NOT_FOUND",
     handle: (param: any): string => {
-      const resource = param?.resource ?? t("handler.not_found.resource");
-      return t("handler.not_found.could_not_find", { param: resource });
+      const resource = param?.resource ?? t("handler.notFound.resource");
+      return t("handler.notFound.couldNotFind", { param: resource });
     },
   },
   BAD_REQUEST: {
     code: "BAD_REQUEST",
     handle: (param: any): string => {
       if (param?.field)
-        return t("handler.bad_request.invalid_fiel", { param: param.field });
+        return t("handler.badRequest.invalidFiel", { param: param.field });
 
-      return t("handler.bad_request.malformed_request");
+      return t("handler.badRequest.malformedRequest");
     },
   },
   BAD_GATEWAY: {
     code: "BAD_GATEWAY",
     handle: (param: any): string => {
-      if (param?.status === 502)
-        return t("handler.bad_gateway.invalid_gateway");
+      if (param?.status === 502) return t("handler.badGateway.invalidGateway");
 
-      if (param?.status === 504)
-        return t("handler.bad_gateway.gateway_timeout");
+      if (param?.status === 504) return t("handler.badGateway.gatewayTimeout");
 
       const status = param?.status ?? t("handler.unknown.unknown");
-      return t("handler.bad_gateway.intermediary_server", { param: status });
+      return t("handler.badGateway.intermediaryServer", { param: status });
     },
   },
   GATEWAY_TIMEOUT: {
     code: "GATEWAY_TIMEOUT",
-    handle: (_param: any): string =>
-      t("handler.gateway_timeout.try_again_later"),
+    handle: (_param: any): string => t("handler.gatewayTimeout.tryAgainLater"),
   },
   INVALID_DATA: {
     code: "INVALID_DATA",
@@ -53,7 +50,7 @@ export const ApiErrorMessageHandler: Record<
       const status = param?.status ?? t("handler.unknown.unknown");
       const url = param?.message ?? t("handler.unknown.unknown");
 
-      return t("handler.invalid_data.obtained_invalid", {
+      return t("handler.invalidData.obtainedInvalid", {
         url: url,
         param: status,
       });

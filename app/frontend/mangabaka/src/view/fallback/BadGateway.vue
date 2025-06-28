@@ -14,9 +14,9 @@ Composables.UseLocaleSync();
 
 <template>
   <Layouts.ErrorFallbackLayout
-    :title="t('page.bad_gateway.title')"
-    :message="t('page.bad_gateway.message')"
-    :cause="t('page.bad_gateway.cause')"
+    :title="t('page.badGateway.title')"
+    :message="t('page.badGateway.message')"
+    :cause="t('page.badGateway.cause')"
   >
     <span
       class="content-center text-end text-8xl sm:text-[190px]"
@@ -27,7 +27,7 @@ Composables.UseLocaleSync();
     <span class="place-self-center">
       <img
         :src="flame"
-        :alt="t('page.bad_gateway.image_alt')"
+        :alt="t('page.badGateway.imageAlt')"
         class="w-24 sm:w-40 h-24 sm:h-40 object-cover rounded-full shadow-lg border-4 border-orange-500"
       />
     </span>

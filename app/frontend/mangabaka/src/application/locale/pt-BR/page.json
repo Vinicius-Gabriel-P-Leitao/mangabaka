@@ -1,34 +1,34 @@
 {
   "page": {
-    "not_found": {
+    "notFound": {
       "title": "Página não encontrada 😢",
       "message": "Não foi possível encontrar:",
       "cause": "Motivo:",
-      "image_alt": "Personagem Frieren do anime Sousou no Frieren."
+      "imageAlt": "Personagem Frieren do anime Sousou no Frieren."
     },
-    "internal_server_error": {
+    "internalServerError": {
       "title": "Erro interno 💀",
       "message": "Não foi possível em:",
       "cause": "Motivo:",
-      "image_alt": "De Sousou no Frieren: {param}"
+      "imageAlt": "De Sousou no Frieren: {param}"
     },
-    "gateway_timeout": {
+    "gatewayTimeout": {
       "title": "Tempo limite do Gateway 🧐",
       "message": "Não foi possível em:",
       "cause": "Motivo:",
-      "image_alt": "Personagem Himmel do anime Sousou no Frieren."
+      "imageAlt": "Personagem Himmel do anime Sousou no Frieren."
     },
-    "bad_request": {
+    "badRequest": {
       "title": "Request mal formado 🤨",
       "message": "Não foi possível em:",
       "cause": "Motivo:",
-      "image_alt": "De Sousou no Frieren: {param}"
+      "imageAlt": "De Sousou no Frieren: {param}"
     },
-    "bad_gateway": {
+    "badGateway": {
       "title": "Erro de Gateway 🧐",
       "message": "Não foi possível em:",
       "cause": "Motivo:",
-      "image_alt": "Personagem Flame do anime Sousou no Frieren."
+      "imageAlt": "Personagem Flame do anime Sousou no Frieren."
     },
     "home": {
       "title": "Página principal"

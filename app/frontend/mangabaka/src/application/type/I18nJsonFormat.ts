@@ -7,35 +7,35 @@ export type I18nJsonFormat = {
     language: string;
   };
   page: {
-    not_found: {
+    notFound: {
       title: string;
       message: string;
       cause: string;
-      image_alt: string;
+      imageAlt: string;
     };
-    internal_server_error: {
+    internalServerError: {
       title: string;
       message: string;
       cause: string;
-      image_alt: string;
+      imageAlt: string;
     };
-    gateway_timeout: {
+    gatewayTimeout: {
       title: string;
       message: string;
       cause: string;
-      image_alt: string;
+      imageAlt: string;
     };
-    bad_request: {
+    badRequest: {
       title: string;
       message: string;
       cause: string;
-      image_alt: string;
+      imageAlt: string;
     };
-    bad_gateway: {
+    badGateway: {
       title: string;
       message: string;
       cause: string;
-      image_alt: string;
+      imageAlt: string;
     };
     home: {
       title: string;
@@ -43,33 +43,36 @@ export type I18nJsonFormat = {
   };
   component: {
     translation: {
-      info_view: string;
+      infoView: string;
+    };
+    select: {
+      label: string;
     };
   };
   handler: {
     unknown: {
       unknown: string;
-      unexpected_error: string;
-      unidentified_error: string;
+      unexpectedError: string;
+      unidentifiedError: string;
     };
-    not_found: {
+    notFound: {
       resource: string;
-      could_not_find: string;
+      couldNotFind: string;
     };
-    bad_request: {
-      invalid_fiel: string;
-      malformed_request: string;
+    badRequest: {
+      invalidFiel: string;
+      malformedRequest: string;
     };
-    bad_gateway: {
-      invalid_gateway: string;
-      gateway_timeout: string;
-      intermediary_server: string;
+    badGateway: {
+      invalidGateway: string;
+      gatewayTimeout: string;
+      intermediaryServer: string;
     };
-    gateway_timeout: {
-      try_again_later: string;
+    gatewayTimeout: {
+      tryAgainLater: string;
     };
-    invalid_data: {
-      obtained_invalid: string;
+    invalidData: {
+      obtainedInvalid: string;
     };
   };
 };

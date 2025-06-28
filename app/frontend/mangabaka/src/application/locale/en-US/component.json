@@ -1,7 +1,10 @@
 {
   "component": {
     "translation": {
-      "info_view": "Field to change interface language."
+      "infoView": "Field to change interface language."
+    },
+    "select": {
+      "label": "Language:"
     }
   }
 }

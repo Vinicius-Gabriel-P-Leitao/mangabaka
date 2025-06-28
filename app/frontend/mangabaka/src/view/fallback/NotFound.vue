@@ -14,9 +14,9 @@ Composables.UseLocaleSync();
 
 <template>
   <Layouts.ErrorFallbackLayout
-    :title="t('page.not_found.title')"
-    :message="t('page.not_found.message')"
-    :cause="t('page.not_found.cause')"
+    :title="t('page.notFound.title')"
+    :message="t('page.notFound.message')"
+    :cause="t('page.notFound.cause')"
   >
     <span
       class="content-center text-end text-8xl sm:text-[190px]"
@@ -27,7 +27,7 @@ Composables.UseLocaleSync();
     <span class="place-self-center">
       <img
         :src="frieren"
-        :alt="t('page.not_found.image_alt')"
+        :alt="t('page.notFound.imageAlt')"
         class="w-24 sm:w-40 h-24 sm:h-40 object-cover rounded-full shadow-lg border-4 border-white"
       />
     </span>

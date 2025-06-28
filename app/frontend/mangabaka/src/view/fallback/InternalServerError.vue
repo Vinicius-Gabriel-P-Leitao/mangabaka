@@ -15,9 +15,9 @@ Composables.UseLocaleSync();
 
 <template>
   <Layouts.ErrorFallbackLayout
-    :title="t('page.internal_server_error.title')"
-    :message="t('page.internal_server_error.message')"
-    :cause="t('page.internal_server_error.cause')"
+    :title="t('page.internalServerError.title')"
+    :message="t('page.internalServerError.message')"
+    :cause="t('page.internalServerError.cause')"
   >
     <span
       class="content-center text-end text-8xl sm:text-[190px]"
@@ -28,14 +28,14 @@ Composables.UseLocaleSync();
     <span class="place-self-center">
       <img
         :src="flame"
-        :alt="t('page.internal_server_error.image_alt', { param: 'Flame' })"
+        :alt="t('page.internalServerError.imageAlt', { param: 'Flame' })"
         class="w-24 sm:w-40 h-24 sm:h-40 object-cover rounded-full shadow-lg border-4 border-orange-500"
       />
     </span>
     <span class="flex items-center justify-start">
       <img
         :src="serie"
-        :alt="t('page.internal_server_error.image_alt', { param: 'Serie' })"
+        :alt="t('page.internalServerError.imageAlt', { param: 'Serie' })"
         class="w-24 sm:w-40 h-24 sm:h-40 object-cover rounded-full shadow-lg border-4 border-orange-200"
       />
     </span>
