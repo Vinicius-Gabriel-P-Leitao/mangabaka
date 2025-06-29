@@ -30,6 +30,12 @@
       "cause": "Reason:",
       "imageAlt": "Flame character from the anime Frieren: Beyond Journey's."
     },
+    "conflict": {
+      "title": "Data conflict 🤯",
+      "message": "Unable to:",
+      "cause": "Reason:",
+      "imageAlt": "Ubel character from the anime Frieren: Beyond Journey's."
+    },
     "home": {
       "title": "Home page"
     }
