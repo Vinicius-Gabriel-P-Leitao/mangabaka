@@ -10,6 +10,7 @@ package br.mangabaka.api.mapper.custom
 
 import br.mangabaka.api.mapper.response.MapperResponseResolver
 import br.mangabaka.api.mapper.response.BadRequestResponse
+import br.mangabaka.api.mapper.response.InternalServerErrorResponse
 import br.mangabaka.exception.code.custom.ParameterErrorCode
 import br.mangabaka.exception.throwable.http.InvalidParameterException
 import br.mangabaka.infrastructure.config.AppConfig
@@ -55,6 +56,14 @@ class InvalidParameterExceptionMapper : ExceptionMapper<InvalidParameterExceptio
                     ParameterErrorCode.ERROR_PARAMETER_EMPTY, ParameterErrorCode.ERROR_PARAMETER_INVALID -> {
                         MapperResponseResolver(
                             response = BadRequestResponse(), uri = uri, message = exception.message
+                        ).resolve()
+                    }
+
+                    else -> {
+                        MapperResponseResolver(
+                            response = InternalServerErrorResponse(),
+                            uri = uri,
+                            message = exception.message
                         ).resolve()
                     }
                 }

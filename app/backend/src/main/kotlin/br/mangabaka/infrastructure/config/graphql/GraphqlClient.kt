@@ -23,11 +23,8 @@ import org.glassfish.jersey.client.ClientProperties
 import org.glassfish.jersey.jackson.JacksonFeature
 
 class GraphqlClient(
-    val endpoint: String,
-    val client: Client = ClientBuilder.newBuilder().withConfig(
-        ClientConfig()
-            .property(ClientProperties.CONNECT_TIMEOUT, 5000)
-            .property(ClientProperties.READ_TIMEOUT, 10000)
+    val endpoint: String, val client: Client = ClientBuilder.newBuilder().withConfig(
+        ClientConfig().property(ClientProperties.CONNECT_TIMEOUT, 5000).property(ClientProperties.READ_TIMEOUT, 10000)
             .register(JacksonFeature::class.java)
     ).build()
 ) {
@@ -37,35 +34,27 @@ class GraphqlClient(
             throw GraphqlException(
                 message = GraphqlErrorCode.ERROR_INVALID_URL.handle(
                     value = I18n.get(
-                        "throw.invalid.unsupported.url",
-                        endpoint
+                        "throw.invalid.unsupported.url", endpoint
                     )
-                ),
-                errorCode = GraphqlErrorCode.ERROR_INVALID_URL, httpError = Response.Status.BAD_REQUEST
+                ), errorCode = GraphqlErrorCode.ERROR_INVALID_URL, httpError = Response.Status.BAD_REQUEST
             )
         }
 
         val requestBody: Map<String, Any> = mapOf(
-            "query" to query,
-            "variables" to variables
+            "query" to query, "variables" to variables
         )
 
         return try {
-            val response = client
-                .target(endpoint)
-                .request(MediaType.APPLICATION_JSON)
+            val response = client.target(endpoint).request(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(requestBody, MediaType.APPLICATION_JSON))
 
             if (response.status != 200) {
                 throw GraphqlException(
                     message = GraphqlErrorCode.ERROR_CLIENT.handle(
                         value = I18n.get(
-                            "throw.graphql.request.error",
-                            response.status
+                            "throw.graphql.request.error", response.status
                         )
-                    ),
-                    errorCode = GraphqlErrorCode.ERROR_CLIENT,
-                    httpError = Response.Status.BAD_GATEWAY
+                    ), errorCode = GraphqlErrorCode.ERROR_CLIENT, httpError = Response.Status.BAD_GATEWAY
                 )
             }
 
@@ -75,12 +64,9 @@ class GraphqlClient(
                 throw GraphqlException(
                     message = GraphqlErrorCode.ERROR_CLIENT.handle(
                         value = I18n.get(
-                            "throw.graphql.response.error",
-                            errors
+                            "throw.graphql.response.error", errors
                         )
-                    ),
-                    errorCode = GraphqlErrorCode.ERROR_CLIENT,
-                    httpError = Response.Status.BAD_GATEWAY
+                    ), errorCode = GraphqlErrorCode.ERROR_CLIENT, httpError = Response.Status.BAD_GATEWAY
                 )
             }
 
@@ -96,8 +82,7 @@ class GraphqlClient(
                         "throw.fetch.metadata.timeout.exceeded",
                         processingException.message ?: I18n.get("throw.unknown.error")
                     )
-                ),
-                errorCode = GraphqlErrorCode.ERROR_TIMEOUT, httpError = Response.Status.GATEWAY_TIMEOUT
+                ), errorCode = GraphqlErrorCode.ERROR_TIMEOUT, httpError = Response.Status.GATEWAY_TIMEOUT
             )
         }
     }

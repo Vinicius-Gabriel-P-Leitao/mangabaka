@@ -19,4 +19,8 @@ enum class ParameterErrorCode : ErrorCodeProvider {
     ERROR_PARAMETER_INVALID {
         override fun handle(value: String) = I18n.get("error.code.invalid.parameter", value)
     },
+
+    ERROR_BODY_EMPTY {
+        override fun handle(value: String) = I18n.get("error.code.empty.body", value)
+    },
 }

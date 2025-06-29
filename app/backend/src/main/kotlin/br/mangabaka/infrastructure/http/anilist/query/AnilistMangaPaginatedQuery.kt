@@ -73,9 +73,7 @@ class AnilistMangaPaginatedQuery(
                     """.trimIndent()
 
         val variables: Map<String, Any> = mapOf(
-            "search" to manga.orEmpty(),
-            "page" to page,
-            "perPage" to perPage
+            "search" to manga.orEmpty(), "page" to page, "perPage" to perPage
         )
 
         return try {
@@ -112,9 +110,7 @@ class AnilistMangaPaginatedQuery(
                     """.trimIndent()
 
         val variables: Map<String, Any> = mapOf(
-            "search" to manga.orEmpty(),
-            "page" to page,
-            "perPage" to perPage
+            "search" to manga.orEmpty(), "page" to page, "perPage" to perPage
         )
 
         return try {

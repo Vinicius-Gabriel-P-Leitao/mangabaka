@@ -11,6 +11,7 @@ package br.mangabaka
 import br.mangabaka.api.controller.GetDataManga
 import br.mangabaka.api.mapper.custom.*
 import br.mangabaka.api.mapper.jersey.BadRequestExceptionMapper
+import br.mangabaka.api.mapper.jersey.MethodNotAllowedMapper
 import br.mangabaka.api.mapper.jersey.NotFoundExceptionMapper
 import br.mangabaka.infrastructure.config.AppConfig
 import br.mangabaka.infrastructure.config.BackendMode
@@ -29,12 +30,14 @@ class Application : Application() {
             // NOTE: Mappers do jersey
             NotFoundExceptionMapper::class.java,
             BadRequestExceptionMapper::class.java,
+            MethodNotAllowedMapper::class.java,
             // NOTE: Mappers custom
             GraphqlExceptionMapper::class.java,
             MetadataExceptionMapper::class.java,
             InvalidParameterExceptionMapper::class.java,
             InternalExceptionMapper::class.java,
             AssetDownloadExceptionMapper::class.java,
+            SqlExceptionMapper::class.java,
         )
 
         PostgresqlConfig().configure();
