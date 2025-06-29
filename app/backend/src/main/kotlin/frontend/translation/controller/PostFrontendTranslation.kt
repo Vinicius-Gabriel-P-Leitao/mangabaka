@@ -7,8 +7,12 @@
  */
 package frontend.translation.controller
 
-import br.mangabaka.infrastructure.config.singleton.JsonConfig
-import frontend.translation.dto.I18nJsonFormat
+import br.mangabaka.exception.code.custom.InternalErrorCode
+import br.mangabaka.exception.code.custom.ParameterErrorCode
+import br.mangabaka.exception.throwable.base.AppException
+import br.mangabaka.exception.throwable.base.InternalException
+import br.mangabaka.exception.throwable.http.InvalidParameterException
+import br.mangabaka.infrastructure.config.singleton.I18n
 import frontend.translation.repository.FrontendTranslationRepo
 import frontend.translation.service.FrontendTranslationService
 import jakarta.ws.rs.Consumes
@@ -26,16 +30,29 @@ class PostFrontendTranslation(
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    fun createTranslation(data: String): Response {
-        val i18nObject = JsonConfig.jsonParser.decodeFromString<I18nJsonFormat>(data)
+    fun createTranslation(data: String?): Response {
+        return try {
+            if (data.isNullOrEmpty()) {
+                throw InvalidParameterException(
+                    message = ParameterErrorCode.ERROR_BODY_EMPTY.handle(value = I18n.get("throw.json.data.body.require")),
+                    errorCode = ParameterErrorCode.ERROR_BODY_EMPTY,
+                    httpError = Response.Status.BAD_REQUEST
+                )
+            }
 
-        if (i18nObject.meta.language.isBlank()) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                .entity(mapOf("error" to "Campos obrigatórios faltando"))
-                .build()
+            service.saveTranslation(data = data)
+            Response.status(Response.Status.CREATED).entity("Salvo com sucesso!").build()
+        } catch (exception: Exception) {
+            when (exception) {
+                is AppException -> throw exception
+                else -> throw InternalException(
+                    message = InternalErrorCode.ERROR_INTERNAL_GENERIC.handle(
+                        value = I18n.get(
+                            "throw.error.fetch.metadata", exception.message ?: I18n.get("throw.unknown.error")
+                        )
+                    ), errorCode = InternalErrorCode.ERROR_INTERNAL_GENERIC
+                )
+            }
         }
-
-        service.saveTranslation(i18nObject = i18nObject)
-        return Response.status(Response.Status.CREATED).entity("Salvo com sucesso!").build()
     }
 }

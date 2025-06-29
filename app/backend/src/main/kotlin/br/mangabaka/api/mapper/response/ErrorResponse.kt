@@ -23,3 +23,7 @@ class BadRequestResponse : ErrorResponse(Response.Status.BAD_REQUEST, "/api-bad-
 class BadGatewayResponse : ErrorResponse(Response.Status.BAD_GATEWAY, "/api-bad-gateway")
 class InternalServerErrorResponse : ErrorResponse(Response.Status.INTERNAL_SERVER_ERROR, "/api-internal-error")
 class NotFoundResponse : ErrorResponse(Response.Status.NOT_FOUND, "/api-not-found")
+class ConflictResponse : ErrorResponse(Response.Status.CONFLICT, "/api-conflict")
+class ForbiddenResponse : ErrorResponse(Response.Status.FORBIDDEN, "/api-forbidden")
+class ServiceUnavailableResponse : ErrorResponse(Response.Status.SERVICE_UNAVAILABLE, "/api-unavailable")
+class MethodNotAllowedResponse : ErrorResponse(Response.Status.METHOD_NOT_ALLOWED, "/api-method-not-allowed")

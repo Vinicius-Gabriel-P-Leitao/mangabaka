@@ -31,12 +31,9 @@ class FetchAnilistMangaDataService(
                 throw MetadataException(
                     message = MetadataErrorCode.ERROR_EMPTY_FIELD.handle(
                         value = I18n.get(
-                            "throw.metadata.media.empty",
-                            mangaName
+                            "throw.metadata.media.empty", mangaName
                         )
-                    ),
-                    errorCode = MetadataErrorCode.ERROR_EMPTY_FIELD,
-                    httpError = Response.Status.NOT_FOUND
+                    ), errorCode = MetadataErrorCode.ERROR_EMPTY_FIELD, httpError = Response.Status.NOT_FOUND
                 )
             }
 
@@ -45,12 +42,9 @@ class FetchAnilistMangaDataService(
             throw MetadataException(
                 message = MetadataErrorCode.ERROR_JSON_MALFORMED.handle(
                     value = I18n.get(
-                        "throw.malformed.serialization.json",
-                        exception.message ?: I18n.get("throw.unknown.error")
+                        "throw.malformed.serialization.json", exception.message ?: I18n.get("throw.unknown.error")
                     )
-                ),
-                errorCode = MetadataErrorCode.ERROR_JSON_MALFORMED,
-                httpError = Response.Status.BAD_REQUEST
+                ), errorCode = MetadataErrorCode.ERROR_JSON_MALFORMED, httpError = Response.Status.BAD_REQUEST
             )
         }
     }
