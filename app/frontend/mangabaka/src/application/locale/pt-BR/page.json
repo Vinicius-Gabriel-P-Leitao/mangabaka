@@ -30,6 +30,12 @@
       "cause": "Motivo:",
       "imageAlt": "Personagem Flame do anime Sousou no Frieren."
     },
+    "conflict": {
+      "title": "Conflito de dados 🤯",
+      "message": "Não foi possível em:",
+      "cause": "Motivo:",
+      "imageAlt": "Personagem Ubel do anime Sousou no Frieren."
+    },
     "home": {
       "title": "Página principal"
     }

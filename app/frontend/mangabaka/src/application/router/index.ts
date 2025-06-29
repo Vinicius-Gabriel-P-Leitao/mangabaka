@@ -4,52 +4,50 @@
 // Licensed under the BSD 3-Clause License.
 // See LICENSE file in the project root for full license information.
 import { createRouter, createWebHistory } from "vue-router";
-import { About, Home } from "@/export/imports/Interface";
-import {
-  BadGateway,
-  BadRequest,
-  GatewayTimeout,
-  InternalServerError,
-  NotFound,
-} from "@/export/imports/Fallback";
+import { Fallbacks, Interfaces } from "@/export";
 
 const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home,
+    component: Interfaces.Home,
   },
   {
     path: "/about",
     name: "About",
-    component: About,
+    component: Interfaces.About,
   },
   // NOTE: Rotas de erros HTTP
   {
     path: "/api-bad-request",
     name: "ApiBadRequest",
-    component: BadRequest,
+    component: Fallbacks.BadRequest,
   },
   {
     path: "/api-bad-gateway",
     name: "ApiBadGateway",
-    component: BadGateway,
+    component: Fallbacks.BadGateway,
   },
   {
     path: "/api-gateway-timeout",
     name: "ApiGatewayTimeout",
-    component: GatewayTimeout,
+    component: Fallbacks.GatewayTimeout,
   },
   {
     path: "/api-internal-error",
     name: "ApiInternalError",
-    component: InternalServerError,
+    component: Fallbacks.InternalServerError,
+  },
+  {
+    path: "/api-conflict",
+    name: "ApiConflict",
+    component: Fallbacks.Conflict,
   },
   // NOTE: Necessário estar em ultimo
   {
     path: "/:pathMatch(.*)*",
     name: "NotFound",
-    component: NotFound,
+    component: Fallbacks.NotFound,
   },
 ];
 

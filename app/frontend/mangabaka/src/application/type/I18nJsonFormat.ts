@@ -1,3 +1,4 @@
+import Conflict from '@/view/fallback/Conflict.vue';
 // SPDX-License-Identifier: BSD-3-Clause
 //
 // Copyright (c) 2025 Vinícius Gabriel Pereira Leitão
@@ -32,6 +33,12 @@ export type I18nJsonFormat = {
       imageAlt: string;
     };
     badGateway: {
+      title: string;
+      message: string;
+      cause: string;
+      imageAlt: string;
+    };
+    conflict: {
       title: string;
       message: string;
       cause: string;
