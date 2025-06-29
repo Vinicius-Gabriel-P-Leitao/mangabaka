@@ -57,11 +57,14 @@ class FrontendTranslationService(
                 }
             }
         } catch (serializationException: SerializationException) {
+            val missingFieldRegex = Regex("""Field '(.*?)' is required""")
+            val campo = missingFieldRegex.find(serializationException.message ?: "")?.groupValues?.get(1)
+
             throw MetadataException(
                 message = MetadataErrorCode.ERROR_JSON_MALFORMED.handle(
                     value = I18n.get(
                         "throw.malformed.serialization.json",
-                        serializationException.message ?: I18n.get("throw.unknown.error")
+                        campo ?: I18n.get("throw.unknown.error")
                     )
                 ), errorCode = MetadataErrorCode.ERROR_JSON_MALFORMED, httpError = Response.Status.BAD_REQUEST
             )
@@ -71,7 +74,8 @@ class FrontendTranslationService(
                 throw InternalException(
                     message = InternalErrorCode.ERROR_INTERNAL_GENERIC.handle(
                         value = I18n.get(
-                            "throw.error.fetch.metadata", sqlException.message ?: I18n.get("throw.unknown.error")
+                            "throw.error.fetch.metadata",
+                            sqlException.localizedMessage ?: I18n.get("throw.unknown.error")
                         )
                     ), errorCode = InternalErrorCode.ERROR_INTERNAL_GENERIC
                 )

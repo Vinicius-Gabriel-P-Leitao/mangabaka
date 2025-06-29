@@ -36,6 +36,24 @@
       "cause": "Motivo:",
       "imageAlt": "Personagem Ubel do anime Sousou no Frieren."
     },
+    "forbidden": {
+      "title": "Conexão proibida 🥹",
+      "message": "Não foi possível em:",
+      "cause": "Motivo:",
+      "imageAlt": "Personagem Heiter do anime Sousou no Frieren."
+    },
+    "unavailable": {
+      "title": "Serviço não disponível 🤐",
+      "message": "Não foi possível em:",
+      "cause": "Motivo:",
+      "imageAlt": "Personagem Sense do anime Sousou no Frieren."
+    },
+    "methodNotAllowed": {
+      "title": "Método não permitido 😬",
+      "message": "Não foi possível em:",
+      "cause": "Motivo:",
+      "imageAlt": "Personagem Methode do anime Sousou no Frieren."
+    },
     "home": {
       "title": "Página principal"
     }

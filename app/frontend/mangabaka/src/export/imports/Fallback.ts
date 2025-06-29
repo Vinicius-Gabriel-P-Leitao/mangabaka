@@ -9,6 +9,9 @@ import GatewayTimeout from "@/view/fallback/GatewayTimeout.vue";
 import InternalServerError from "@/view/fallback/InternalServerError.vue";
 import NotFound from "@/view/fallback/NotFound.vue";
 import Conflict from "@/view/fallback/Conflict.vue";
+import Forbidden from "@/view/fallback/Forbidden.vue";
+import Unavailable from "@/view/fallback/Unavailable.vue";
+import MethodNotAllowed from "@/view/fallback/MethodNotAllowed.vue";
 
 export {
   BadGateway,
@@ -17,4 +20,7 @@ export {
   InternalServerError,
   NotFound,
   Conflict,
+  Forbidden,
+  Unavailable,
+  MethodNotAllowed,
 };

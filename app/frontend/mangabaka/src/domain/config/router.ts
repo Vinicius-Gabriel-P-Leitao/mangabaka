@@ -43,6 +43,21 @@ const routes = [
     name: "ApiConflict",
     component: Fallbacks.Conflict,
   },
+  {
+    path: "/api-forbidden",
+    name: "ApiForbidden",
+    component: Fallbacks.Forbidden,
+  },
+  {
+    path: "/api-unavailable",
+    name: "ApiUnavailable",
+    component: Fallbacks.Unavailable,
+  },
+  {
+    path: "/api-method-not-allowed",
+    name: "ApiMethodNotAllowed",
+    component: Fallbacks.MethodNotAllowed,
+  },
   // NOTE: Necessário estar em ultimo
   {
     path: "/:pathMatch(.*)*",
