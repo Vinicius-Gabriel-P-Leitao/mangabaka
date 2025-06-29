@@ -15,11 +15,9 @@ import br.mangabaka.api.mapper.response.InternalServerErrorResponse
 import br.mangabaka.api.mapper.response.MapperResponseResolver
 import br.mangabaka.api.mapper.response.NotFoundResponse
 import br.mangabaka.exception.code.custom.AssetDownloadErrorCode
-import br.mangabaka.exception.code.custom.GraphqlErrorCode
 import br.mangabaka.exception.throwable.http.AssetDownloadException
-import br.mangabaka.exception.throwable.http.GraphqlException
-import br.mangabaka.infrastructure.config.AppConfig
-import br.mangabaka.infrastructure.config.BackendMode
+import br.mangabaka.infrastructure.config.singleton.AppConfig
+import br.mangabaka.infrastructure.config.singleton.BackendMode
 import br.mangabaka.infrastructure.config.singleton.I18n
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.ws.rs.core.Context

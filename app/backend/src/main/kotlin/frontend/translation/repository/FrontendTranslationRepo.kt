@@ -7,7 +7,7 @@
  */
 package frontend.translation.repository;
 
-import br.mangabaka.domain.EbeanRepository
+import br.mangabaka.domain.usecase.EbeanRepository
 import frontend.translation.model.FrontendTranslation
 import frontend.translation.model.FrontendTranslation.Companion.META_LANGUAGE
 import frontend.translation.model.FrontendTranslation.Companion.TRANSLATION_KEY

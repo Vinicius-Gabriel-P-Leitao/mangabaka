@@ -5,7 +5,11 @@
  * Licensed under the BSD 3-Clause License.
  * See LICENSE file in the project root for full license information.
  */
-package br.mangabaka.infrastructure.config;
+package br.mangabaka.infrastructure.config.singleton
+
+object AppConfig {
+    val backendMode: BackendMode = BackendMode.fromEnv(System.getenv("BACKEND_MODE"))
+}
 
 enum class BackendMode {
     ALL, API;
@@ -17,8 +21,4 @@ enum class BackendMode {
             else -> ALL
         }
     }
-}
-
-object AppConfig {
-    val backendMode: BackendMode = BackendMode.fromEnv(System.getenv("BACKEND_MODE"))
 }

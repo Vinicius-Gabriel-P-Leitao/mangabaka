@@ -21,14 +21,20 @@ import frontend.translation.repository.FrontendTranslationRepo
 import jakarta.ws.rs.core.Response
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.*
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 import java.sql.SQLException
 
-class FrontendTranslationService(
-    private val repository: FrontendTranslationRepo
+// @formatter:off
+class SaveFrontendTranslationService(
+    private val repository: FrontendTranslationRepo,
+    private val fetchFrontendTranslationService: FetchFrontendTranslationService = FetchFrontendTranslationService()
 ) {
-    fun saveTranslation(
-        data: String
-    ) {
+    companion object {
+        private val logger: Logger = LogManager.getLogger(SaveFrontendTranslationService::class.java)
+    }
+
+    fun saveTranslation(data: String) : I18nJsonFormat {
         try {
             val i18nObject: I18nJsonFormat = JsonConfig.jsonParser.decodeFromString<I18nJsonFormat>(data)
             if (i18nObject.meta.language.isBlank()) {
@@ -44,18 +50,29 @@ class FrontendTranslationService(
             val flatMap = mutableMapOf<String, String>()
             flattenJson(prefix = "", element = jsonElement, map = flatMap)
 
+
+            val callbackSave: MutableList<FrontendTranslation> = mutableListOf()
             val lang = i18nObject.meta.language
             for ((key, value) in flatMap) {
-                val existing = repository.findByKeyAndLang(key, lang)
+                val existing: FrontendTranslation? = repository.findByKeyAndLang(key, lang)
                 if (existing != null) {
                     existing.translationValue = value
-                    repository.save(entity = existing)
+                    callbackSave.add(repository.save(entity = existing))
                 } else {
-                    val newEntry =
-                        FrontendTranslation(metaLanguage = lang, translationKey = key, translationValue = value)
-                    repository.save(entity = newEntry)
+                    val newEntry = FrontendTranslation(metaLanguage = lang, translationKey = key, translationValue = value)
+                    callbackSave.add(repository.save(entity = newEntry))
                 }
             }
+
+            if (callbackSave.isEmpty()) {
+                throw SqlException(
+                    message = SqlErrorCode.ERROR_PERSIST_DATA.handle(I18n.get("throw.data.callback.is.null")),
+                    errorCode = SqlErrorCode.ERROR_PERSIST_DATA,
+                    httpError = Response.Status.INTERNAL_SERVER_ERROR
+                )
+            }
+
+            return fetchFrontendTranslationService.toI18nJsonFormat(translations = callbackSave)
         } catch (serializationException: SerializationException) {
             val missingFieldRegex = Regex("""Field '(.*?)' is required""")
             val campo = missingFieldRegex.find(serializationException.message ?: "")?.groupValues?.get(1)
@@ -63,8 +80,7 @@ class FrontendTranslationService(
             throw MetadataException(
                 message = MetadataErrorCode.ERROR_JSON_MALFORMED.handle(
                     value = I18n.get(
-                        "throw.malformed.serialization.json",
-                        campo ?: I18n.get("throw.unknown.error")
+                        "throw.malformed.serialization.json", campo ?: I18n.get("throw.unknown.error")
                     )
                 ), errorCode = MetadataErrorCode.ERROR_JSON_MALFORMED, httpError = Response.Status.BAD_REQUEST
             )
@@ -83,7 +99,8 @@ class FrontendTranslationService(
 
             throw SqlException(
                 message = errorCode.handle(sqlException.sqlState),
-                errorCode = errorCode, httpError = Response.Status.BAD_REQUEST
+                errorCode = errorCode,
+                httpError = Response.Status.BAD_REQUEST
             )
         }
     }
@@ -93,9 +110,7 @@ class FrontendTranslationService(
             is JsonObject -> {
                 for ((key, value) in element) {
                     flattenJson(
-                        prefix = if (prefix.isEmpty()) key else "$prefix.$key",
-                        element = value,
-                        map
+                        prefix = if (prefix.isEmpty()) key else "$prefix.$key", element = value, map
                     )
                 }
             }

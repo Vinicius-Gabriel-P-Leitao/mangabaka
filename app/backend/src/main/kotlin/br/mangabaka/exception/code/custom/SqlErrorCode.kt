@@ -11,6 +11,10 @@ import br.mangabaka.exception.code.ErrorCodeProvider
 import br.mangabaka.infrastructure.config.singleton.I18n
 
 enum class SqlErrorCode : ErrorCodeProvider {
+    ERROR_PERSIST_DATA {
+        override fun handle(value: String) = I18n.get("error.code.sql.persisting.data", value)
+    },
+
     ERROR_DUPLICATE_CONSTRAINT {
         override fun handle(value: String) = I18n.get("error.code.sql.duplicate.constraint", value)
     },

@@ -13,8 +13,10 @@ import br.mangabaka.exception.throwable.base.AppException
 import br.mangabaka.exception.throwable.base.InternalException
 import br.mangabaka.exception.throwable.http.InvalidParameterException
 import br.mangabaka.infrastructure.config.singleton.I18n
+import frontend.translation.dto.I18nJsonFormat
+import frontend.translation.model.FrontendTranslation
 import frontend.translation.repository.FrontendTranslationRepo
-import frontend.translation.service.FrontendTranslationService
+import frontend.translation.service.SaveFrontendTranslationService
 import jakarta.ws.rs.Consumes
 import jakarta.ws.rs.POST
 import jakarta.ws.rs.Path
@@ -25,7 +27,7 @@ import jakarta.ws.rs.core.Response
 @Path(value = "/frontend/translation")
 class PostFrontendTranslation(
     private val repository: FrontendTranslationRepo = FrontendTranslationRepo(),
-    private val service: FrontendTranslationService = FrontendTranslationService(repository)
+    private val service: SaveFrontendTranslationService = SaveFrontendTranslationService(repository),
 ) {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -40,8 +42,8 @@ class PostFrontendTranslation(
                 )
             }
 
-            service.saveTranslation(data = data)
-            Response.status(Response.Status.CREATED).entity("Salvo com sucesso!").build()
+            val result: I18nJsonFormat = service.saveTranslation(data = data)
+            Response.status(Response.Status.CREATED).entity(result).build()
         } catch (exception: Exception) {
             when (exception) {
                 is AppException -> throw exception

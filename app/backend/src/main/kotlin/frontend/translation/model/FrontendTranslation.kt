@@ -7,18 +7,19 @@
  */
 package frontend.translation.model
 
+import br.mangabaka.infrastructure.config.database.PostgresqlConfig.Companion.SCHEMA
 import jakarta.persistence.*
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
 @Entity
 @Table(
-    name = "tb_frontend_translation", schema = "mangabaka"
+    name = "tb_frontend_translation", schema = SCHEMA
 )
 class FrontendTranslation(
     metaLanguage: String,
     translationKey: String,
-    translationValue: String
+    translationValue: String,
 ) {
     companion object {
         const val ID_TRANSLATION = "id_translation"

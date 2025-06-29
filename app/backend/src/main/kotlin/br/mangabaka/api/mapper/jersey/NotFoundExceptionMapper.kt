@@ -11,8 +11,8 @@ package br.mangabaka.api.mapper.jersey
 import br.mangabaka.api.mapper.response.MapperResponse
 import br.mangabaka.api.mapper.response.MapperResponseResolver
 import br.mangabaka.api.mapper.response.NotFoundResponse
-import br.mangabaka.infrastructure.config.AppConfig
-import br.mangabaka.infrastructure.config.BackendMode
+import br.mangabaka.infrastructure.config.singleton.AppConfig
+import br.mangabaka.infrastructure.config.singleton.BackendMode
 import br.mangabaka.infrastructure.config.singleton.I18n
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.ws.rs.NotFoundException
