@@ -10,6 +10,7 @@ package frontend.translation.service
 import br.mangabaka.exception.code.custom.InternalErrorCode
 import br.mangabaka.exception.code.custom.MetadataErrorCode
 import br.mangabaka.exception.code.custom.SqlErrorCode
+import br.mangabaka.exception.throwable.base.AppException
 import br.mangabaka.exception.throwable.base.InternalException
 import br.mangabaka.exception.throwable.http.MetadataException
 import br.mangabaka.exception.throwable.http.SqlException
@@ -21,20 +22,13 @@ import frontend.translation.repository.FrontendTranslationRepo
 import jakarta.ws.rs.core.Response
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.*
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
 import java.sql.SQLException
 
-// @formatter:off
 class SaveFrontendTranslationService(
     private val repository: FrontendTranslationRepo,
-    private val fetchFrontendTranslationService: FetchFrontendTranslationService = FetchFrontendTranslationService()
+    private val fetchFrontendTranslationService: FetchFrontendTranslationService = FetchFrontendTranslationService(),
 ) {
-    companion object {
-        private val logger: Logger = LogManager.getLogger(SaveFrontendTranslationService::class.java)
-    }
-
-    fun saveTranslation(data: String) : I18nJsonFormat {
+    fun saveTranslation(data: String): I18nJsonFormat {
         try {
             val i18nObject: I18nJsonFormat = JsonConfig.jsonParser.decodeFromString<I18nJsonFormat>(data)
             if (i18nObject.meta.language.isBlank()) {
@@ -57,10 +51,20 @@ class SaveFrontendTranslationService(
                 val existing: FrontendTranslation? = repository.findByKeyAndLang(key, lang)
                 if (existing != null) {
                     existing.translationValue = value
-                    callbackSave.add(repository.save(entity = existing))
+                    val saved: FrontendTranslation? = repository.save(entity = existing)
+                    if (saved != null) {
+                        callbackSave.add(saved)
+                    }
                 } else {
-                    val newEntry = FrontendTranslation(metaLanguage = lang, translationKey = key, translationValue = value)
-                    callbackSave.add(repository.save(entity = newEntry))
+                    val saved: FrontendTranslation? = repository.save(
+                        entity = FrontendTranslation(
+                            metaLanguage = lang, translationKey = key, translationValue = value
+                        )
+                    )
+
+                    if (saved != null) {
+                        callbackSave.add(saved)
+                    }
                 }
             }
 
@@ -84,24 +88,39 @@ class SaveFrontendTranslationService(
                     )
                 ), errorCode = MetadataErrorCode.ERROR_JSON_MALFORMED, httpError = Response.Status.BAD_REQUEST
             )
-        } catch (sqlException: SQLException) {
-            val errorCode = SqlErrorCode.mapSqlStateToErrorCode(sqlState = sqlException.sqlState)
-            if (errorCode == null) {
-                throw InternalException(
+        } catch (exception: Exception) {
+            if (exception is SQLException || exception.cause is SQLException) {
+                val sqlException = exception as? SQLException ?: exception.cause as? SQLException
+                val errorCode = sqlException?.sqlState?.let { SqlErrorCode.mapSqlStateToErrorCode(sqlState = it) }
+
+                if (errorCode == null) {
+                    throw InternalException(
+                        message = InternalErrorCode.ERROR_INTERNAL_SQL.handle(
+                            value = I18n.get(
+                                key = "throw.error.fetch.metadata",
+                                exception.localizedMessage ?: I18n.get(key = "throw.unknown.error")
+                            )
+                        ), errorCode = InternalErrorCode.ERROR_INTERNAL_SQL
+                    )
+                }
+
+                throw SqlException(
+                    message = errorCode.handle(value = sqlException.sqlState),
+                    errorCode = errorCode,
+                    httpError = Response.Status.BAD_REQUEST
+                )
+            }
+
+            when (exception) {
+                is AppException -> throw exception
+                else -> throw InternalException(
                     message = InternalErrorCode.ERROR_INTERNAL_GENERIC.handle(
                         value = I18n.get(
-                            "throw.error.fetch.metadata",
-                            sqlException.localizedMessage ?: I18n.get("throw.unknown.error")
+                            key = "throw.internal.saving.translation", I18n.get(key = "throw.unknown.error")
                         )
                     ), errorCode = InternalErrorCode.ERROR_INTERNAL_GENERIC
                 )
             }
-
-            throw SqlException(
-                message = errorCode.handle(sqlException.sqlState),
-                errorCode = errorCode,
-                httpError = Response.Status.BAD_REQUEST
-            )
         }
     }
 

@@ -8,8 +8,8 @@
 
 package br.mangabaka.api.mapper.custom
 
-import br.mangabaka.api.mapper.response.MapperResponseResolver
 import br.mangabaka.api.mapper.response.InternalServerErrorResponse
+import br.mangabaka.api.mapper.response.MapperResponseResolver
 import br.mangabaka.exception.code.custom.InternalErrorCode
 import br.mangabaka.exception.throwable.base.InternalException
 import br.mangabaka.infrastructure.config.singleton.AppConfig
@@ -54,7 +54,7 @@ class InternalExceptionMapper : ExceptionMapper<InternalException> {
 
             BackendMode.ALL -> {
                 when (exception.errorCode as InternalErrorCode) {
-                    InternalErrorCode.ERROR_INTERNAL_GENERIC, InternalErrorCode.ERROR_TRANSLATE -> {
+                    InternalErrorCode.ERROR_INTERNAL_GENERIC, InternalErrorCode.ERROR_TRANSLATE, InternalErrorCode.ERROR_INTERNAL_SQL -> {
                         MapperResponseResolver(
                             response = InternalServerErrorResponse(), uri = uri, message = exception.message
                         ).resolve()

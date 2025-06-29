@@ -16,6 +16,10 @@ enum class InternalErrorCode : ErrorCodeProvider {
         override fun handle(value: String) = I18n.get("error.code.standard.internal", value)
     },
 
+    ERROR_INTERNAL_SQL {
+        override fun handle(value: String) = I18n.get("throw.internal.sql.exception", value)
+    },
+
     ERROR_TRANSLATE {
         // NOTE: Unico erro a ser lançado com string pura.
         override fun handle(value: String) = "Missing translation/Tradução faltando: $value"
