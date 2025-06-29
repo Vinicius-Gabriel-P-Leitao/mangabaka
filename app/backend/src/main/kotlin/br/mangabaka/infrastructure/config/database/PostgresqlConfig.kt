@@ -13,15 +13,19 @@ import io.ebean.DatabaseFactory
 import io.ebean.annotation.Platform
 import io.ebean.config.DatabaseConfig
 import io.ebean.datasource.DataSourceConfig
+import kotlin.reflect.KClass
 
 class PostgresqlConfig {
+    companion object {
+        const val SCHEMA = "mangabaka"
+    }
 
-    fun configure() {
+    fun configure(): DatabaseConfig {
         val dataSourceConfig = DataSourceConfig()
         dataSourceConfig.setPassword(System.getenv("PG_PASSWORD"))
         dataSourceConfig.setUsername(System.getenv("PG_USERNAME"))
         dataSourceConfig.setUrl(System.getenv("PG_JDBC_URL"))
-        dataSourceConfig.setSchema("mangabaka")
+        dataSourceConfig.setSchema(SCHEMA)
         dataSourceConfig.setPlatform(Platform.POSTGRES.name)
 
         val databaseConfig = DatabaseConfig()
@@ -29,10 +33,8 @@ class PostgresqlConfig {
         databaseConfig.setDdlGenerate(true)
         databaseConfig.setDdlExtra(true);
         databaseConfig.setDdlRun(true)
-        databaseConfig.setDbSchema("mangabaka")
+        databaseConfig.setDbSchema(SCHEMA)
 
-        databaseConfig.addClass(FrontendTranslation::class.java)
-
-        DatabaseFactory.create(databaseConfig)
+        return databaseConfig
     }
 }

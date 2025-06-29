@@ -12,8 +12,8 @@ import br.mangabaka.api.mapper.response.MapperResponseResolver
 import br.mangabaka.api.mapper.response.InternalServerErrorResponse
 import br.mangabaka.exception.code.custom.InternalErrorCode
 import br.mangabaka.exception.throwable.base.InternalException
-import br.mangabaka.infrastructure.config.AppConfig
-import br.mangabaka.infrastructure.config.BackendMode
+import br.mangabaka.infrastructure.config.singleton.AppConfig
+import br.mangabaka.infrastructure.config.singleton.BackendMode
 import br.mangabaka.infrastructure.config.singleton.I18n
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.ws.rs.core.Context

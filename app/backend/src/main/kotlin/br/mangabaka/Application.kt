@@ -13,15 +13,26 @@ import br.mangabaka.api.mapper.custom.*
 import br.mangabaka.api.mapper.jersey.BadRequestExceptionMapper
 import br.mangabaka.api.mapper.jersey.MethodNotAllowedMapper
 import br.mangabaka.api.mapper.jersey.NotFoundExceptionMapper
-import br.mangabaka.infrastructure.config.AppConfig
-import br.mangabaka.infrastructure.config.BackendMode
+import br.mangabaka.infrastructure.config.singleton.AppConfig
+import br.mangabaka.infrastructure.config.singleton.BackendMode
 import br.mangabaka.infrastructure.config.database.PostgresqlConfig
 import frontend.translation.controller.PostFrontendTranslation
+import frontend.translation.model.FrontendTranslation
+import io.ebean.DatabaseFactory
+import io.ebean.config.DatabaseConfig
 import jakarta.ws.rs.ApplicationPath
 import jakarta.ws.rs.core.Application
 
 @ApplicationPath("/v1")
 class Application : Application() {
+    init {
+        val database: DatabaseConfig = PostgresqlConfig().configure();
+
+        database.addClass(FrontendTranslation::class.java)
+
+        DatabaseFactory.create(database)
+    }
+
     override fun getClasses(): MutableSet<Class<*>?> {
         val classes: MutableSet<Class<*>?> = mutableSetOf(
             // NOTE: Classes de controller
@@ -40,8 +51,6 @@ class Application : Application() {
             SqlExceptionMapper::class.java,
         )
 
-        PostgresqlConfig().configure();
-
         return when (AppConfig.backendMode) {
             BackendMode.ALL -> {
                 try {
@@ -55,7 +64,6 @@ class Application : Application() {
             }
 
             BackendMode.API -> classes
-
         }
     }
 }
