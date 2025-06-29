@@ -19,7 +19,7 @@ abstract class EbeanRepository<ID, T : Any>(
         return db.find(entityClass.java).where().orderBy().asc(attribute).setFirstRow(offset).setMaxRows(size).findPagedList()
     }
 
-     fun save(entity: T): T {
+     fun save(entity: T): T? {
         db.save(entity)
         return entity
     }

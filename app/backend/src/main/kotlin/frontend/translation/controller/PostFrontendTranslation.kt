@@ -14,7 +14,6 @@ import br.mangabaka.exception.throwable.base.InternalException
 import br.mangabaka.exception.throwable.http.InvalidParameterException
 import br.mangabaka.infrastructure.config.singleton.I18n
 import frontend.translation.dto.I18nJsonFormat
-import frontend.translation.model.FrontendTranslation
 import frontend.translation.repository.FrontendTranslationRepo
 import frontend.translation.service.SaveFrontendTranslationService
 import jakarta.ws.rs.Consumes

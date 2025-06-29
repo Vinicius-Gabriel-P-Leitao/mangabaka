@@ -9,6 +9,7 @@ package br.mangabaka.exception.code.custom;
 
 import br.mangabaka.exception.code.ErrorCodeProvider
 import br.mangabaka.infrastructure.config.singleton.I18n
+import org.postgresql.util.PSQLState
 
 enum class SqlErrorCode : ErrorCodeProvider {
     ERROR_PERSIST_DATA {
@@ -53,15 +54,14 @@ enum class SqlErrorCode : ErrorCodeProvider {
 
     companion object {
         fun mapSqlStateToErrorCode(sqlState: String): SqlErrorCode? = when (sqlState) {
-            "23505" -> ERROR_DUPLICATE_CONSTRAINT
-            "23503" -> ERROR_FOREIGN_KEY_CONSTRAINT
-            "23502" -> ERROR_NOT_NULL_VIOLATION
-            "22001" -> ERROR_DATA_TOO_LONG
-            "40P01" -> ERROR_DEADLOCK_DETECTED
-            "42601" -> ERROR_SYNTAX
-            "42703" -> ERROR_UNDEFINED_COLUMN
-            "42501" -> ERROR_PERMISSION_DENIED
-            "08001" -> ERROR_CONNECTION_FAILURE
+            PSQLState.UNIQUE_VIOLATION.state -> ERROR_DUPLICATE_CONSTRAINT
+            PSQLState.FOREIGN_KEY_VIOLATION.state -> ERROR_FOREIGN_KEY_CONSTRAINT
+            PSQLState.NOT_NULL_VIOLATION.state -> ERROR_NOT_NULL_VIOLATION
+            PSQLState.STRING_DATA_RIGHT_TRUNCATION.state -> ERROR_DATA_TOO_LONG
+            PSQLState.DEADLOCK_DETECTED.state -> ERROR_DEADLOCK_DETECTED
+            PSQLState.SYNTAX_ERROR.state -> ERROR_SYNTAX
+            PSQLState.UNDEFINED_COLUMN.state -> ERROR_UNDEFINED_COLUMN
+            PSQLState.CONNECTION_UNABLE_TO_CONNECT.state -> ERROR_CONNECTION_FAILURE
             else -> null
         }
     }
