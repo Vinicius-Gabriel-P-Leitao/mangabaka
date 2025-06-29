@@ -19,9 +19,10 @@ import jakarta.ws.rs.core.Context
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import jakarta.ws.rs.ext.ExceptionMapper
+import jakarta.ws.rs.ext.Provider
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
-
+@Provider
 class MethodNotAllowedMapper : ExceptionMapper<NotAllowedException> {
     companion object {
         private val logger: Logger = LogManager.getLogger(MethodNotAllowedMapper::class.java)
@@ -41,7 +42,7 @@ class MethodNotAllowedMapper : ExceptionMapper<NotAllowedException> {
             BackendMode.API -> {
                 val errorMap = mapOf("error" to (exception.message ?: "Method not Allowed"))
 
-                Response.status(Response.Status.BAD_REQUEST).entity(
+                Response.status(Response.Status.METHOD_NOT_ALLOWED).entity(
                     errorMap
                 ).type(MediaType.APPLICATION_JSON).build()
             }
