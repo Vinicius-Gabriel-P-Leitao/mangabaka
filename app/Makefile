@@ -40,13 +40,13 @@ generate-env-prod:
 # FRONTEND
 # ===============================
 build-frontend:
-	cd frontend/mangabaka && npm install && npm run build
+	cd frontend/mangabaka && npm install && npm run build \
 
 # ===============================
 # BACKEND
 # ===============================
 build-backend: build-frontend
-	cd backend && gradle build war
+	cp -r frontend/mangabaka/dist backend/src/main/webapp && cd backend && gradle build war
 
 # ===============================
 # DOCKER
@@ -79,6 +79,6 @@ prod: docker-prod
 # CLEAN
 # ===============================
 clean:
-	rm -rf backend/build frontend/mangabaka/dist
+	rm -rf backend/build frontend/mangabaka/dist backend/src/main/webapp
 	rm -f $(ENV_DEV) $(ENV_PROD)
 	@echo "🧹 Build e arquivos .env limpos!"
