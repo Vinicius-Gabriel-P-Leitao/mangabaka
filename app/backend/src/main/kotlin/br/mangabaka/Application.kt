@@ -13,9 +13,10 @@ import br.mangabaka.api.mapper.custom.*
 import br.mangabaka.api.mapper.jersey.BadRequestExceptionMapper
 import br.mangabaka.api.mapper.jersey.MethodNotAllowedMapper
 import br.mangabaka.api.mapper.jersey.NotFoundExceptionMapper
+import br.mangabaka.infrastructure.config.database.PostgresqlConfig
 import br.mangabaka.infrastructure.config.singleton.AppConfig
 import br.mangabaka.infrastructure.config.singleton.BackendMode
-import br.mangabaka.infrastructure.config.database.PostgresqlConfig
+import frontend.translation.controller.GetFrontendTranslation
 import frontend.translation.controller.PostFrontendTranslation
 import frontend.translation.model.FrontendTranslation
 import io.ebean.DatabaseFactory
@@ -37,7 +38,6 @@ class Application : Application() {
         val classes: MutableSet<Class<*>?> = mutableSetOf(
             // NOTE: Classes de controller
             GetDataManga::class.java,
-            PostFrontendTranslation::class.java,
             // NOTE: Mappers do jersey
             NotFoundExceptionMapper::class.java,
             BadRequestExceptionMapper::class.java,
@@ -54,9 +54,8 @@ class Application : Application() {
         return when (AppConfig.backendMode) {
             BackendMode.ALL -> {
                 try {
-                    val clazz = Class.forName("frontend.translation.controller.PostFrontendTranslation")
-                    classes.add(clazz)
-
+                    classes.add(PostFrontendTranslation::class.java)
+                    classes.add(GetFrontendTranslation::class.java)
                     classes
                 } catch (exception: ClassNotFoundException) {
                     throw exception // TODO: Tratar esse erro de forma agradável

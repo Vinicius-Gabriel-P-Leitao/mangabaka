@@ -8,12 +8,7 @@
 
 package br.mangabaka.api.mapper.custom
 
-import br.mangabaka.api.mapper.response.BadGatewayResponse
-import br.mangabaka.api.mapper.response.BadRequestResponse
-import br.mangabaka.api.mapper.response.GatewayTimeoutResponse
-import br.mangabaka.api.mapper.response.InternalServerErrorResponse
-import br.mangabaka.api.mapper.response.MapperResponseResolver
-import br.mangabaka.api.mapper.response.NotFoundResponse
+import br.mangabaka.api.mapper.response.*
 import br.mangabaka.exception.code.custom.AssetDownloadErrorCode
 import br.mangabaka.exception.throwable.http.AssetDownloadException
 import br.mangabaka.infrastructure.config.singleton.AppConfig

@@ -8,27 +8,23 @@ import i18n from "@/domain/config/I18n";
 import { Exceptions, Handlers, Services, Types } from "@/export";
 import { ExclamationCircleIcon } from "@heroicons/vue/24/solid";
 
-export async function SwitchLanguageInterfaceService(translate: string) {
+export async function SwitchLanguageInterfaceService(language: string) {
   const availableLocales = i18n.global.availableLocales;
 
-  if (!availableLocales.includes(translate as AvailableLocales)) {
+  if (!availableLocales.includes(language as AvailableLocales)) {
     try {
+      const params = new URLSearchParams({
+        lang: language,
+      });
+
       const result: Types.ApiResponse<Types.I18nJsonFormat> =
         await Services.FetchDataService<Types.I18nJsonFormat>(
-          `/v1/translate/${translate}` // TODO: Criar rota no backend para essa busca
+          `/v1/frontend/translation?${params}`
         );
 
-      if (result.data || result.status === 200) {
-        i18n.global.setLocaleMessage(translate, result.data);
-
-        Services.AddLanguageInterfaceService(
-          translate,
-          result.data?.meta?.language ?? translate,
-          result.data
-        );
-      } else {
+      if (!result.data || result.status !== 200) {
         throw new Exceptions.ToastException(
-          Handlers.ApiErrorMessageHandler.NOT_FOUND,
+          Handlers.ApiErrorMessageHandler.BAD_REQUEST,
           {
             variant: "error",
             icon: ExclamationCircleIcon,
@@ -36,6 +32,13 @@ export async function SwitchLanguageInterfaceService(translate: string) {
           { status: result.status }
         );
       }
+
+      i18n.global.setLocaleMessage(language, result.data);
+      Services.AddLanguageInterfaceService(
+        language,
+        result.data?.meta?.label ?? language,
+        result.data
+      );
     } catch (exception) {
       if (exception instanceof Exceptions.AppException) {
         throw new Exceptions.ToastException(

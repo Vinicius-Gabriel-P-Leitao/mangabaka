@@ -17,12 +17,14 @@ import java.time.ZonedDateTime
     name = "tb_frontend_translation", schema = SCHEMA
 )
 class FrontendTranslation(
+    codeLanguage: String,
     metaLanguage: String,
     translationKey: String,
     translationValue: String,
 ) {
     companion object {
         const val ID_TRANSLATION = "id_translation"
+        const val CODE_LANGUAGE = "code_language"
         const val META_LANGUAGE = "meta_language"
         const val TRANSLATION_KEY = "translation_key"
         const val TRANSLATION_VALUE = "translation_value"
@@ -33,6 +35,9 @@ class FrontendTranslation(
     @Column(name = ID_TRANSLATION)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
+
+    @Column(name = CODE_LANGUAGE, length = 10, nullable = false)
+    var codeLanguage: String = codeLanguage
 
     @Column(name = META_LANGUAGE, length = 100, nullable = false)
     var metaLanguage: String = metaLanguage

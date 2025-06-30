@@ -4,7 +4,8 @@
 // Licensed under the BSD 3-Clause License.
 export type I18nJsonFormat = {
   meta: {
-    language: string;
+    code: string;
+    label: string;
   };
   page: {
     notFound: {

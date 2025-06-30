@@ -31,7 +31,7 @@ function getLocaleMessages(): Record<
       (acc, current) => Object.assign(acc, current as Types.I18nJsonFormat),
       {} as Types.I18nJsonFormat
     );
-    
+
     return { ...messages, [locale]: merged };
   }, {} as Record<Types.AvailableLocales, Types.I18nJsonFormat>);
 }

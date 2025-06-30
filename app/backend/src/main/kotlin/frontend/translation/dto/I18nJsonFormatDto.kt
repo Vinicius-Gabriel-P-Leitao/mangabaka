@@ -19,7 +19,8 @@ data class I18nJsonFormat(
 
 @Serializable
 data class Meta(
-    val language: String,
+    val code: String,
+    val label: String,
 )
 
 @Serializable

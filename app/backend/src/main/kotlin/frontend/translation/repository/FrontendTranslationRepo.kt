@@ -9,6 +9,7 @@ package frontend.translation.repository;
 
 import br.mangabaka.domain.usecase.EbeanRepository
 import frontend.translation.model.FrontendTranslation
+import frontend.translation.model.FrontendTranslation.Companion.CODE_LANGUAGE
 import frontend.translation.model.FrontendTranslation.Companion.META_LANGUAGE
 import frontend.translation.model.FrontendTranslation.Companion.TRANSLATION_KEY
 import io.ebean.DB
@@ -22,10 +23,18 @@ class FrontendTranslationRepo : EbeanRepository<Long, FrontendTranslation>(entit
             .findOne()
     }
 
-    fun findByLang(lang: String): List<FrontendTranslation> {
+    fun findByLang(lang: String): List<FrontendTranslation>? {
         return DB.find(FrontendTranslation::class.java)
             .where()
-            .eq(META_LANGUAGE, lang)
+            .eq(CODE_LANGUAGE, lang)
+            .findList()
+    }
+
+    fun findAllMetaLanguage(): List<FrontendTranslation>? {
+        return DB.find(FrontendTranslation::class.java)
+            .select("metaLanguage, codeLanguage")
+            .setDistinct(true)
+            .orderBy("metaLanguage")
             .findList()
     }
 }

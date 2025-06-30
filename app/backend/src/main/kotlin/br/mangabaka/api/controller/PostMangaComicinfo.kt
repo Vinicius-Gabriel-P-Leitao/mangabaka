@@ -23,27 +23,31 @@ import jakarta.ws.rs.core.Response
 
 @Path("/manga")
 class PostMangaComicinfo {
+    // TODO: Implementar toda lógica desse método
     @POST
     @Path("/comicinfo")
     @Produces(MediaType.APPLICATION_JSON)
-    fun postComicInfo(nameManga: String?): Response {
+    fun postComicInfo(data: String?): Response {
         return try {
-            if (nameManga == null) {
+            if (data == null) {
                 throw InvalidParameterException(
-                    message = ParameterErrorCode.ERROR_PARAMETER_EMPTY.handle(value = I18n.get("throw.name.parameter.require")),
-                    errorCode = ParameterErrorCode.ERROR_PARAMETER_EMPTY, httpError = Response.Status.BAD_REQUEST
+                    message = ParameterErrorCode.ERROR_BODY_EMPTY.handle(value = I18n.get("throw.json.data.body.require")),
+                    errorCode = ParameterErrorCode.ERROR_BODY_EMPTY, httpError = Response.Status.BAD_REQUEST
                 )
             }
 
-            val comicInfo: Response.Status = MangaComicinfoService().createComicinfo(nameManga)
+            val comicInfo: Response.Status = MangaComicinfoService().createComicinfo(data)
 
             Response.ok("ok").build()
         } catch (exception: Exception) {
             when (exception) {
                 is AppException -> throw exception
                 else -> throw InternalException(
-                    message = InternalErrorCode.ERROR_INTERNAL_GENERIC.handle(value = "Erro ao buscar Comicinfo: ${exception.message}"),
-                    errorCode = InternalErrorCode.ERROR_INTERNAL_GENERIC
+                    message = InternalErrorCode.ERROR_INTERNAL_GENERIC.handle(
+                        value = I18n.get(
+                            "throw.error.fetch.metadata", I18n.get("throw.unknown.error")
+                        )
+                    ), errorCode = InternalErrorCode.ERROR_INTERNAL_GENERIC
                 )
             }
         }

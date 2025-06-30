@@ -9,9 +9,10 @@ import { Services, Types, Handlers, Exceptions } from "@/export";
 
 export async function FetchCustomTranslations() {
   try {
-    const response = await Services.FetchDataService<
-      Types.AvailableTranslation[]
-    >("/v1/translate/list");
+    const response: Types.ApiResponse<Types.AvailableTranslation[]> =
+      await Services.FetchDataService<Types.AvailableTranslation[]>(
+        "/v1/frontend/translation/language"
+      );
 
     if (!response.data || !Array.isArray(response.data)) {
       throw new Exceptions.ToastException(
@@ -21,7 +22,7 @@ export async function FetchCustomTranslations() {
           icon: ExclamationCircleIcon,
         },
         {
-          message: "/v1/translate/list",
+          message: "/v1/frontend/translation/languages",
           status: response.status,
         }
       );
