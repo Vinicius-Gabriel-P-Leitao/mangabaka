@@ -53,6 +53,10 @@ build-backend: build-frontend
 # ===============================
 docker-dev: generate-env-dev build-backend
 	docker compose -f docker/development/mangabaka-docker-compose-dev.yml -p mangabaka-dev up -d postgresql-dev
+	docker compose -f docker/development/mangabaka-docker-compose-dev.yml -p mangabaka-dev up -d jetty 
+
+docker-dev-recreate: generate-env-dev build-backend
+	docker compose -f docker/development/mangabaka-docker-compose-dev.yml -p mangabaka-dev up -d postgresql-dev --force-recreate
 	docker compose -f docker/development/mangabaka-docker-compose-dev.yml -p mangabaka-dev up -d jetty --force-recreate
 
 docker-prod: generate-env-prod

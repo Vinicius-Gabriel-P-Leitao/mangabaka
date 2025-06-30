@@ -49,7 +49,7 @@ class PostFrontendTranslation(
                 else -> throw InternalException(
                     message = InternalErrorCode.ERROR_INTERNAL_GENERIC.handle(
                         value = I18n.get(
-                            "throw.error.fetch.metadata", exception.message ?: I18n.get("throw.unknown.error")
+                            "throw.error.save.translation", I18n.get("throw.unknown.error")
                         )
                     ), errorCode = InternalErrorCode.ERROR_INTERNAL_GENERIC
                 )

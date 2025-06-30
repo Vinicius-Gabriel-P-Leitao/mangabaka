@@ -14,13 +14,13 @@ const { t, locale } = useI18n();
 const channel = new BroadcastChannel("locale-change");
 const languages = AvailableTranslation;
 
-watch(locale, (translate: string) => {
-  runToastSafe(() => Services.SwitchLanguageInterfaceService(translate));
+watch(locale, async (translate: string) => {
+  await runToastSafe(() => Services.SwitchLanguageInterfaceService(translate));
   channel.postMessage(translate);
   localStorage.setItem("locale", translate);
 });
 
-function runToastSafe(fn: () => Promise<void>) {
+async function runToastSafe(fn: () => Promise<void>) {
   fn().catch((error) => {
     if (!(error instanceof Exceptions.AppException)) {
       error = new Exceptions.ToastException(

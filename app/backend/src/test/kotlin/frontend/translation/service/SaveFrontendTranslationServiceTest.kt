@@ -19,7 +19,11 @@ import frontend.translation.repository.FrontendTranslationRepo
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.kotlin.*
+import org.mockito.kotlin.any
+import org.mockito.kotlin.atLeastOnce
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.postgresql.util.PSQLState
 import java.sql.SQLException
 import kotlin.test.assertEquals
@@ -27,16 +31,16 @@ import kotlin.test.assertEquals
 class SaveFrontendTranslationServiceTest {
 
     private val repositoryMock: FrontendTranslationRepo = mock()
-    private val fetchFrontendTranslationServiceMock: FetchFrontendTranslationService = mock()
 
     private val service = SaveFrontendTranslationService(
-        repository = repositoryMock, fetchFrontendTranslationService = fetchFrontendTranslationServiceMock
+        repository = repositoryMock,
     )
 
     val validJsonTranslation: String = """
         {
             "meta": {
-                "language": "Português (Brasil)"
+                "code": "pt_BR",
+                "label": "Português (Brasil)"
             },
             "page": {
                 "notFound": {
@@ -141,14 +145,11 @@ class SaveFrontendTranslationServiceTest {
     fun `should save new translations successful response`() {
         whenever(methodCall = repositoryMock.findByKeyAndLang(key = any(), lang = any())).thenReturn(null)
         whenever(methodCall = repositoryMock.save(entity = any())).thenAnswer { it.arguments[0] as FrontendTranslation }
-        whenever(methodCall = fetchFrontendTranslationServiceMock.toI18nJsonFormat(translations = any())).thenReturn(
-            validI18nJsonFormat
-        )
 
         val result = service.saveTranslation(data = validJsonTranslation)
 
         verify(mock = repositoryMock, mode = atLeastOnce()).save(entity = any())
-        assertEquals(expected = "Português (Brasil)", actual = result.meta.language)
+        assertEquals(expected = "Português (Brasil)", actual = result.meta.label)
     }
 
     @Test
@@ -188,11 +189,11 @@ class SaveFrontendTranslationServiceTest {
         whenever(methodCall = repositoryMock.findByKeyAndLang(key = any(), lang = any())).thenReturn(null)
         whenever(methodCall = repositoryMock.save(entity = any())).thenReturn(null)
 
-        val exception = assertThrows<SqlException> {
+        val exception = assertThrows<MetadataException> {
             service.saveTranslation(data = validJsonTranslation)
         }
 
-        assertEquals(expected = SqlErrorCode.ERROR_PERSIST_DATA, actual = exception.errorCode)
+        assertEquals(expected = MetadataErrorCode.ERROR_EMPTY_FIELD, actual = exception.errorCode)
     }
 
     @Test

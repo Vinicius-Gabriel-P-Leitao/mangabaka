@@ -7,111 +7,74 @@
  */
 package frontend.translation.service;
 
-import frontend.translation.dto.*
+import br.mangabaka.exception.code.custom.MetadataErrorCode
+import br.mangabaka.exception.throwable.http.MetadataException
+import br.mangabaka.infrastructure.config.singleton.I18n
+import frontend.translation.dto.AvailableTranslationsDto
+import frontend.translation.dto.I18nJsonFormat
 import frontend.translation.model.FrontendTranslation
+import frontend.translation.repository.FrontendTranslationRepo
+import frontend.translation.usecase.FrontendTranslationService
+import jakarta.ws.rs.core.Response
 
-class FetchFrontendTranslationService {
-    fun toI18nJsonFormat(translations: List<FrontendTranslation>): I18nJsonFormat {
-        val flatMap = translations.associate { it.translationKey to it.translationValue }
-        val metaLanguage = translations.firstOrNull()?.metaLanguage ?: "unknown"
+class FetchFrontendTranslationService(
+    private val repository: FrontendTranslationRepo,
+) : FrontendTranslationService() {
 
-        return I18nJsonFormat(
-            meta = Meta(language = metaLanguage),
+    fun fetchAvailableTranslations(): List<AvailableTranslationsDto> {
+        return handlerBaseMethod(
+            action = {
+                val fetched: List<FrontendTranslation>? = repository.findAllMetaLanguage()
+                if (fetched.isNullOrEmpty()) {
+                    throw MetadataException(
+                        message = MetadataErrorCode.ERROR_EMPTY_FIELD.handle(value = I18n.get(key = "throw.database.callback.data.is.empty.or.null")),
+                        errorCode = MetadataErrorCode.ERROR_EMPTY_FIELD,
+                        httpError = Response.Status.BAD_REQUEST
+                    )
+                }
 
-            page = Page(
-                notFound = ErrorPage(
-                    title = flatMap["page.notFound.title"] ?: "",
-                    message = flatMap["page.notFound.message"] ?: "",
-                    cause = flatMap["page.notFound.cause"] ?: "",
-                    imageAlt = flatMap["page.notFound.imageAlt"] ?: ""
-                ),
-                internalServerError = ErrorPage(
-                    title = flatMap["page.internalServerError.title"] ?: "",
-                    message = flatMap["page.internalServerError.message"] ?: "",
-                    cause = flatMap["page.internalServerError.cause"] ?: "",
-                    imageAlt = flatMap["page.internalServerError.imageAlt"] ?: ""
-                ),
-                gatewayTimeout = ErrorPage(
-                    title = flatMap["page.gatewayTimeout.title"] ?: "",
-                    message = flatMap["page.gatewayTimeout.message"] ?: "",
-                    cause = flatMap["page.gatewayTimeout.cause"] ?: "",
-                    imageAlt = flatMap["page.gatewayTimeout.imageAlt"] ?: ""
-                ),
-                badRequest = ErrorPage(
-                    title = flatMap["page.badRequest.title"] ?: "",
-                    message = flatMap["page.badRequest.message"] ?: "",
-                    cause = flatMap["page.badRequest.cause"] ?: "",
-                    imageAlt = flatMap["page.badRequest.imageAlt"] ?: ""
-                ),
-                badGateway = ErrorPage(
-                    title = flatMap["page.badGateway.title"] ?: "",
-                    message = flatMap["page.badGateway.message"] ?: "",
-                    cause = flatMap["page.badGateway.cause"] ?: "",
-                    imageAlt = flatMap["page.badGateway.imageAlt"] ?: ""
-                ),
-                conflict = ErrorPage(
-                    title = flatMap["page.conflict.title"] ?: "",
-                    message = flatMap["page.conflict.message"] ?: "",
-                    cause = flatMap["page.conflict.cause"] ?: "",
-                    imageAlt = flatMap["page.conflict.imageAlt"] ?: ""
-                ),
-                forbidden = ErrorPage(
-                    title = flatMap["page.forbidden.title"] ?: "",
-                    message = flatMap["page.forbidden.message"] ?: "",
-                    cause = flatMap["page.forbidden.cause"] ?: "",
-                    imageAlt = flatMap["page.forbidden.imageAlt"] ?: ""
-                ),
-                unavailable = ErrorPage(
-                    title = flatMap["page.unavailable.title"] ?: "",
-                    message = flatMap["page.unavailable.message"] ?: "",
-                    cause = flatMap["page.unavailable.cause"] ?: "",
-                    imageAlt = flatMap["page.unavailable.imageAlt"] ?: ""
-                ),
-                methodNotAllowed = ErrorPage(
-                    title = flatMap["page.methodNotAllowed.title"] ?: "",
-                    message = flatMap["page.methodNotAllowed.message"] ?: "",
-                    cause = flatMap["page.methodNotAllowed.cause"] ?: "",
-                    imageAlt = flatMap["page.methodNotAllowed.imageAlt"] ?: ""
-                ),
-                home = HomePage(
-                    title = flatMap["page.home.title"] ?: ""
-                )
-            ),
+                fetched.map {
+                    AvailableTranslationsDto(
+                        code = it.codeLanguage,
+                        label = it.metaLanguage
+                    )
+                }
+            },
+            i18nPair = I18nPair(
+                serializationMessage = I18n.get("throw.malformed.serialization.json", I18n.get("throw.unknown.error")),
+                errorCodeIsNullMessage = I18n.get("throw.internal.fetch.translation", I18n.get("throw.unknown.error")),
+                defaultErrorMessage = I18n.get("throw.internal.fetch.translation", I18n.get("throw.unknown.error"))
+            )
+        )
+    }
 
-            component = Component(
-                translation = Translation(
-                    infoView = flatMap["component.translation.infoView"] ?: ""
-                ),
-                select = Label(
-                    label = flatMap["component.select.label"] ?: ""
-                )
-            ),
+    fun fetchDataTranslation(lang: String): I18nJsonFormat {
+        return handlerBaseMethod(
+            action = {
+                val fetched: List<FrontendTranslation>? = repository.findByLang(lang)
+                if (fetched.isNullOrEmpty()) {
+                    throw MetadataException(
+                        message = MetadataErrorCode.ERROR_EMPTY_FIELD.handle(value = I18n.get(key = "throw.database.callback.data.is.empty.or.null")),
+                        errorCode = MetadataErrorCode.ERROR_EMPTY_FIELD,
+                        httpError = Response.Status.BAD_REQUEST
+                    )
+                }
 
-            handler = Handler(
-                unknown = UnknownHandler(
-                    unknown = flatMap["handler.unknown.unknown"] ?: "",
-                    unexpectedError = flatMap["handler.unknown.unexpectedError"] ?: "",
-                    unidentifiedError = flatMap["handler.unknown.unidentifiedError"] ?: ""
-                ),
-                notFound = NotFoundHandler(
-                    resource = flatMap["handler.notFound.resource"] ?: "",
-                    couldNotFind = flatMap["handler.notFound.couldNotFind"] ?: ""
-                ),
-                badRequest = BadRequestHandler(
-                    invalidField = flatMap["handler.badRequest.invalidFiel"] ?: "",
-                    malformedRequest = flatMap["handler.badRequest.malformedRequest"] ?: ""
-                ),
-                badGateway = BadGatewayHandler(
-                    invalidGateway = flatMap["handler.badGateway.invalidGateway"] ?: "",
-                    gatewayTimeout = flatMap["handler.badGateway.gatewayTimeout"] ?: "",
-                    intermediaryServer = flatMap["handler.badGateway.intermediaryServer"] ?: ""
-                ),
-                gatewayTimeout = GatewayTimeoutHandler(
-                    tryAgainLater = flatMap["handler.gatewayTimeout.tryAgainLater"] ?: ""
-                ),
-                invalidData = InvalidDataHandler(
-                    obtainedInvalid = flatMap["handler.invalidData.obtainedInvalid"] ?: ""
-                )
+                val i18nObject: I18nJsonFormat = toI18nJsonFormat(translations = fetched)
+                if (i18nObject.meta.label.isBlank() || i18nObject.meta.code.isBlank()) {
+                    throw MetadataException(
+                        message = MetadataErrorCode.ERROR_JSON_MALFORMED.handle(value = I18n.get(key = "throw.malformed.json.meta.language.translation")),
+                        errorCode = MetadataErrorCode.ERROR_JSON_MALFORMED,
+                        httpError = Response.Status.BAD_REQUEST
+                    )
+                }
+
+                i18nObject
+            },
+            i18nPair = I18nPair(
+                serializationMessage = I18n.get("throw.malformed.serialization.json", I18n.get("throw.unknown.error")),
+                errorCodeIsNullMessage = I18n.get("throw.internal.fetch.translation", I18n.get("throw.unknown.error")),
+                defaultErrorMessage = I18n.get("throw.internal.fetch.translation", I18n.get("throw.unknown.error"))
             )
         )
     }

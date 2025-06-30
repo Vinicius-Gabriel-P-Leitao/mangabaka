@@ -33,18 +33,20 @@ import jakarta.ws.rs.core.Response
 @Path(value = "/manga")
 class GetDataManga(
     private val fetchAnilistMangaDataService: FetchAnilistMangaDataService = FetchAnilistMangaDataService(),
-    private val fetchAnilistMangaAssetService: FetchAnilistMangaAssetService = FetchAnilistMangaAssetService()
+    private val fetchAnilistMangaAssetService: FetchAnilistMangaAssetService = FetchAnilistMangaAssetService(),
 ) {
     @GET
     @Path(value = "/metadata")
     @Produces(MediaType.APPLICATION_JSON)
     fun getAnilistMetadataManga(@QueryParam("name") nameManga: String?): Response {
         return try {
-            if (nameManga == null) {
+            if (nameManga == null || nameManga.isEmpty()) {
                 throw InvalidParameterException(
-                    message = ParameterErrorCode.ERROR_PARAMETER_EMPTY.handle(value = I18n.get("throw.name.parameter.require")),
-                    errorCode = ParameterErrorCode.ERROR_PARAMETER_EMPTY,
-                    httpError = Response.Status.BAD_REQUEST
+                    message = ParameterErrorCode.ERROR_PARAMETER_EMPTY.handle(
+                        value = I18n.get(
+                            "throw.parameter.require", "name"
+                        )
+                    ), errorCode = ParameterErrorCode.ERROR_PARAMETER_EMPTY, httpError = Response.Status.BAD_REQUEST
                 )
             }
 
@@ -65,7 +67,7 @@ class GetDataManga(
                 else -> throw InternalException(
                     message = InternalErrorCode.ERROR_INTERNAL_GENERIC.handle(
                         value = I18n.get(
-                            "throw.error.fetch.metadata", exception.message ?: I18n.get("throw.unknown.error")
+                            key = "throw.error.fetch.metadata", I18n.get("throw.unknown.error")
                         )
                     ), errorCode = InternalErrorCode.ERROR_INTERNAL_GENERIC
                 )
@@ -78,11 +80,13 @@ class GetDataManga(
     @Produces(MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON)
     fun getAnilistAssetManga(@QueryParam("name") nameManga: String?, @QueryParam("type") typeParam: String?): Response {
         return try {
-            if (nameManga == null || typeParam == null) {
+            if (nameManga == null || nameManga.isEmpty() || typeParam == null || typeParam.isEmpty()) {
                 throw InvalidParameterException(
-                    message = ParameterErrorCode.ERROR_PARAMETER_EMPTY.handle(value = I18n.get("throw.name.type.parameter.require")),
-                    errorCode = ParameterErrorCode.ERROR_PARAMETER_EMPTY,
-                    httpError = Response.Status.BAD_REQUEST
+                    message = ParameterErrorCode.ERROR_PARAMETER_EMPTY.handle(
+                        value = I18n.get(
+                            key = "throw.parameter.require", "name, type"
+                        )
+                    ), errorCode = ParameterErrorCode.ERROR_PARAMETER_EMPTY, httpError = Response.Status.BAD_REQUEST
                 )
             }
 
@@ -112,7 +116,7 @@ class GetDataManga(
             } ?: throw InvalidParameterException(
                 message = ParameterErrorCode.ERROR_PARAMETER_INVALID.handle(
                     value = I18n.get(
-                        "throw.not.found.asset.type", typeParam
+                        key = "throw.not.found.asset.type", typeParam
                     )
                 ), errorCode = ParameterErrorCode.ERROR_PARAMETER_INVALID, httpError = Response.Status.BAD_REQUEST
             )
@@ -125,7 +129,7 @@ class GetDataManga(
                 else -> throw InternalException(
                     message = InternalErrorCode.ERROR_INTERNAL_GENERIC.handle(
                         value = I18n.get(
-                            "throw.error.fetch.asset", exception.message ?: I18n.get("throw.unknown.error")
+                            key = "throw.error.fetch.asset", I18n.get("throw.unknown.error")
                         )
                     ), errorCode = InternalErrorCode.ERROR_INTERNAL_GENERIC
                 )

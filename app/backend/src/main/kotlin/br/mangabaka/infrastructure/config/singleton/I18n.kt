@@ -32,7 +32,7 @@ object I18n {
             MessageFormat(pattern).format(args)
         } catch (exception: MissingResourceException) {
             throw InternalException(
-                message = InternalErrorCode.ERROR_TRANSLATE.handle("Error finding translation key/Erro ao encontrar tradução: $key"),
+                message = InternalErrorCode.ERROR_TRANSLATE.handle(value = "Error finding translation key/Erro ao encontrar tradução: $key"),
                 errorCode = InternalErrorCode.ERROR_TRANSLATE
             )
         }
