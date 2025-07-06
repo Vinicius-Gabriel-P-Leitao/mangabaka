@@ -1,0 +1,61 @@
+{
+  "page": {
+    "notFound": {
+      "title": "Página não encontrada 😢",
+      "message": "Não foi possível encontrar:",
+      "cause": "Motivo:",
+      "imageAlt": "Personagem Frieren do anime Sousou no Frieren."
+    },
+    "internalServerError": {
+      "title": "Erro interno 💀",
+      "message": "Não foi possível em:",
+      "cause": "Motivo:",
+      "imageAlt": "De Sousou no Frieren: {param}"
+    },
+    "gatewayTimeout": {
+      "title": "Tempo limite do Gateway 🧐",
+      "message": "Não foi possível em:",
+      "cause": "Motivo:",
+      "imageAlt": "Personagem Himmel do anime Sousou no Frieren."
+    },
+    "badRequest": {
+      "title": "Request mal formado 🤨",
+      "message": "Não foi possível em:",
+      "cause": "Motivo:",
+      "imageAlt": "De Sousou no Frieren: {param}"
+    },
+    "badGateway": {
+      "title": "Erro de Gateway 🧐",
+      "message": "Não foi possível em:",
+      "cause": "Motivo:",
+      "imageAlt": "Personagem Flame do anime Sousou no Frieren."
+    },
+    "conflict": {
+      "title": "Conflito de dados 🤯",
+      "message": "Não foi possível em:",
+      "cause": "Motivo:",
+      "imageAlt": "Personagem Ubel do anime Sousou no Frieren."
+    },
+    "forbidden": {
+      "title": "Conexão proibida 🥹",
+      "message": "Não foi possível em:",
+      "cause": "Motivo:",
+      "imageAlt": "Personagem Heiter do anime Sousou no Frieren."
+    },
+    "unavailable": {
+      "title": "Serviço não disponível 🤐",
+      "message": "Não foi possível em:",
+      "cause": "Motivo:",
+      "imageAlt": "Personagem Sense do anime Sousou no Frieren."
+    },
+    "methodNotAllowed": {
+      "title": "Método não permitido 😬",
+      "message": "Não foi possível em:",
+      "cause": "Motivo:",
+      "imageAlt": "Personagem Methode do anime Sousou no Frieren."
+    },
+    "home": {
+      "title": "Página principal"
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "page": {
+    "notFound": {
+      "title": "Page not found 😢",
+      "message": "Could not find:",
+      "cause": "Reason:",
+      "imageAlt": "Frieren character from the anime Frieren: Beyond Journey's."
+    },
+    "internalServerError": {
+      "title": "Internal error 💀",
+      "message": "Unable to:",
+      "cause": "Reason:",
+      "imageAlt": "From Frieren: Beyond Journey's: {param}"
+    },
+    "gatewayTimeout": {
+      "title": "Gateway Timeout 🧐",
+      "message": "Unable to:",
+      "cause": "Reason:",
+      "imageAlt": "Himmel character from the anime Frieren: Beyond Journey's."
+    },
+    "badRequest": {
+      "title": "Malformed request 🤨",
+      "message": "Unable to:",
+      "cause": "Reason:",
+      "imageAlt": "From Frieren: Beyond Journey's: {param}"
+    },
+    "badGateway": {
+      "title": "Gateway Error 🧐",
+      "message": "Unable to:",
+      "cause": "Reason:",
+      "imageAlt": "Flame character from the anime Frieren: Beyond Journey's."
+    },
+    "conflict": {
+      "title": "Data conflict 🤯",
+      "message": "Unable to:",
+      "cause": "Reason:",
+      "imageAlt": "Ubel character from the anime Frieren: Beyond Journey's."
+    },
+    "forbidden": {
+      "title": "Forbidden connection 🥹",
+      "message": "Unable to:",
+      "cause": "Reason:",
+      "imageAlt": "Heiter character from the anime Frieren: Beyond Journey's."
+    },
+    "unavailable": {
+      "title": "Service Unavailable 🤐",
+      "message": "Unable to:",
+      "cause": "Reason:",
+      "imageAlt": "Sense character from the anime Frieren: Beyond Journey's."
+    },
+    "methodNotAllowed": {
+      "title": "Method Not Allowed 😬",
+      "message": "Unable to:",
+      "cause": "Reason:",
+      "imageAlt": "Methode character from the anime Frieren: Beyond Journey's."
+    },
+    "home": {
+      "title": "Home page"
+    }
+  }
+}

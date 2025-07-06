@@ -1,0 +1,17 @@
+# Dependências específicas do frontend
+frontend/mangabaka/node_modules
+frontend/mangabaka/dist
+frontend/mangabaka/dist-ssr
+frontend/mangabaka/.vite
+
+# Dependências específicas do backend
+backend/src/main/webapp
+backend/build
+backend/gradlew
+backend/gradlew.bat
+backend/.env
+
+# IDEs e editores
+.idea/
+.vscode/
+.gradle

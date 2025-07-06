@@ -1,0 +1,62 @@
+networks:
+  mangabaka-network-prod:
+    driver: bridge
+
+services:
+  postgresql-prod:
+    container_name: mangabaka-postgresql-prod
+    image: postgres:alpine3.16
+    environment:
+      TZ: America/Sao_Paulo
+      POSTGRES_DB: ${PG_DB_NAME}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_USER: ${PG_USERNAME}
+    ports:
+      - "5432:5432"
+    networks:
+      - mangabaka-network-prod
+    restart: always
+
+  mangabaka-all:
+    build:
+      context: ../..
+      dockerfile: docker/production/all/Dockerfile
+    container_name: mangabaka-all
+    depends_on:
+      - postgresql-prod
+    environment:
+      TZ: America/Sao_Paulo
+      BACKEND_MODE: ALL
+      APP_LOCALE: ${APP_LOCALE}
+      PG_PASSWORD: ${PG_PASSWORD}
+      PG_USERNAME: ${PG_USERNAME}
+      PG_JDBC_URL: ${PG_JDBC_URL}
+    ports:
+      - "9090:9090"
+    volumes:
+      - ~/docker:/app/data/mangabaka
+    networks:
+      - mangabaka-network-prod
+    restart: always
+
+  mangabaka-api:
+    build:
+      context: ../..
+      dockerfile: docker/production/api/Dockerfile
+    container_name: mangabaka-api
+    depends_on:
+      - postgresql-prod
+    environment:
+      TZ: America/Sao_Paulo
+      BACKEND_MODE: API
+      APP_LOCALE: ${APP_LOCALE}
+      PG_PASSWORD: ${PG_PASSWORD}
+      PG_USERNAME: ${PG_USERNAME}
+      PG_JDBC_URL: ${PG_JDBC_URL}
+    ports:
+      - "9091:9090"
+    volumes:
+      - ~/docker:/app/data/mangabaka
+    networks:
+      - mangabaka-network-prod
+    restart: always

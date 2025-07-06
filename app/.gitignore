@@ -1,7 +1,7 @@
 # Gradle build outputs
 .gradle/
 *build/
-!gradle/wrapper/gradle-wrapper.jar
+!backend/gradle/wrapper/gradle-wrapper.jar
 # Keep build folders inside source sets to allow IDE to recognize compiled outputs
 !**/src/main/**/build/
 !**/src/test/**/build/
@@ -44,6 +44,9 @@ out/
 # Keep recommended extensions config but ignore everything else inside .vscode
 !.vscode/extensions.json
 
+# Lazyvum files and folders
+kls_database.db
+
 # macOS system files
 .DS_Store
 
@@ -77,6 +80,7 @@ out/
 
 # Other IDEs or editors (just in case)
 *.idea/
+*.kotlin/
 
 # Optional: Ignore coverage reports (if you use any coverage tool)
 coverage/
@@ -86,5 +90,5 @@ coverage/
 *.temp
 
 # Application enviroments
-*local.properties
+buildSrc/local.properties
 *.env

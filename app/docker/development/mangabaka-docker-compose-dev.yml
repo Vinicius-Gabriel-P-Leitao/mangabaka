@@ -1,0 +1,47 @@
+networks:
+  mangabaka-network-dev:
+    driver: bridge
+
+services:
+  postgresql-dev:
+    container_name: mangabaka-postgresql-dev
+    image: postgres:alpine3.16
+    environment:
+      TZ: America/Sao_Paulo
+      POSTGRES_DB: ${PG_DB_NAME}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_USER: ${PG_USERNAME}
+    ports:
+      - "4321:5432"
+    volumes:
+      - ../../backend/src/main/resources/docker/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ../../backend/src/main/resources/docker/sql:/docker-entrypoint-initdb.d
+    networks:
+      - mangabaka-network-dev
+    restart: always
+
+  jetty:
+    image: jetty:12.0.22-jdk17
+    container_name: mangabaka-jetty
+    depends_on:
+      - postgresql-dev
+    ports:
+      - "9089:9090"
+    environment:
+      TZ: America/Sao_Paulo
+      BACKEND_MODE: ${BACKEND_MODE}
+      APP_LOCALE: ${APP_LOCALE}
+      PG_PASSWORD: ${PG_PASSWORD}
+      PG_USERNAME: ${PG_USERNAME}
+      PG_JDBC_URL: ${PG_JDBC_URL}
+    volumes:
+      - ../../backend/build/libs/backend.war:/var/lib/jetty/webapps/ROOT.war
+      - ~/docker:/app/data/mangabaka
+    command: >
+      --module=ee10-deploy,ee10-webapp,http,ee10-annotations,ee10-servlet
+      -Djetty.http.port=9090
+      -Djetty.deploy.scanInterval=10
+      -Dlog4j.debug=true
+    networks:
+      - mangabaka-network-dev
+    restart: always

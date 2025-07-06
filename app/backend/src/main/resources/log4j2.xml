@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ SPDX-License-Identifier: BSD-3-Clause
+  ~
+  ~ Copyright (c) 2025 Vinícius Gabriel Pereira Leitão
+  ~ Licensed under the BSD 3-Clause License.
+  ~ See LICENSE file in the project root for full license information.
+  -->
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%style{%d{HH:mm:ss.SSS}}{cyan} %highlight{%-5level}{FATAL=bg_red, ERROR=bg_red, WARN=bg_yellow, INFO=bg_green, DEBUG=bg_blue, TRACE=bg_black} %highlight{%logger{36}}{FATAL=bg_red, ERROR=red, WARN=yellow, INFO=green, DEBUG=blue, TRACE=black} - %msg%n"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="ConsoleAppender"/>
+        </Root>
+    </Loggers>
+</Configuration>
