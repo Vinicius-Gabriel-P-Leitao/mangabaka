@@ -13,29 +13,21 @@ Composables.UseLocaleSync();
 </script>
 
 <template>
-  <Layouts.ErrorFallbackLayout
-    :title="t('page.unavailable.title')"
-    :message="t('page.unavailable.message')"
-    :cause="t('page.unavailable.cause')"
-  >
-    <span
-      class="content-center text-end text-8xl sm:text-[190px]"
-      aria-hidden="true"
+    <Layouts.ErrorFallbackLayout
+        :title="t('page.unavailable.title')"
+        :message="t('page.unavailable.message')"
+        :cause="t('page.unavailable.cause')"
     >
-      5
-    </span>
-    <span class="place-self-center">
-      <img
-        :src="sense"
-        :alt="t('page.unavailable.imageAlt')"
-        class="w-24 sm:w-40 h-24 sm:h-40 object-cover rounded-full shadow-lg border-4 border-stone-700"
-      />
-    </span>
-    <span
-      class="content-center text-start text-8xl sm:text-[190px]"
-      aria-hidden="true"
-    >
-      3
-    </span>
-  </Layouts.ErrorFallbackLayout>
+        <span class="content-center text-end text-8xl sm:text-[190px]" aria-hidden="true"> 5 </span>
+        <span class="place-self-center">
+            <img
+                :src="sense"
+                :alt="t('page.unavailable.imageAlt')"
+                class="w-24 sm:w-40 h-24 sm:h-40 object-cover rounded-full shadow-lg border-4 border-stone-700"
+            />
+        </span>
+        <span class="content-center text-start text-8xl sm:text-[190px]" aria-hidden="true">
+            3
+        </span>
+    </Layouts.ErrorFallbackLayout>
 </template>

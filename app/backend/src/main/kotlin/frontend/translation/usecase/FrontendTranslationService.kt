@@ -8,18 +8,28 @@
 package frontend.translation.usecase;
 
 import br.mangabaka.exception.code.custom.InternalErrorCode
+import br.mangabaka.exception.code.custom.InvalidDataErrorCode
 import br.mangabaka.exception.code.custom.MetadataErrorCode
 import br.mangabaka.exception.code.custom.SqlErrorCode
 import br.mangabaka.exception.throwable.base.AppException
 import br.mangabaka.exception.throwable.base.InternalException
 import br.mangabaka.exception.throwable.http.MetadataException
 import br.mangabaka.exception.throwable.http.SqlException
+import br.mangabaka.infrastructure.config.singleton.I18n
 import frontend.translation.dto.*
 import frontend.translation.model.FrontendTranslation
+import jakarta.ws.rs.BadRequestException
 import jakarta.ws.rs.core.Response
 import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.encodeToJsonElement
 import java.sql.SQLException
 
+@Suppress("UNCHECKED_CAST")
 abstract class FrontendTranslationService {
     data class I18nPair(
         val serializationMessage: String,
@@ -69,94 +79,48 @@ abstract class FrontendTranslationService {
     }
 
     fun toI18nJsonFormat(translations: List<FrontendTranslation>): I18nJsonFormat {
-        val flatMap = translations.associate { it.translationKey to it.translationValue }
+        val flatMap: Map<String, String> = translations.associate { it.translationKey to it.translationValue }
+        val nestedMap = mutableMapOf<String, Any>()
 
-        return I18nJsonFormat(
-            meta = Meta(
-                code = flatMap["meta.code"] ?: "",
-                label = flatMap["meta.label"] ?: ""
-            ),
+        for ((key, value) in flatMap) {
+            val keys: List<String> = key.split(".")
+            var currentLevel: MutableMap<String, Any> = nestedMap
 
-            page = Page(
-                notFound = ErrorPage(
-                    title = flatMap["page.notFound.title"] ?: "",
-                    message = flatMap["page.notFound.message"] ?: "",
-                    cause = flatMap["page.notFound.cause"] ?: "",
-                    imageAlt = flatMap["page.notFound.imageAlt"] ?: ""
-                ), internalServerError = ErrorPage(
-                    title = flatMap["page.internalServerError.title"] ?: "",
-                    message = flatMap["page.internalServerError.message"] ?: "",
-                    cause = flatMap["page.internalServerError.cause"] ?: "",
-                    imageAlt = flatMap["page.internalServerError.imageAlt"] ?: ""
-                ), gatewayTimeout = ErrorPage(
-                    title = flatMap["page.gatewayTimeout.title"] ?: "",
-                    message = flatMap["page.gatewayTimeout.message"] ?: "",
-                    cause = flatMap["page.gatewayTimeout.cause"] ?: "",
-                    imageAlt = flatMap["page.gatewayTimeout.imageAlt"] ?: ""
-                ), badRequest = ErrorPage(
-                    title = flatMap["page.badRequest.title"] ?: "",
-                    message = flatMap["page.badRequest.message"] ?: "",
-                    cause = flatMap["page.badRequest.cause"] ?: "",
-                    imageAlt = flatMap["page.badRequest.imageAlt"] ?: ""
-                ), badGateway = ErrorPage(
-                    title = flatMap["page.badGateway.title"] ?: "",
-                    message = flatMap["page.badGateway.message"] ?: "",
-                    cause = flatMap["page.badGateway.cause"] ?: "",
-                    imageAlt = flatMap["page.badGateway.imageAlt"] ?: ""
-                ), conflict = ErrorPage(
-                    title = flatMap["page.conflict.title"] ?: "",
-                    message = flatMap["page.conflict.message"] ?: "",
-                    cause = flatMap["page.conflict.cause"] ?: "",
-                    imageAlt = flatMap["page.conflict.imageAlt"] ?: ""
-                ), forbidden = ErrorPage(
-                    title = flatMap["page.forbidden.title"] ?: "",
-                    message = flatMap["page.forbidden.message"] ?: "",
-                    cause = flatMap["page.forbidden.cause"] ?: "",
-                    imageAlt = flatMap["page.forbidden.imageAlt"] ?: ""
-                ), unavailable = ErrorPage(
-                    title = flatMap["page.unavailable.title"] ?: "",
-                    message = flatMap["page.unavailable.message"] ?: "",
-                    cause = flatMap["page.unavailable.cause"] ?: "",
-                    imageAlt = flatMap["page.unavailable.imageAlt"] ?: ""
-                ), methodNotAllowed = ErrorPage(
-                    title = flatMap["page.methodNotAllowed.title"] ?: "",
-                    message = flatMap["page.methodNotAllowed.message"] ?: "",
-                    cause = flatMap["page.methodNotAllowed.cause"] ?: "",
-                    imageAlt = flatMap["page.methodNotAllowed.imageAlt"] ?: ""
-                ), home = HomePage(
-                    title = flatMap["page.home.title"] ?: ""
-                )
-            ),
+            for (item in 0 until keys.size - 1) {
+                val parts: String = keys[item]
+                val nextLevel: Any? = currentLevel[parts]
 
-            component = Component(
-                translation = Translation(
-                    infoView = flatMap["component.translation.infoView"] ?: ""
-                ), select = Label(
-                    label = flatMap["component.select.label"] ?: ""
-                )
-            ),
+                if (nextLevel == null || nextLevel !is MutableMap<*, *>) {
+                    val newMap = mutableMapOf<String, Any>()
+                    currentLevel[parts] = newMap
+                    currentLevel = newMap
+                } else {
+                    @Suppress("UNCHECKED_CAST")
+                    currentLevel = nextLevel as MutableMap<String, Any>
+                }
+            }
 
-            handler = Handler(
-                unknown = UnknownHandler(
-                    unknown = flatMap["handler.unknown.unknown"] ?: "",
-                    unexpectedError = flatMap["handler.unknown.unexpectedError"] ?: "",
-                    unidentifiedError = flatMap["handler.unknown.unidentifiedError"] ?: ""
-                ), notFound = NotFoundHandler(
-                    resource = flatMap["handler.notFound.resource"] ?: "",
-                    couldNotFind = flatMap["handler.notFound.couldNotFind"] ?: ""
-                ), badRequest = BadRequestHandler(
-                    invalidField = flatMap["handler.badRequest.invalidField"] ?: "",
-                    malformedRequest = flatMap["handler.badRequest.malformedRequest"] ?: ""
-                ), badGateway = BadGatewayHandler(
-                    invalidGateway = flatMap["handler.badGateway.invalidGateway"] ?: "",
-                    gatewayTimeout = flatMap["handler.badGateway.gatewayTimeout"] ?: "",
-                    intermediaryServer = flatMap["handler.badGateway.intermediaryServer"] ?: ""
-                ), gatewayTimeout = GatewayTimeoutHandler(
-                    tryAgainLater = flatMap["handler.gatewayTimeout.tryAgainLater"] ?: ""
-                ), invalidData = InvalidDataHandler(
-                    obtainedInvalid = flatMap["handler.invalidData.obtainedInvalid"] ?: ""
-                )
-            )
+            currentLevel[keys.last()] = value
+        }
+
+        val json = Json { ignoreUnknownKeys = true }
+        val jsonElement = mapToJsonElement(map = nestedMap, depth = nestedMap.size)
+        val jsonString = Json.encodeToString(value = jsonElement)
+        return json.decodeFromString<I18nJsonFormat>(string = jsonString)
+    }
+
+    fun mapToJsonElement(map: Map<String, Any>, depth: Int = 0): JsonObject {
+        if (depth > 20) throw BadRequestException(
+            InvalidDataErrorCode.ERROR_SIZE_DATA.handle(value = I18n.get(key = "throw.json.depth.is.large"))
         )
+
+        val content = map.mapValues { (_, value) ->
+            when (value) {
+                is String -> JsonPrimitive(value)
+                is Map<*, *> -> mapToJsonElement(map = value as Map<String, Any>, depth = value.size)
+                else -> JsonNull
+            }
+        }
+        return JsonObject(content)
     }
 }

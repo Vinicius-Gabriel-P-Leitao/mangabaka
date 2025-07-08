@@ -9,10 +9,10 @@ import { XMarkIcon } from "@heroicons/vue/24/solid";
 import { computed, ref, watch } from "vue";
 
 const props = defineProps<{
-  error: { message: string; error: Types.GlobalToastErrorPayload } | null;
-  variant?: Types.ToastVariant | "error";
-  descriptionIcon: string;
-  duration?: number;
+    error: { message: string; error: Types.GlobalToastErrorPayload } | null;
+    variant?: Types.ToastVariant | "error";
+    descriptionIcon: string;
+    duration?: number;
 }>();
 
 const localMessage = ref("");
@@ -20,23 +20,23 @@ const localVariant = ref<Types.ToastVariant>("error");
 const emit = defineEmits(["close"]);
 
 watch(
-  () => props.error,
-  (error) => {
-    if (error) {
-      localMessage.value = error.message;
-      localVariant.value = error.error.variant;
+    () => props.error,
+    (error) => {
+        if (error) {
+            localMessage.value = error.message;
+            localVariant.value = error.error.variant;
 
-      if (props.duration) {
-        setTimeout(() => {
-          emit("close");
-        }, props.duration);
-      }
-    } else {
-      localMessage.value = "";
-      localVariant.value = "error";
-    }
-  },
-  { immediate: true }
+            if (props.duration) {
+                setTimeout(() => {
+                    emit("close");
+                }, props.duration);
+            }
+        } else {
+            localMessage.value = "";
+            localVariant.value = "error";
+        }
+    },
+    { immediate: true },
 );
 
 // prettier-ignore
@@ -54,35 +54,39 @@ const classes = {
 };
 
 const computedClasses = computed(() => {
-  return [
-    classes.base,
-    classes.variants[localVariant.value] ?? classes.variants.error,
-  ].join(" ");
+    return [
+        classes.base,
+        classes.variants[localVariant.value] ?? classes.variants.error,
+    ].join(" ");
 });
 </script>
 
 <template>
-  <article :class="computedClasses" role="alert">
-    <header class="inline-flex items-center justify-center shrink-0 w-8 h-8">
-      <slot />
-      <span class="sr-only">{{ descriptionIcon }}</span>
-    </header>
+    <article :class="computedClasses" role="alert">
+        <header
+            class="inline-flex items-center justify-center shrink-0 w-8 h-8"
+        >
+            <slot />
+            <span class="sr-only">{{ descriptionIcon }}</span>
+        </header>
 
-    <p class="flex-1 min-w-0">
-      <span class="block text-sm font-normal overflow-hidden text-ellipsis">
-        {{ localMessage }}
-      </span>
-    </p>
+        <p class="flex-1 min-w-0">
+            <span
+                class="block text-sm font-normal overflow-hidden text-ellipsis"
+            >
+                {{ localMessage }}
+            </span>
+        </p>
 
-    <button
-      type="button"
-      @click="$emit('close')"
-      class="cursor-pointer ms-auto -mx-1.5 -my-1.5 p-1.5 rounded-lg focus:ring-1 inline-flex items-center justify-center h-8 w-8 bg-white dark:bg-[#1a1a1a] text-[#1a1a1a] dark:text-white hover:text-white hover:bg-[#1a1a1a]/20 dark:hover:bg-white/40 focus:ring-gray-300"
-      data-dismiss-target="#toast-success"
-      aria-label="Close"
-    >
-      <span class="sr-only">Close</span>
-      <XMarkIcon aria-hidden="true" />
-    </button>
-  </article>
+        <button
+            type="button"
+            @click="$emit('close')"i
+            class="cursor-pointer ms-auto -mx-1.5 -my-1.5 p-1.5 rounded-lg focus:ring-1 inline-flex items-center justify-center h-8 w-8 bg-white dark:bg-[#1a1a1a] text-[#1a1a1a] dark:text-white hover:text-white hover:bg-[#1a1a1a]/20 dark:hover:bg-white/40 focus:ring-gray-300"
+            data-dismiss-target="#toast-success"
+            aria-label="Close"
+        >
+            <span class="sr-only">Close</span>
+            <XMarkIcon aria-hidden="true" />
+        </button>
+    </article>
 </template>

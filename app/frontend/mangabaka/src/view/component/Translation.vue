@@ -15,59 +15,66 @@ const channel = new BroadcastChannel("locale-change");
 const languages = AvailableTranslation;
 
 watch(locale, async (translate: string) => {
-  await runToastSafe(() => Services.SwitchLanguageInterfaceService(translate));
-  channel.postMessage(translate);
-  localStorage.setItem("locale", translate);
+    await runToastSafe(() =>
+        Services.SwitchLanguageInterfaceService(translate),
+    );
+    channel.postMessage(translate);
+    localStorage.setItem("locale", translate);
 });
 
 async function runToastSafe(fn: () => Promise<void>) {
-  fn().catch((error) => {
-    if (!(error instanceof Exceptions.AppException)) {
-      error = new Exceptions.ToastException(
-        Handlers.ApiErrorMessageHandler.NOT_FOUND,
-        {
-          variant: "error",
-          icon: ExclamationCircleIcon,
-        },
-        { status: 404 }
-      );
-    }
+    fn().catch((error) => {
+        if (!(error instanceof Exceptions.AppException)) {
+            error = new Exceptions.ToastException(
+                Handlers.ApiErrorMessageHandler.NOT_FOUND,
+                {
+                    variant: "error",
+                    icon: ExclamationCircleIcon,
+                },
+                { status: 404 },
+            );
+        }
 
-    throw error;
-  });
+        throw error;
+    });
 }
 </script>
 
 <template>
-  <section class="flex items-center gap-3">
-    <Components.Select :label="t('component.select.label')" v-model="locale">
-      <option
-        v-for="lang in languages"
-        :key="lang.code"
-        :value="lang.code"
-        class="text-[#1a1a1a] dark:text-white bg-[#f4f4f5] dark:bg-[#1a1a1a]"
-      >
-        {{ lang.label }}
-      </option>
-    </Components.Select>
+    <section class="flex items-center gap-3">
+        <Components.Select
+            :label="t('component.select.label')"
+            v-model="locale"
+        >
+            <option
+                v-for="lang in languages"
+                :key="lang.code"
+                :value="lang.code"
+                class="text-[#1a1a1a] dark:text-white bg-[#f4f4f5] dark:bg-[#1a1a1a]"
+            >
+                {{ lang.label }}
+            </option>
+        </Components.Select>
 
-    <Components.InfoView :infoText="t('component.translation.infoView')" />
-  </section>
+        <Components.InfoView :infoText="t('component.translation.infoView')" />
+    </section>
 </template>
 
 <style>
 .toast-enter-from,
 .toast-leave-to {
-  opacity: 0;
-  transform: translateY(20px);
+    opacity: 0;
+    transform: translateY(20px);
 }
 .toast-enter-to,
 .toast-leave-from {
-  opacity: 1;
-  transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
 }
 .toast-enter-active,
 .toast-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
 }
 </style>
